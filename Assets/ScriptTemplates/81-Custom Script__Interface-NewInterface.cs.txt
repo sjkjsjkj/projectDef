@@ -1,0 +1,9 @@
+/// <summary>
+/// 
+/// </summary>
+    #ROOTNAMESPACEBEGIN#
+public interface #SCRIPTNAME#
+{
+    
+}
+#ROOTNAMESPACEEND#
