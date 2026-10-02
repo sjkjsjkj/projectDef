@@ -3,19 +3,15 @@ using UnityEngine;
 /// <summary>
 /// 클래스의 설계 의도입니다.
 /// </summary>
-public class TestManager : BaseMono
+public class EnemyTest : BaseMono
 {
     #region ─────────────────────────▶ 인스펙터 ◀─────────────────────────
-    [Header("유닛 생성 테스트")]
-    [SerializeField] private Unit[] units;
-    [SerializeField] private WaitField waitField;
-    [SerializeField] private EnemySpawner enemySpawner;
-    [SerializeField] private bool unitTestFlag;
-    
+    //[Header("주제")]
+    //[SerializeField] private Class _class;
     #endregion
 
     #region ─────────────────────────▶ 내부 변수 ◀─────────────────────────
-
+    private EnemyHealth _enemyHealth;
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
@@ -23,35 +19,19 @@ public class TestManager : BaseMono
     #endregion
 
     #region ─────────────────────────▶ 내부 메서드 ◀─────────────────────────
-    private void Init()
-    {
-        if(unitTestFlag) UnitTest();
-    }
 
-    private void UnitTest()
-    {
-        for (int i = 0; i < units.Length; i++)
-        {
-            waitField.TryAddUnit(units[i]);
-        }
-    }
     #endregion
 
     #region ─────────────────────────▶ 메시지 함수 ◀─────────────────────────
     protected override void Awake()
     {
-        
+        _enemyHealth = GetComponent<EnemyHealth>();
     }
-    private void Start()
-    {
-        Init();
-    }
-
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.V))
         {
-            if(unitTestFlag) enemySpawner.SpawnEnemy();
+            _enemyHealth.TakeDamage(30);
         }
     }
     #endregion

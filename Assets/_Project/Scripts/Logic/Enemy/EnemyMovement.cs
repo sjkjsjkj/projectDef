@@ -18,6 +18,10 @@ public class EnemyMovement : BaseMono
     #region ─────────────────────────▶ 내부 변수 ◀─────────────────────────
     private int _currentWaypointIndex;
     private EnemyPath _path;
+
+    private EnemyHealth _enemyHealth;
+    private bool _canMove = true;
+
     private bool _isMoving = false;
 
     #endregion
@@ -42,6 +46,14 @@ public class EnemyMovement : BaseMono
     #endregion
 
     #region ─────────────────────────▶ 내부 메서드 ◀─────────────────────────
+    private void OnEnable()
+    {
+        _enemyHealth.OnDead += StopMovement;
+    }
+    private void OnDisable()
+    {
+        _enemyHealth.OnDead -= StopMovement;
+    }
     private void Move()
     {
         if (_currentWaypointIndex >= _path.WaypointCount)
@@ -81,9 +93,18 @@ public class EnemyMovement : BaseMono
 
         Destroy(gameObject);
     }
+
+    private void StopMovement()
+    {
+        _canMove = false;
+    }
     #endregion
 
     #region ─────────────────────────▶ 메시지 함수 ◀─────────────────────────
+    protected override void Awake()
+    {
+        _enemyHealth = GetComponent<EnemyHealth>();
+    }
     private void Start()
     {
         _currentWaypointIndex = 0;
@@ -91,6 +112,8 @@ public class EnemyMovement : BaseMono
 
     private void Update()
     {
+        if (!_canMove)
+            return;
         if (!_isMoving || _path == null)
             return;
 
