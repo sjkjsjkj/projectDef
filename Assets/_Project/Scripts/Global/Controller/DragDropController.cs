@@ -21,6 +21,7 @@ public class DragDropController : BaseMono
     #region ─────────────────────────▶ 내부 변수 ◀─────────────────────────
     private IDraggable _draggingObject;
     private IDropTarget _sourceTarget;
+    private IDropTarget _hoverTarget;
     private Transform _draggingTransform;
     
 
@@ -34,11 +35,8 @@ public class DragDropController : BaseMono
     #region ─────────────────────────▶ 내부 메서드 ◀─────────────────────────
     private void TryBeginDrag()
     {
-        Vector2 mousePosition =
-        Mouse.current.position.ReadValue();
-
-        Ray ray =
-            targetCamera.ScreenPointToRay(mousePosition);
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+        Ray ray = targetCamera.ScreenPointToRay(mousePosition);
 
         if (!Physics.Raycast(
                 ray,
@@ -68,25 +66,41 @@ public class DragDropController : BaseMono
 
     private void UpdateDrag()
     {
-        Debug.Log("UpdateDrag");
-
         if (_draggingObject == null)
             return;
 
+        //마우스 위치에 따라 드래그 오브젝트 이동
         if (TryGetDragPosition(out Vector3 position))
         {
             _draggingObject.Transform.position = position;
         }
+
+        //현재 마우스 아래의 DropTarget 탐색
+        IDropTarget newTarget = FindDropTarget();
+
+        //이전 Target과 동일하면 아무것도 하지 않음
+        if (_hoverTarget == newTarget)
+            return;
+
+        //hover 갱신
+        _hoverTarget?.SetHighlight(false);
+
+        _hoverTarget = newTarget;
+
+        _hoverTarget?.SetHighlight(true);
+
     }
 
     private void EndDrag()
     {
-        IDropTarget destination = FindDropTarget();
+        if (_draggingObject == null)
+            return;
 
-        if (destination != null &&
-            destination.CanDrop(_draggingObject))
+        // 유효한 DropTarget이 있고 배치 가능
+        if (_hoverTarget != null &&
+            _hoverTarget.CanDrop(_draggingObject))
         {
-            MoveToTarget(destination);
+            MoveToTarget(_hoverTarget);
         }
         else
         {
@@ -98,11 +112,8 @@ public class DragDropController : BaseMono
 
     private bool TryGetDragPosition(out Vector3 position)
     {
-        Vector2 mousePosition =
-        Mouse.current.position.ReadValue();
-
-        Ray ray =
-            targetCamera.ScreenPointToRay(mousePosition);
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+        Ray ray = targetCamera.ScreenPointToRay(mousePosition);
 
         Plane plane = new Plane(
             dragPlaneTransform.up,
@@ -120,11 +131,8 @@ public class DragDropController : BaseMono
     }
     private IDropTarget FindDropTarget()
     {
-        Vector2 mousePosition =
-        Mouse.current.position.ReadValue();
-
-        Ray ray =
-            targetCamera.ScreenPointToRay(mousePosition);
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+        Ray ray = targetCamera.ScreenPointToRay(mousePosition);
 
         if (!Physics.Raycast(
                 ray,
@@ -140,8 +148,8 @@ public class DragDropController : BaseMono
 
     private void CancelDrag()
     {
-        if (_sourceTarget == null)
-            return;
+        //if (_sourceTarget == null)
+        //    return;
 
         _sourceTarget?.OnDrop(_draggingObject);
     }
@@ -155,8 +163,12 @@ public class DragDropController : BaseMono
 
     private void ClearDragState()
     {
+        _hoverTarget?.SetHighlight(false);
+
         _draggingObject = null;
         _sourceTarget = null;
+        _hoverTarget = null;
+
         _isDragging = false;
     }
     #endregion

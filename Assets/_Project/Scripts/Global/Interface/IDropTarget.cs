@@ -3,8 +3,11 @@
 /// </summary>
 public interface IDropTarget
 {
+    IDraggable Occupant { get; } //Á¡À¯ÀÚ
     bool CanDrop(IDraggable draggable);
     void OnDrop(IDraggable draggable);
     void Remove(IDraggable draggable);
+
+    void SetHighlight(bool active);
 
 }
