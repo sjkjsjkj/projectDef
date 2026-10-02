@@ -129,8 +129,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4351468}
   - component: {fileID: 4351470}
-  - component: {fileID: 4351469}
   - component: {fileID: 4351471}
+  - component: {fileID: 4351472}
   m_Layer: 7
   m_Name: BattleSlot 1
   m_TagString: Untagged
@@ -153,52 +153,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &4351469
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4351467}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &4351470
 SpriteRenderer:
   serializedVersion: 2
@@ -274,6 +228,27 @@ MonoBehaviour:
   _instanceId: 53804
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &4351472
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4351467}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &38051235
 GameObject:
   m_ObjectHideFlags: 0
@@ -284,8 +259,8 @@ GameObject:
   m_Component:
   - component: {fileID: 38051236}
   - component: {fileID: 38051238}
-  - component: {fileID: 38051237}
   - component: {fileID: 38051239}
+  - component: {fileID: 38051240}
   m_Layer: 7
   m_Name: BattleSlot 24
   m_TagString: Untagged
@@ -308,52 +283,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &38051237
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 38051235}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &38051238
 SpriteRenderer:
   serializedVersion: 2
@@ -429,6 +358,27 @@ MonoBehaviour:
   _instanceId: 53814
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &38051240
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38051235}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &114779977
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,8 +389,8 @@ GameObject:
   m_Component:
   - component: {fileID: 114779978}
   - component: {fileID: 114779980}
-  - component: {fileID: 114779979}
   - component: {fileID: 114779981}
+  - component: {fileID: 114779982}
   m_Layer: 7
   m_Name: BattleSlot 3
   m_TagString: Untagged
@@ -463,52 +413,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &114779979
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 114779977}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &114779980
 SpriteRenderer:
   serializedVersion: 2
@@ -584,6 +488,27 @@ MonoBehaviour:
   _instanceId: 53824
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &114779982
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 114779977}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &197704421
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,8 +519,8 @@ GameObject:
   m_Component:
   - component: {fileID: 197704422}
   - component: {fileID: 197704424}
-  - component: {fileID: 197704423}
   - component: {fileID: 197704425}
+  - component: {fileID: 197704426}
   m_Layer: 7
   m_Name: BattleSlot 21
   m_TagString: Untagged
@@ -618,52 +543,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &197704423
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 197704421}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &197704424
 SpriteRenderer:
   serializedVersion: 2
@@ -739,6 +618,27 @@ MonoBehaviour:
   _instanceId: 53834
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &197704426
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197704421}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &240714710
 GameObject:
   m_ObjectHideFlags: 0
@@ -749,8 +649,8 @@ GameObject:
   m_Component:
   - component: {fileID: 240714711}
   - component: {fileID: 240714713}
-  - component: {fileID: 240714712}
   - component: {fileID: 240714714}
+  - component: {fileID: 240714715}
   m_Layer: 7
   m_Name: BattleSlot 15
   m_TagString: Untagged
@@ -773,52 +673,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &240714712
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 240714710}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &240714713
 SpriteRenderer:
   serializedVersion: 2
@@ -890,10 +744,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: f808e178-031f-4417-9428-8ee623616106
-  _instanceId: 53854
+  _uniqueId: c8cbf48b-724a-4e3d-ace9-f719710dc07c
+  _instanceId: 53844
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &240714715
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240714710}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &274913900
 GameObject:
   m_ObjectHideFlags: 0
@@ -904,8 +779,8 @@ GameObject:
   m_Component:
   - component: {fileID: 274913901}
   - component: {fileID: 274913903}
-  - component: {fileID: 274913902}
   - component: {fileID: 274913904}
+  - component: {fileID: 274913905}
   m_Layer: 7
   m_Name: BattleSlot 37
   m_TagString: Untagged
@@ -928,52 +803,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &274913902
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 274913900}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &274913903
 SpriteRenderer:
   serializedVersion: 2
@@ -1045,10 +874,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 51efade9-5265-45b3-84dd-aba22286458d
-  _instanceId: 53864
+  _uniqueId: b58fbaa6-62f8-4a09-aff0-aa2671686bee
+  _instanceId: 53854
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &274913905
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 274913900}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &302470714
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,8 +909,8 @@ GameObject:
   m_Component:
   - component: {fileID: 302470715}
   - component: {fileID: 302470717}
-  - component: {fileID: 302470716}
   - component: {fileID: 302470718}
+  - component: {fileID: 302470719}
   m_Layer: 7
   m_Name: BattleSlot 12
   m_TagString: Untagged
@@ -1083,52 +933,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &302470716
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 302470714}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &302470717
 SpriteRenderer:
   serializedVersion: 2
@@ -1200,10 +1004,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 1fe6d5cd-7e90-4672-8ed9-bb6028e8d7e2
-  _instanceId: 53874
+  _uniqueId: 67d34986-a936-4d54-ac48-f71b373cb78f
+  _instanceId: 53864
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &302470719
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302470714}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &307060358
 GameObject:
   m_ObjectHideFlags: 0
@@ -1214,8 +1039,8 @@ GameObject:
   m_Component:
   - component: {fileID: 307060359}
   - component: {fileID: 307060361}
-  - component: {fileID: 307060360}
   - component: {fileID: 307060362}
+  - component: {fileID: 307060363}
   m_Layer: 7
   m_Name: BattleSlot 10
   m_TagString: Untagged
@@ -1238,52 +1063,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &307060360
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 307060358}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &307060361
 SpriteRenderer:
   serializedVersion: 2
@@ -1355,10 +1134,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 0ad487c7-708f-4948-9b6f-e0507df3183d
-  _instanceId: 53884
+  _uniqueId: a6b8be6f-e087-43db-b378-f76e902622b6
+  _instanceId: 53874
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &307060363
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307060358}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &458099820
 GameObject:
   m_ObjectHideFlags: 0
@@ -1369,8 +1169,8 @@ GameObject:
   m_Component:
   - component: {fileID: 458099821}
   - component: {fileID: 458099823}
-  - component: {fileID: 458099822}
   - component: {fileID: 458099824}
+  - component: {fileID: 458099825}
   m_Layer: 7
   m_Name: BattleSlot 32
   m_TagString: Untagged
@@ -1393,52 +1193,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &458099822
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 458099820}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &458099823
 SpriteRenderer:
   serializedVersion: 2
@@ -1510,10 +1264,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: d6f5b9df-4189-46f8-80d7-cb1bcfb5a4a6
-  _instanceId: 53894
+  _uniqueId: 21ac349d-be74-4629-96ad-295455948598
+  _instanceId: 53884
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &458099825
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458099820}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &467798064
 GameObject:
   m_ObjectHideFlags: 0
@@ -1524,8 +1299,8 @@ GameObject:
   m_Component:
   - component: {fileID: 467798065}
   - component: {fileID: 467798067}
-  - component: {fileID: 467798066}
   - component: {fileID: 467798068}
+  - component: {fileID: 467798069}
   m_Layer: 7
   m_Name: BattleSlot 26
   m_TagString: Untagged
@@ -1548,52 +1323,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &467798066
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 467798064}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &467798067
 SpriteRenderer:
   serializedVersion: 2
@@ -1665,10 +1394,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: f2db36e4-66d3-441d-8500-f4e54851d56b
-  _instanceId: 53904
+  _uniqueId: b748a41b-009d-488a-85c0-9ca20fa96191
+  _instanceId: 53894
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &467798069
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467798064}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &489115812
 GameObject:
   m_ObjectHideFlags: 0
@@ -1679,8 +1429,8 @@ GameObject:
   m_Component:
   - component: {fileID: 489115813}
   - component: {fileID: 489115815}
-  - component: {fileID: 489115814}
   - component: {fileID: 489115816}
+  - component: {fileID: 489115817}
   m_Layer: 7
   m_Name: BattleSlot 16
   m_TagString: Untagged
@@ -1703,52 +1453,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &489115814
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489115812}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &489115815
 SpriteRenderer:
   serializedVersion: 2
@@ -1820,10 +1524,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 0cb08351-ac44-4d64-ac9b-c7bb2450bb62
-  _instanceId: 53914
+  _uniqueId: 95b9584f-d3cf-4a3b-9261-e40afc0d227e
+  _instanceId: 53904
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &489115817
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489115812}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &516671991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1834,8 +1559,8 @@ GameObject:
   m_Component:
   - component: {fileID: 516671992}
   - component: {fileID: 516671994}
-  - component: {fileID: 516671993}
   - component: {fileID: 516671995}
+  - component: {fileID: 516671996}
   m_Layer: 7
   m_Name: BattleSlot 17
   m_TagString: Untagged
@@ -1858,52 +1583,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &516671993
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 516671991}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &516671994
 SpriteRenderer:
   serializedVersion: 2
@@ -1975,10 +1654,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: b77067f0-0b6f-4a0b-9f60-e969f0b194a1
-  _instanceId: 53924
+  _uniqueId: dcdce771-d2f2-4601-84ea-c5aec4123ccf
+  _instanceId: 53914
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &516671996
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516671991}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &588980210
 GameObject:
   m_ObjectHideFlags: 0
@@ -1989,8 +1689,8 @@ GameObject:
   m_Component:
   - component: {fileID: 588980211}
   - component: {fileID: 588980213}
-  - component: {fileID: 588980212}
   - component: {fileID: 588980214}
+  - component: {fileID: 588980215}
   m_Layer: 7
   m_Name: BattleSlot 0
   m_TagString: Untagged
@@ -2013,52 +1713,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &588980212
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588980210}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &588980213
 SpriteRenderer:
   serializedVersion: 2
@@ -2130,10 +1784,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: b6fd2394-22b2-4849-a7ea-78b376268b30
-  _instanceId: 53934
+  _uniqueId: f5b279b7-968b-49c5-bcb8-7ef15916d3a7
+  _instanceId: 53924
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &588980215
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 588980210}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &663002479
 GameObject:
   m_ObjectHideFlags: 0
@@ -2144,8 +1819,8 @@ GameObject:
   m_Component:
   - component: {fileID: 663002480}
   - component: {fileID: 663002482}
-  - component: {fileID: 663002481}
   - component: {fileID: 663002483}
+  - component: {fileID: 663002484}
   m_Layer: 7
   m_Name: BattleSlot 2
   m_TagString: Untagged
@@ -2168,52 +1843,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &663002481
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 663002479}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &663002482
 SpriteRenderer:
   serializedVersion: 2
@@ -2285,10 +1914,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: af7467e5-1535-464b-b017-62f1aa57217b
-  _instanceId: 53944
+  _uniqueId: e1135d06-61a6-43fc-935c-cb380298941b
+  _instanceId: 53934
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &663002484
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 663002479}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &704240974
 GameObject:
   m_ObjectHideFlags: 0
@@ -2299,8 +1949,8 @@ GameObject:
   m_Component:
   - component: {fileID: 704240975}
   - component: {fileID: 704240977}
-  - component: {fileID: 704240976}
   - component: {fileID: 704240978}
+  - component: {fileID: 704240979}
   m_Layer: 7
   m_Name: BattleSlot 35
   m_TagString: Untagged
@@ -2323,52 +1973,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &704240976
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 704240974}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &704240977
 SpriteRenderer:
   serializedVersion: 2
@@ -2440,10 +2044,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 5186a0fb-4a87-458d-b29c-1e5baa5a9377
-  _instanceId: 53954
+  _uniqueId: 9a3b317c-8ff9-4e15-b0f4-3e9cd9d7a2d4
+  _instanceId: 53944
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &704240979
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 704240974}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &749844580
 GameObject:
   m_ObjectHideFlags: 0
@@ -2454,8 +2079,8 @@ GameObject:
   m_Component:
   - component: {fileID: 749844581}
   - component: {fileID: 749844583}
-  - component: {fileID: 749844582}
   - component: {fileID: 749844584}
+  - component: {fileID: 749844585}
   m_Layer: 7
   m_Name: BattleSlot 6
   m_TagString: Untagged
@@ -2478,52 +2103,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &749844582
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 749844580}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &749844583
 SpriteRenderer:
   serializedVersion: 2
@@ -2595,10 +2174,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 8b386844-6ebc-4f50-b8ac-b314d7d424aa
-  _instanceId: 53964
+  _uniqueId: 66feea35-3d01-4b40-9758-1b4cf165e4d1
+  _instanceId: 53954
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &749844585
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749844580}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &759666618
 GameObject:
   m_ObjectHideFlags: 0
@@ -2609,8 +2209,8 @@ GameObject:
   m_Component:
   - component: {fileID: 759666619}
   - component: {fileID: 759666621}
-  - component: {fileID: 759666620}
   - component: {fileID: 759666622}
+  - component: {fileID: 759666623}
   m_Layer: 7
   m_Name: BattleSlot 20
   m_TagString: Untagged
@@ -2633,52 +2233,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &759666620
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 759666618}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &759666621
 SpriteRenderer:
   serializedVersion: 2
@@ -2750,10 +2304,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: ca4dbaa5-4770-4d02-ad41-e74e5dfeed8b
-  _instanceId: 53974
+  _uniqueId: 01bac575-44c2-49c4-9959-1845174a23bf
+  _instanceId: 53964
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &759666623
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759666618}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &872165107
 GameObject:
   m_ObjectHideFlags: 0
@@ -2764,8 +2339,8 @@ GameObject:
   m_Component:
   - component: {fileID: 872165108}
   - component: {fileID: 872165110}
-  - component: {fileID: 872165109}
   - component: {fileID: 872165111}
+  - component: {fileID: 872165112}
   m_Layer: 7
   m_Name: BattleSlot 27
   m_TagString: Untagged
@@ -2788,52 +2363,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &872165109
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 872165107}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &872165110
 SpriteRenderer:
   serializedVersion: 2
@@ -2905,10 +2434,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 61776847-eb0e-4f35-9e35-2ac6d8f8f7a8
-  _instanceId: 53984
+  _uniqueId: 2d1716f1-15f6-4ce7-aadf-2742567732f4
+  _instanceId: 53974
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &872165112
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872165107}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &897749598
 GameObject:
   m_ObjectHideFlags: 0
@@ -2919,8 +2469,8 @@ GameObject:
   m_Component:
   - component: {fileID: 897749599}
   - component: {fileID: 897749601}
-  - component: {fileID: 897749600}
   - component: {fileID: 897749602}
+  - component: {fileID: 897749603}
   m_Layer: 7
   m_Name: BattleSlot 13
   m_TagString: Untagged
@@ -2943,52 +2493,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &897749600
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897749598}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &897749601
 SpriteRenderer:
   serializedVersion: 2
@@ -3060,10 +2564,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 253015ae-ed76-46df-8264-f6fd8508fb29
-  _instanceId: 53994
+  _uniqueId: 45cec829-4add-4e72-b212-1c2c234bb0cd
+  _instanceId: 53984
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &897749603
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897749598}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &926380287
 GameObject:
   m_ObjectHideFlags: 0
@@ -3169,8 +2694,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b8ebc574ab58a64ea2e34cd04ce0be9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unit
-  _uniqueId: 99c2fcad-314b-4615-871f-c039f9b7227b
-  _instanceId: 54002
+  _uniqueId: c7b48b6b-f431-41df-a14f-787aba4a381f
+  _instanceId: 53992
 --- !u!65 &926380292
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3202,8 +2727,8 @@ GameObject:
   m_Component:
   - component: {fileID: 940729741}
   - component: {fileID: 940729743}
-  - component: {fileID: 940729742}
   - component: {fileID: 940729744}
+  - component: {fileID: 940729745}
   m_Layer: 7
   m_Name: BattleSlot 34
   m_TagString: Untagged
@@ -3226,52 +2751,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &940729742
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 940729740}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &940729743
 SpriteRenderer:
   serializedVersion: 2
@@ -3343,10 +2822,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 19907ae4-5906-4f12-9b81-acd40fa7e516
-  _instanceId: 54014
+  _uniqueId: 0ec602a8-4930-4bd6-b85a-cc3fdb28188d
+  _instanceId: 54004
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &940729745
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940729740}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1042639192
 GameObject:
   m_ObjectHideFlags: 0
@@ -3357,8 +2857,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1042639193}
   - component: {fileID: 1042639195}
-  - component: {fileID: 1042639194}
   - component: {fileID: 1042639196}
+  - component: {fileID: 1042639197}
   m_Layer: 7
   m_Name: BattleSlot 33
   m_TagString: Untagged
@@ -3381,52 +2881,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1042639194
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1042639192}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &1042639195
 SpriteRenderer:
   serializedVersion: 2
@@ -3498,10 +2952,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 87771bd9-b300-49f5-80cf-9cac2cc44acf
-  _instanceId: 54024
+  _uniqueId: 4702e6fe-fe41-432c-a247-2d5354c14ed1
+  _instanceId: 54014
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &1042639197
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042639192}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1129153030
 GameObject:
   m_ObjectHideFlags: 0
@@ -3531,8 +3006,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5978c34b847c144b840bed2fb3e9ff3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DragDropController
-  _uniqueId: 0d3fb949-6da7-41ce-9f73-f74c4c83bc5a
-  _instanceId: 54028
+  _uniqueId: 48d1cde9-7b63-4a56-8dc2-f79623b8d7d1
+  _instanceId: 54018
   targetCamera: {fileID: 1501859693}
   draggableLayer:
     serializedVersion: 2
@@ -3630,8 +3105,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1352507567}
   - component: {fileID: 1352507569}
-  - component: {fileID: 1352507568}
   - component: {fileID: 1352507570}
+  - component: {fileID: 1352507571}
   m_Layer: 7
   m_Name: BattleSlot 23
   m_TagString: Untagged
@@ -3654,52 +3129,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1352507568
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1352507566}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &1352507569
 SpriteRenderer:
   serializedVersion: 2
@@ -3771,10 +3200,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 35d6ebcb-9345-4b7d-9776-dd33185fd94c
-  _instanceId: 54044
+  _uniqueId: 4b5c3923-e561-4c79-85cb-8701a219b8a6
+  _instanceId: 54034
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &1352507571
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352507566}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1404962961
 GameObject:
   m_ObjectHideFlags: 0
@@ -3785,8 +3235,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1404962962}
   - component: {fileID: 1404962964}
-  - component: {fileID: 1404962963}
   - component: {fileID: 1404962965}
+  - component: {fileID: 1404962966}
   m_Layer: 7
   m_Name: BattleSlot 4
   m_TagString: Untagged
@@ -3809,52 +3259,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1404962963
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1404962961}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &1404962964
 SpriteRenderer:
   serializedVersion: 2
@@ -3926,10 +3330,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 34fba9ad-dda4-45fd-b86e-375afecd327a
-  _instanceId: 54054
+  _uniqueId: 19f05b00-bce2-43ad-a2ee-b1f211426c64
+  _instanceId: 54044
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &1404962966
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404962961}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1418113055
 GameObject:
   m_ObjectHideFlags: 0
@@ -3940,8 +3365,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1418113056}
   - component: {fileID: 1418113058}
-  - component: {fileID: 1418113057}
   - component: {fileID: 1418113059}
+  - component: {fileID: 1418113060}
   m_Layer: 7
   m_Name: BattleSlot 11
   m_TagString: Untagged
@@ -3964,52 +3389,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1418113057
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1418113055}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &1418113058
 SpriteRenderer:
   serializedVersion: 2
@@ -4081,10 +3460,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 732a4d52-6038-455b-ae3b-5b3fbc40a493
-  _instanceId: 54064
+  _uniqueId: 1bb2a9b0-1614-4515-9e0b-2b5c6ffb55a3
+  _instanceId: 54054
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &1418113060
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418113055}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1431193081
 GameObject:
   m_ObjectHideFlags: 0
@@ -4095,8 +3495,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1431193082}
   - component: {fileID: 1431193084}
-  - component: {fileID: 1431193083}
   - component: {fileID: 1431193085}
+  - component: {fileID: 1431193086}
   m_Layer: 7
   m_Name: BattleSlot 5
   m_TagString: Untagged
@@ -4119,52 +3519,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1431193083
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1431193081}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &1431193084
 SpriteRenderer:
   serializedVersion: 2
@@ -4236,10 +3590,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: bcda665b-f57c-477c-ad10-73a1458aacbf
-  _instanceId: 54074
+  _uniqueId: 2668b08b-6987-4174-89ef-763c23f10995
+  _instanceId: 54064
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &1431193086
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1431193081}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1462736376
 GameObject:
   m_ObjectHideFlags: 0
@@ -4250,8 +3625,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1462736377}
   - component: {fileID: 1462736379}
-  - component: {fileID: 1462736378}
   - component: {fileID: 1462736380}
+  - component: {fileID: 1462736381}
   m_Layer: 7
   m_Name: BattleSlot 30
   m_TagString: Untagged
@@ -4274,52 +3649,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1462736378
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1462736376}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &1462736379
 SpriteRenderer:
   serializedVersion: 2
@@ -4391,10 +3720,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: f34d79f6-65c5-4a03-af25-5d16e59d600b
-  _instanceId: 54084
+  _uniqueId: 4e041f2e-cd51-4e80-8a4c-3c392163dd9e
+  _instanceId: 54074
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &1462736381
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462736376}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1501859691
 GameObject:
   m_ObjectHideFlags: 0
@@ -4542,8 +3892,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1530233094}
   - component: {fileID: 1530233096}
-  - component: {fileID: 1530233095}
   - component: {fileID: 1530233097}
+  - component: {fileID: 1530233098}
   m_Layer: 7
   m_Name: BattleSlot 22
   m_TagString: Untagged
@@ -4566,52 +3916,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1530233095
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1530233093}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &1530233096
 SpriteRenderer:
   serializedVersion: 2
@@ -4683,10 +3987,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: b0bcfd4c-a380-4808-ac9b-ee3cfd922335
-  _instanceId: 54104
+  _uniqueId: 7f002435-e461-47c7-a22a-268fd2b6be3f
+  _instanceId: 54094
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &1530233098
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530233093}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1718650759
 GameObject:
   m_ObjectHideFlags: 0
@@ -4728,8 +4053,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1739087053}
   - component: {fileID: 1739087055}
-  - component: {fileID: 1739087054}
   - component: {fileID: 1739087056}
+  - component: {fileID: 1739087057}
   m_Layer: 7
   m_Name: BattleSlot 36
   m_TagString: Untagged
@@ -4752,52 +4077,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1739087054
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1739087052}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &1739087055
 SpriteRenderer:
   serializedVersion: 2
@@ -4869,10 +4148,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: af184d42-4d9b-48a0-836e-9a7cd66ead0d
-  _instanceId: 54114
+  _uniqueId: f030e46a-ec64-4105-9ed4-ff6d404419d9
+  _instanceId: 54108
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &1739087057
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739087052}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1861708150
 GameObject:
   m_ObjectHideFlags: 0
@@ -4883,8 +4183,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1861708151}
   - component: {fileID: 1861708153}
-  - component: {fileID: 1861708152}
   - component: {fileID: 1861708154}
+  - component: {fileID: 1861708155}
   m_Layer: 7
   m_Name: BattleSlot 7
   m_TagString: Untagged
@@ -4907,52 +4207,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1861708152
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1861708150}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &1861708153
 SpriteRenderer:
   serializedVersion: 2
@@ -5024,10 +4278,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 71800e38-b922-47c8-92ea-a4763fee685d
-  _instanceId: 54124
+  _uniqueId: 75a13dc0-2cbb-4587-9b3b-e1172aa8a9bd
+  _instanceId: 54118
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &1861708155
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861708150}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1975937376
 GameObject:
   m_ObjectHideFlags: 0
@@ -5038,8 +4313,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1975937377}
   - component: {fileID: 1975937379}
-  - component: {fileID: 1975937378}
   - component: {fileID: 1975937380}
+  - component: {fileID: 1975937381}
   m_Layer: 7
   m_Name: BattleSlot 14
   m_TagString: Untagged
@@ -5062,52 +4337,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1975937378
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1975937376}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &1975937379
 SpriteRenderer:
   serializedVersion: 2
@@ -5179,10 +4408,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: c40eef88-3a7a-4441-8858-4f8bbf19486f
-  _instanceId: 54134
+  _uniqueId: 38febf52-4f41-4f60-8c9b-5c8113e55baf
+  _instanceId: 54128
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &1975937381
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1975937376}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2055554331
 GameObject:
   m_ObjectHideFlags: 0
@@ -5193,8 +4443,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2055554332}
   - component: {fileID: 2055554334}
-  - component: {fileID: 2055554333}
   - component: {fileID: 2055554335}
+  - component: {fileID: 2055554336}
   m_Layer: 7
   m_Name: BattleSlot 25
   m_TagString: Untagged
@@ -5217,52 +4467,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &2055554333
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2055554331}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &2055554334
 SpriteRenderer:
   serializedVersion: 2
@@ -5334,10 +4538,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: 2f25da6c-6656-4017-9dd6-534f7a03ccaa
-  _instanceId: 54144
+  _uniqueId: bb977a9a-da16-48a1-855e-3acf4b8808bf
+  _instanceId: 54138
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &2055554336
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055554331}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2092605926
 GameObject:
   m_ObjectHideFlags: 0
@@ -5348,8 +4573,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2092605927}
   - component: {fileID: 2092605929}
-  - component: {fileID: 2092605928}
   - component: {fileID: 2092605930}
+  - component: {fileID: 2092605931}
   m_Layer: 7
   m_Name: BattleSlot 31
   m_TagString: Untagged
@@ -5372,52 +4597,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1333338593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &2092605928
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092605926}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!212 &2092605929
 SpriteRenderer:
   serializedVersion: 2
@@ -5489,10 +4668,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d0f272d7caffd4eb915052c05a53e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  _uniqueId: b5d3531a-df32-4c95-9a64-42d939701be6
-  _instanceId: 54154
+  _uniqueId: d66b3581-ffc8-494c-9592-f8adffbfb415
+  _instanceId: 54148
   slotIndex: 0
   initialUnit: {fileID: 0}
+--- !u!65 &2092605931
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2092605926}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
