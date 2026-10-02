@@ -156,9 +156,32 @@ public class DragDropController : BaseMono
 
     private void MoveToTarget(IDropTarget destination)
     {
+        // 같은 슬롯이면 아무것도 하지 않음
+        if (destination == _sourceTarget)
+        {
+            destination.OnDrop(_draggingObject);
+            return;
+        }
+
+        IDraggable destinationOccupant = destination.Occupant;
+
+        // 목적지의 기존 객체 제거
+        if (destinationOccupant != null)
+        {
+            destination.Remove(destinationOccupant);
+        }
+
+        // 드래그 중인 객체를 원래 슬롯에서 제거
         _sourceTarget?.Remove(_draggingObject);
 
+        // 드래그 객체를 목적지에 배치
         destination.OnDrop(_draggingObject);
+
+        // 목적지에 원래 객체가 있었다면 출발지로 이동
+        if (destinationOccupant != null && _sourceTarget != null)
+        {
+            _sourceTarget.OnDrop(destinationOccupant);
+        }
     }
 
     private void ClearDragState()

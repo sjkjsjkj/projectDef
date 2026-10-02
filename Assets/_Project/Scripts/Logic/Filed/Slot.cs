@@ -43,8 +43,9 @@ public class Slot : BaseMono , IDropTarget
 
     public bool CanDrop(IDraggable draggable)
     {
-        if (!IsEmpty)
-            return false;
+        //swap을 하기 위해 
+        //if (!IsEmpty)
+        //    return false;
 
         return draggable is Unit;
     }
