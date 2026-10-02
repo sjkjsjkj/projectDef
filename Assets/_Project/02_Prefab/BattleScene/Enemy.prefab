@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 7578167601864077916}
   - component: {fileID: 2520675807183836726}
   - component: {fileID: 1188136741374686675}
+  - component: {fileID: 5330910966230902335}
+  - component: {fileID: 4588725634257154674}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -108,3 +110,32 @@ MonoBehaviour:
   _instanceId: 0
   moveSpeed: 2
   arriveDistance: 0.02
+--- !u!114 &5330910966230902335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6964515760269296233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a7d0792ed1b1d749b2ad0c8755035cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyTest
+  _uniqueId: 
+  _instanceId: 0
+--- !u!114 &4588725634257154674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6964515760269296233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b3479e2f5321824e9d484cfcbe390d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  _uniqueId: 
+  _instanceId: 0
+  maxHealth: 100

@@ -313,7 +313,8 @@ MonoBehaviour:
   - {fileID: 926380291}
   - {fileID: 1935742070}
   waitField: {fileID: 7786302791907246864}
-  _unitTestFlag: 1
+  enemySpawner: {fileID: 1129153033}
+  unitTestFlag: 1
 --- !u!4 &928763021
 Transform:
   m_ObjectHideFlags: 0
