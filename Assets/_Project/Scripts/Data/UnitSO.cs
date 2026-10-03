@@ -40,7 +40,7 @@ public abstract class UnitSO : BaseSO
         base.OnValidate();
         if (!IsValid())
         {
-            UDebug.PrintOnce($"SO 인스턴스({this.name})의 값이 올바르지 않습니다. (ID = {_id}, Type = {this.GetType().Name})", LogType.Warning);
+            UDebug.PrintOnce($"SO 인스턴스({this.name})의 값이 올바르지 않습니다. (ID = {id}, Type = {this.GetType().Name})", LogType.Warning);
         }
     }
     #endregion
