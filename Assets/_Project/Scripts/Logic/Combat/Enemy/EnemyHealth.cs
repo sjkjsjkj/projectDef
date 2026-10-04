@@ -4,26 +4,30 @@ using UnityEngine;
 /// <summary>
 /// 클래스의 설계 의도입니다.
 /// </summary>
-public class EnemyHealth : BaseMono
+public class EnemyHealth : BaseMono, IDamageable
 {
     #region ─────────────────────────▶ 인스펙터 ◀─────────────────────────
     [Header("체력")]
-    [SerializeField] private int maxHealth = 100;
+    [SerializeField] private float maxHealth = 100;
     #endregion
 
     #region ─────────────────────────▶ 내부 변수 ◀─────────────────────────
-    private int _currentHealth;
+    private float _currentHealth;
     private bool _isDead;
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
-    public int CurrentHealth => _currentHealth;
-    public int MaxHealth => maxHealth;
+    public float CurrentHealth => _currentHealth;
+    public float MaxHealth => maxHealth;
     public bool IsDead => _isDead;
 
     public event Action OnDead;
 
-    public void TakeDamage(int damage)
+    public bool IsAlive => _currentHealth > 0f;
+
+    public Transform TargetTransform => transform;
+
+    public void TakeDamage(float damage)
     {
         if (_isDead)
             return;

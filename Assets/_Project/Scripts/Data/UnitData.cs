@@ -1,31 +1,42 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
-/// 모든 SO 클래스가 상속받아야하는 기본 데이터입니다.
+/// SO 클래스의 설계 의도입니다.
 /// </summary>
-public abstract class BaseSO : ScriptableObject
+[CreateAssetMenu(fileName = "UnitData_", menuName = "ScriptableObjects/Unit/UnitData", order = 2)]
+public class UnitData : BaseSO
 {
     #region ─────────────────────────▶ 인스펙터 ◀─────────────────────────
     [Header("기본 정보")]
-    [SerializeField] protected string id;
-    [SerializeField] protected EResourceType type;
+    [SerializeField] protected Sprite image;
+    [SerializeField] protected string unitName;
+    [SerializeField] protected string description = "설명";
+
+    [Header("유닛 스탯")]
+    [SerializeField] protected float attack = 100;
+    
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
-    public string Id => id;
+    public Sprite Image => image;
+    public string Description => description;
+
+    public float Attack => attack;
     
-    // 정상 값을 가지는지 검사
-    public virtual bool IsValid()
+    // 값 유효성 검사
+    public override bool IsValid()
     {
-        if (id.IsEmpty()) return false;
-    
+        base.IsValid();
+        if (unitName.IsEmpty()) return false;
+        if (description.IsEmpty()) return false;
+        if (image == null) return false;
+        
         return true;
     }
     #endregion
 
     #region ─────────────────────────▶ 메시지 함수 ◀─────────────────────────
-    // 인스펙터 변수 유효성 검사
-    protected virtual void OnValidate()
+    protected override void OnValidate()
     {
         if (!IsValid())
         {
