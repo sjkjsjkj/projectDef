@@ -10,9 +10,9 @@ public class UnitStats
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
     public float AttackPower { get; private set; }
 
-    public UnitStats(float attackPower)
+    public UnitStats(UnitData data)
     {
-        AttackPower = attackPower;
+        AttackPower = data.Attack;
     }
     #endregion
 
