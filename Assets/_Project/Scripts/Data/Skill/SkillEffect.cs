@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// SO 클래스의 설계 의도입니다.
+/// 스킬의 효과로 들어갈 수 있는 효과들을 쪼개 놓은 SO
 /// </summary>
 public abstract class SkillEffect : ScriptableObject 
 {

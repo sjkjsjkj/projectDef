@@ -4,7 +4,7 @@ using UnityEngine;
 /// </summary>
 public interface IDraggable
 {
-    Transform Transform { get; }
+    Transform Origin { get; }
 
     IDropTarget CurrentTarget { get; set; }
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// 클래스의 설계 의도입니다.
+/// 유닛을 놓을 슬롯에게 부착될 스크립트
 /// </summary>
 public class Slot : BaseMono , IDropTarget
 {
