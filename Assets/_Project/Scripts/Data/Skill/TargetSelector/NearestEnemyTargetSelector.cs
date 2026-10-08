@@ -2,22 +2,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// SO 클래스의 설계 의도입니다.
+/// 가장 가까운 적 1개를 대상으로 하는 타겟 셀렉터
 /// </summary>
-[CreateAssetMenu(fileName = "NearestEnemyTargetSelector_", menuName = "ScriptableObjects/Combat/TargetSelector/NearestEnemyTargetSelector", order = 2)]
+[CreateAssetMenu(fileName = "NearestEnemyTarget_", menuName = "ScriptableObjects/Combat/TargetSelector/NearestEnemyTargetSelector", order = 2)]
 public class NearestEnemyTargetSelector : TargetSelector
 {
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
     public override void SelectTargets(
         AbilityContext context,
+        AbilityData data,
         List<IDamageable> results)
     {
         var position = context.Origin.position;
-        var data = context.Ability.Data;
+        var range = data.GetRange(context.OwnerStats);
 
         var colliders = Physics2D.OverlapCircleAll(
             position,
-            data.Range,
+            range,
             data.TargetLayer);
 
         IDamageable nearestTarget = null;

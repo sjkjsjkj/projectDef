@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// SO 클래스의 설계 의도입니다.
+/// 스킬의 효과 중, 데미지를 주는 효과
 /// </summary>
 [CreateAssetMenu(fileName = "DamageEffect_", menuName = "ScriptableObjects/Combat/SkillEffect/DamageEffect", order = 2)]
 public class DamageEffect : SkillEffect

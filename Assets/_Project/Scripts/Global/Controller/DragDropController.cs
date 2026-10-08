@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 /// <summary>
-/// 클래스의 설계 의도입니다.
+/// 드래그 / 드랍을 관리하는 컨트롤러
 /// </summary>
 [System.Serializable]
 public class DragDropController : BaseMono
@@ -35,44 +35,75 @@ public class DragDropController : BaseMono
     #region ─────────────────────────▶ 내부 메서드 ◀─────────────────────────
     private void TryBeginDrag()
     {
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Ray ray = targetCamera.ScreenPointToRay(mousePosition);
+        #region 3D Physics ver
+        //Vector2 mousePosition = Mouse.current.position.ReadValue();
+        //Ray ray = targetCamera.ScreenPointToRay(mousePosition);
 
-        if (!Physics.Raycast(
-                ray,
-                out RaycastHit hit,
-                Mathf.Infinity,
-                draggableLayer))
-        {
+        //if (!Physics.Raycast(
+        //        ray,
+        //        out RaycastHit hit,
+        //        Mathf.Infinity,
+        //        draggableLayer))
+        //{
+        //    return;
+        //}
+
+        //IDraggable draggable =
+        //    hit.collider.GetComponentInParent<IDraggable>();
+
+        //if (draggable == null)
+        //    return;
+
+
+
+        //_draggingObject = draggable;
+        //_sourceTarget = draggable.CurrentTarget;
+
+        //_isDragging = true;
+
+        //Debug.Log($"Drag Started: {_draggingObject.Origin.name}");
+        #endregion
+
+        UDebug.Print($"TryBeginDrag");
+
+        #region 2D Physics ver
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+
+        Vector2 worldPosition =
+            targetCamera.ScreenToWorldPoint(mousePosition);
+
+        Collider2D hit = Physics2D.OverlapPoint(
+            worldPosition,
+            draggableLayer);
+
+        if (hit == null)
             return;
-        }
 
         IDraggable draggable =
-            hit.collider.GetComponentInParent<IDraggable>();
+            hit.GetComponentInParent<IDraggable>();
 
         if (draggable == null)
             return;
-
-
 
         _draggingObject = draggable;
         _sourceTarget = draggable.CurrentTarget;
 
         _isDragging = true;
 
-        Debug.Log($"Drag Started: {_draggingObject.Transform.name}");
-
+        Debug.Log($"Drag Started: {_draggingObject.Origin.name}");
+        #endregion
     }
 
     private void UpdateDrag()
     {
+        #region 3D Physics ver
         if (_draggingObject == null)
             return;
 
         //마우스 위치에 따라 드래그 오브젝트 이동
         if (TryGetDragPosition(out Vector3 position))
         {
-            _draggingObject.Transform.position = position;
+            _draggingObject.Origin.position = position;
         }
 
         //현재 마우스 아래의 DropTarget 탐색
@@ -88,11 +119,12 @@ public class DragDropController : BaseMono
         _hoverTarget = newTarget;
 
         _hoverTarget?.SetHighlight(true);
-
+        #endregion
     }
 
     private void EndDrag()
     {
+        #region 3D Physics ver
         if (_draggingObject == null)
             return;
 
@@ -108,42 +140,74 @@ public class DragDropController : BaseMono
         }
 
         ClearDragState();
+        #endregion
     }
 
     private bool TryGetDragPosition(out Vector3 position)
     {
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Ray ray = targetCamera.ScreenPointToRay(mousePosition);
+        #region 3D Physics ver
+        //Vector2 mousePosition = Mouse.current.position.ReadValue();
+        //Ray ray = targetCamera.ScreenPointToRay(mousePosition);
 
-        Plane plane = new Plane(
-            dragPlaneTransform.up,
-            dragPlaneTransform.position
+        //Plane plane = new Plane(
+        //    dragPlaneTransform.up,
+        //    dragPlaneTransform.position
+        //);
+
+        //if (plane.Raycast(ray, out float distance))
+        //{
+        //    position = ray.GetPoint(distance);
+        //    return true;
+        //}
+
+        //position = default;
+        //return false;
+        #endregion
+
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+
+        Vector3 worldPosition =
+            targetCamera.ScreenToWorldPoint(mousePosition);
+
+        position = new Vector3(
+            worldPosition.x,
+            worldPosition.y,
+            _draggingObject.Origin.position.z
         );
 
-        if (plane.Raycast(ray, out float distance))
-        {
-            position = ray.GetPoint(distance);
-            return true;
-        }
-
-        position = default;
-        return false;
+        return true;
     }
     private IDropTarget FindDropTarget()
     {
+        #region 3D Physics ver
+        //Vector2 mousePosition = Mouse.current.position.ReadValue();
+        //Ray ray = targetCamera.ScreenPointToRay(mousePosition);
+
+        //if (!Physics.Raycast(
+        //        ray,
+        //        out RaycastHit hit,
+        //        Mathf.Infinity,
+        //        dropTargetLayer))
+        //{
+        //    return null;
+        //}
+
+        //return hit.collider.GetComponentInParent<IDropTarget>();
+        #endregion
+
         Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Ray ray = targetCamera.ScreenPointToRay(mousePosition);
 
-        if (!Physics.Raycast(
-                ray,
-                out RaycastHit hit,
-                Mathf.Infinity,
-                dropTargetLayer))
-        {
+        Vector2 worldPosition =
+            targetCamera.ScreenToWorldPoint(mousePosition);
+
+        Collider2D hit = Physics2D.OverlapPoint(
+            worldPosition,
+            dropTargetLayer);
+
+        if (hit == null)
             return null;
-        }
 
-        return hit.collider.GetComponentInParent<IDropTarget>();
+        return hit.GetComponentInParent<IDropTarget>();
     }
 
     private void CancelDrag()

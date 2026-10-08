@@ -1,13 +1,12 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 클래스의 설계 의도입니다.
+/// 유닛별 Ability의 실행 문맥과 쿨다운을 관리합니다.
 /// </summary>
 public class AbilityInstance
 {
     #region ─────────────────────────▶ 내부 변수 ◀─────────────────────────
-    private readonly List<IDamageable> _targets = new();
+    private readonly AbilityContext _context;
 
     private float _remainingCooldown;
     #endregion
@@ -16,10 +15,17 @@ public class AbilityInstance
     public AbilityData Data { get; }
 
     public float RemainingCooldown => _remainingCooldown;
+    public bool IsReady => _remainingCooldown <= 0f;
 
-    public AbilityInstance(AbilityData data)
+    public AbilityInstance(AbilityData data, AbilityContext context)
     {
+        if (data == null)
+            throw new System.ArgumentNullException(nameof(data));
+        if (context == null)
+            throw new System.ArgumentNullException(nameof(context));
+
         Data = data;
+        _context = context;
     }
 
     public void Tick(float deltaTime)
@@ -27,44 +33,18 @@ public class AbilityInstance
         if (_remainingCooldown <= 0f)
             return;
 
-        _remainingCooldown -= deltaTime;
+        _remainingCooldown = Mathf.Max(0f, _remainingCooldown - Mathf.Max(0f, deltaTime));
     }
 
-    public bool TryActivate(
-    UnitStats ownerStats,
-    Transform ownerTransform)
+    public bool TryActivate()
     {
-        if (_remainingCooldown > 0f)
+        if (!IsReady)
             return false;
 
-        _targets.Clear();
+        if (!Data.TryExecute(_context))
+            return false;
 
-        var context = new AbilityContext(
-            ownerStats,
-            ownerTransform,
-            this,
-            _targets);
-
-        foreach (var condition in Data.UseConditions)
-        {
-            if (!condition.IsSatisfied(context))
-                return false;
-        }
-
-        Data.TargetSelector.SelectTargets(context, _targets);
-
-        foreach (var condition in Data.ActivationConditions)
-        {
-            if (!condition.IsSatisfied(context))
-                return false;
-        }
-
-        foreach (var effect in Data.Effects)
-        {
-            effect.Apply(context);
-        }
-
-        _remainingCooldown = Data.Cooldown;
+        _remainingCooldown = Mathf.Max(0f, Data.GetCooldown(_context));
 
         return true;
     }
