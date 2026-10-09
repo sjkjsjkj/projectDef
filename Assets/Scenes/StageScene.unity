@@ -255,8 +255,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b8ebc574ab58a64ea2e34cd04ce0be9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unit
-  _uniqueId: 819918c7-9f0e-40b2-9bb3-b26a9d4f065c
-  _instanceId: 54106
+  _uniqueId: 08d7c5e0-3b0f-4d6d-ae11-df928bada954
+  _instanceId: 53864
   unitData: {fileID: 11400000, guid: 9dd0370b3242e1747b5ab835d153514c, type: 2}
 --- !u!61 &926380292
 BoxCollider2D:
@@ -333,13 +333,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca406ddfe726bcf4b9c1b273e89b4f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestManager
-  _uniqueId: 55c4b538-6521-409f-a829-578ee931d334
-  _instanceId: 54112
+  _uniqueId: ce5b279c-7074-442e-99ad-ee4c40b944fb
+  _instanceId: 53870
   units:
   - {fileID: 926380291}
   - {fileID: 1935742070}
   waitField: {fileID: 7786302791907246864}
-  enemySpawner: {fileID: 1129153033}
   unitTestFlag: 1
 --- !u!4 &928763021
 Transform:
@@ -367,6 +366,7 @@ GameObject:
   - component: {fileID: 1129153032}
   - component: {fileID: 1129153031}
   - component: {fileID: 1129153033}
+  - component: {fileID: 1129153034}
   m_Layer: 0
   m_Name: BattleSceneSystem
   m_TagString: Untagged
@@ -386,8 +386,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5978c34b847c144b840bed2fb3e9ff3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DragDropController
-  _uniqueId: 9756a621-393e-4da1-905d-842636fbae94
-  _instanceId: 54118
+  _uniqueId: dfa97c5f-9285-4814-b163-c9e8565bee1f
+  _instanceId: 53876
   targetCamera: {fileID: 1501859693}
   draggableLayer:
     serializedVersion: 2
@@ -423,10 +423,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e094acdeb9f29134291018eb65cafb2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  _uniqueId: 30703cb1-6a13-4f35-be9d-a9a4a85dfd30
-  _instanceId: 54122
+  _uniqueId: bc36eb3b-acc7-44c0-b481-f816055a8491
+  _instanceId: 53880
   enemyPath: {fileID: 1959097002}
   enemyPrefab: {fileID: 1188136741374686675, guid: e921b782bab0df2459e046325451887e, type: 3}
+  spawnPoints: []
+--- !u!114 &1129153034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129153030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c6706d098b6460a83697040dbe3ddc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaveManager
+  _uniqueId: e24cba86-d421-4f52-9632-e53ad1476ae5
+  _instanceId: -3840
+  waveDatas:
+  - {fileID: 11400000, guid: 46bbec33e23068148855ba6fc8be5b23, type: 2}
+  enemySpawner: {fileID: 1129153033}
+  startGameOnStart: 1
+  maxEnemyCount: 100
 --- !u!1 &1501859691
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,8 +705,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3adb0d8fad54c044bd36daf4ca09c8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPath
-  _uniqueId: c9355af2-b517-4c4d-8221-8b50d5b06b59
-  _instanceId: 54148
+  _uniqueId: b2c8cb21-12c1-4f96-bc4e-0bd02ac22db4
+  _instanceId: 53906
   waypointRadius: 0.15
   directionSize: 0.25
 --- !u!1 &2101228191

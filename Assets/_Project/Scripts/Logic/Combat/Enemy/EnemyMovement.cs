@@ -1,11 +1,11 @@
-using DG.Tweening.Plugins.Core.PathCore;
-using System.IO;
+using System;
 using UnityEngine;
 
 /// <summary>
 /// 에너미에게 부착될 스크립트.
 /// 에너미에게 Path를 따라 움직이게 할 스크립트.
 /// </summary>
+[RequireComponent(typeof(EnemyHealth))]
 public class EnemyMovement : BaseMono
 {
     #region ─────────────────────────▶ 인스펙터 ◀─────────────────────────
@@ -23,24 +23,24 @@ public class EnemyMovement : BaseMono
     private bool _canMove = true;
 
     private bool _isMoving = false;
+    private bool _removalReported;
 
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
-    public void Init(EnemyPath enemyPath)
+    public event Action<EnemyMovement> OnRemoved;
+
+    public void Init(EnemyPath enemyPath, Transform spawnPoint = null)
     {
         _path = enemyPath;
 
         if (_path == null || _path.WaypointCount == 0)
             return;
 
-        _currentWaypointIndex = 0;
-
-        transform.position =
-            _path.GetWaypoint(_currentWaypointIndex);
-
-        _currentWaypointIndex++;
-
+        transform.position = spawnPoint != null ? spawnPoint.position : _path.GetWaypoint(0);
+        _currentWaypointIndex = spawnPoint != null ? 0 : 1;
+        _canMove = true;
+        _removalReported = false;
         _isMoving = true;
     }
     #endregion
@@ -53,6 +53,7 @@ public class EnemyMovement : BaseMono
     private void OnDisable()
     {
         _enemyHealth.OnDead -= StopMovement;
+        ReportRemoval();
     }
     private void Move()
     {
@@ -87,27 +88,32 @@ public class EnemyMovement : BaseMono
 
     private void ReachGoal()
     {
-        _isMoving = false;
-
-        Debug.Log($"{name} 경로 끝 도착");
-
-        Destroy(gameObject);
+        // 마지막 지점에서 첫 지점으로 이동하며 경로를 반복합니다.
+        _currentWaypointIndex = 0;
     }
 
     private void StopMovement()
     {
         _canMove = false;
+        ReportRemoval();
+    }
+
+    private void ReportRemoval()
+    {
+        if (_removalReported)
+            return;
+
+        _removalReported = true;
+        _isMoving = false;
+        OnRemoved?.Invoke(this);
     }
     #endregion
 
     #region ─────────────────────────▶ 메시지 함수 ◀─────────────────────────
     protected override void Awake()
     {
+        base.Awake();
         _enemyHealth = GetComponent<EnemyHealth>();
-    }
-    private void Start()
-    {
-        _currentWaypointIndex = 0;
     }
 
     private void Update()

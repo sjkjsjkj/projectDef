@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -6,6 +7,35 @@ using UnityEngine;
 /// </summary>
 public class EnemyHealth : BaseMono, IDamageable
 {
+    // 스포너 종류와 관계없이 활성 상태인 생존 적 전체를 집계합니다.
+    private static readonly HashSet<EnemyHealth> ActiveEnemies = new HashSet<EnemyHealth>();
+    public static int ActiveEnemyCount => ActiveEnemies.Count;
+    public static event Action<int> OnActiveEnemyCountChanged;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetRegistry()
+    {
+        ActiveEnemies.Clear();
+        OnActiveEnemyCountChanged = null;
+    }
+
+    private void OnEnable()
+    {
+        if (IsAlive && ActiveEnemies.Add(this))
+            OnActiveEnemyCountChanged?.Invoke(ActiveEnemyCount);
+    }
+
+    private void OnDisable()
+    {
+        UnregisterEnemy();
+    }
+
+    private void UnregisterEnemy()
+    {
+        if (ActiveEnemies.Remove(this))
+            OnActiveEnemyCountChanged?.Invoke(ActiveEnemyCount);
+    }
+
     #region ─────────────────────────▶ 인스펙터 ◀─────────────────────────
     [Header("체력")]
     [SerializeField] private float maxHealth = 100;
@@ -54,6 +84,7 @@ public class EnemyHealth : BaseMono, IDamageable
             return;
 
         _isDead = true;
+        UnregisterEnemy();
 
         OnDead?.Invoke();
         Debug.Log($"{name} 사망");
@@ -65,6 +96,7 @@ public class EnemyHealth : BaseMono, IDamageable
     #region ─────────────────────────▶ 메시지 함수 ◀─────────────────────────
     protected override void Awake()
     {
+        base.Awake();
         _currentHealth = maxHealth;
     }
     #endregion

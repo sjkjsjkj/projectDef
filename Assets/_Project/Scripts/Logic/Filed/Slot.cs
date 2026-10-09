@@ -27,7 +27,7 @@ public class Slot : BaseMono , IDropTarget
 
     public void Remove(IDraggable draggable)
     {
-        if (draggable is not Unit unit)
+        if (draggable is not Unit unit || unit == null)
             return;
 
         if (_unit != unit)
@@ -35,7 +35,7 @@ public class Slot : BaseMono , IDropTarget
 
         _unit = null;
 
-        if (unit.CurrentTarget == this)
+        if (ReferenceEquals(unit.CurrentTarget, this))
         {
             unit.CurrentTarget = null;
         }
@@ -43,17 +43,26 @@ public class Slot : BaseMono , IDropTarget
 
     public bool CanDrop(IDraggable draggable)
     {
-        //swap을 하기 위해 
-        //if (!IsEmpty)
-        //    return false;
-
-        return draggable is Unit;
+        // 점유 중이어도 교환 후보가 될 수 있습니다. 실제 교환은 컨트롤러가 처리합니다.
+        return draggable is Unit unit && unit != null;
     }
 
     public void OnDrop(IDraggable draggable)
     {
-        if (draggable is not Unit unit)
+        if (draggable is not Unit unit || unit == null)
             return;
+
+        if (_unit != null && _unit != unit)
+        {
+            Debug.LogError($"기존 유닛을 제거하지 않고 슬롯을 덮어쓸 수 없습니다: {name}", this);
+            return;
+        }
+
+        if (unit.CurrentTarget != null && !ReferenceEquals(unit.CurrentTarget, this))
+        {
+            Debug.LogError($"기존 슬롯에서 제거하지 않고 유닛을 중복 배치할 수 없습니다: {unit.name}", unit);
+            return;
+        }
 
         SetUnit(unit);
     }
@@ -82,17 +91,15 @@ public class Slot : BaseMono , IDropTarget
     #region ─────────────────────────▶ 메시지 함수 ◀─────────────────────────
     protected override void Awake()
     {
-        if (initialUnit != null)
-        {
-            SetUnit(initialUnit);
-        }
+        base.Awake();
 
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
 
         SetHighlight(false);
         if (initialUnit != null)
         {
-            SetUnit(initialUnit);
+            OnDrop(initialUnit);
         }
     }
     #endregion
