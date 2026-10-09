@@ -255,8 +255,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b8ebc574ab58a64ea2e34cd04ce0be9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unit
-  _uniqueId: 08d7c5e0-3b0f-4d6d-ae11-df928bada954
-  _instanceId: 53864
+  _uniqueId: 2b56be5e-0fe1-482f-b20d-0a45793638ad
+  _instanceId: 55882
   unitData: {fileID: 11400000, guid: 9dd0370b3242e1747b5ab835d153514c, type: 2}
 --- !u!61 &926380292
 BoxCollider2D:
@@ -333,8 +333,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca406ddfe726bcf4b9c1b273e89b4f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestManager
-  _uniqueId: ce5b279c-7074-442e-99ad-ee4c40b944fb
-  _instanceId: 53870
+  _uniqueId: a1270d66-52b9-42a8-a04e-3dc71d62d198
+  _instanceId: 55888
   units:
   - {fileID: 926380291}
   - {fileID: 1935742070}
@@ -386,12 +386,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5978c34b847c144b840bed2fb3e9ff3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DragDropController
-  _uniqueId: dfa97c5f-9285-4814-b163-c9e8565bee1f
-  _instanceId: 53876
+  _uniqueId: 4c396b58-9fc6-4c7d-a045-1df1597688fb
+  _instanceId: 55894
   targetCamera: {fileID: 1501859693}
   draggableLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 576
   dropTargetLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -423,8 +423,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e094acdeb9f29134291018eb65cafb2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  _uniqueId: bc36eb3b-acc7-44c0-b481-f816055a8491
-  _instanceId: 53880
+  _uniqueId: b8db3185-10ba-4cf7-92bf-1e6d51297636
+  _instanceId: 55898
   enemyPath: {fileID: 1959097002}
   enemyPrefab: {fileID: 1188136741374686675, guid: e921b782bab0df2459e046325451887e, type: 3}
   spawnPoints: []
@@ -440,8 +440,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c6706d098b6460a83697040dbe3ddc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveManager
-  _uniqueId: e24cba86-d421-4f52-9632-e53ad1476ae5
-  _instanceId: -3840
+  _uniqueId: cd186f84-4871-433d-b23e-fd7fed6cd4e0
+  _instanceId: 55900
   waveDatas:
   - {fileID: 11400000, guid: 46bbec33e23068148855ba6fc8be5b23, type: 2}
   enemySpawner: {fileID: 1129153033}
@@ -705,8 +705,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3adb0d8fad54c044bd36daf4ca09c8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPath
-  _uniqueId: b2c8cb21-12c1-4f96-bc4e-0bd02ac22db4
-  _instanceId: 53906
+  _uniqueId: 93735ccd-7637-4504-80f8-f98a1f93f007
+  _instanceId: 55926
   waypointRadius: 0.15
   directionSize: 0.25
 --- !u!1 &2101228191
