@@ -22,7 +22,7 @@ MonoBehaviour:
   cooldown: 1
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   targetSelector: {fileID: 11400000, guid: 0ce9d069320366b4e87fee2fafaab04b, type: 2}
   useConditions: []
   activationConditions:
