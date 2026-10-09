@@ -4,10 +4,158 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// 핵심 오브젝트에 대한 접근과 씬 로드를 지원합니다.
+/// 핵심 오브젝트 접근, 씬 로드 및 디펜스 게임 진행을 관리합니다.
 /// </summary>
 public class GameManager : GlobalSingleton<GameManager>
 {
+    [Header("게임 진행 (런타임 확인용)")]
+    [SerializeField] private GameState gameState = GameState.Ready;
+    [SerializeField] private int currentWave;
+    [SerializeField] private int currentEnemyCount;
+
+    private WaveManager _waveManager;
+    private bool _enemyLimitExceeded;
+
+    public GameState State => gameState;
+    public int CurrentWave => currentWave;
+    public int CurrentEnemyCount => EnemyHealth.ActiveEnemyCount;
+    public WaveManager WaveManager => _waveManager;
+    public event Action<GameState> OnGameStateChanged;
+
+    /// <summary>부팅 시 생성되는 GameManager에 씬의 WaveManager를 연결합니다.</summary>
+    public void RegisterWaveManager(WaveManager manager)
+    {
+        if (manager == null || _waveManager == manager)
+            return;
+
+        if (_waveManager != null)
+        {
+            Debug.LogError("이미 연결된 WaveManager가 있습니다. 전투 씬에는 하나만 배치하세요.", manager);
+            return;
+        }
+
+        _waveManager = manager;
+        _waveManager.OnWaveStart += HandleWaveStart;
+        _waveManager.OnWaveEnd += HandleWaveEnd;
+        currentWave = 0;
+        _enemyLimitExceeded = false;
+        ChangeGameState(GameState.Ready);
+    }
+
+    public void UnregisterWaveManager(WaveManager manager)
+    {
+        if (_waveManager != manager)
+            return;
+
+        _waveManager.OnWaveStart -= HandleWaveStart;
+        _waveManager.OnWaveEnd -= HandleWaveEnd;
+        _waveManager.StopWave();
+        _waveManager = null;
+        _enemyLimitExceeded = false;
+        currentWave = 0;
+        ChangeGameState(GameState.Ready);
+    }
+
+    public bool StartGame()
+    {
+        if (gameState == GameState.Playing)
+            return false;
+        if (_waveManager == null || !_waveManager.isActiveAndEnabled)
+        {
+            Debug.LogError("활성 WaveManager를 씬에 배치하고 웨이브를 설정하세요.", this);
+            return false;
+        }
+
+        _waveManager.ResetWaves();
+        _enemyLimitExceeded = false;
+        currentWave = 0;
+        ChangeGameState(GameState.Playing);
+        HandleEnemyCountChanged(EnemyHealth.ActiveEnemyCount);
+        if (_enemyLimitExceeded)
+        {
+            EndGame();
+            return false;
+        }
+
+        if (_waveManager.StartWave())
+            return true;
+
+        ChangeGameState(GameState.Ready);
+        return false;
+    }
+
+    /// <summary>웨이브/소환을 멈추고 결과를 통지합니다. 결과 화면을 위해 적은 유지합니다.</summary>
+    public void EndGame(bool victory = false)
+    {
+        if (gameState != GameState.Playing)
+            return;
+
+        if (_waveManager != null)
+            _waveManager.StopWave();
+        ChangeGameState(victory ? GameState.Victory : GameState.Defeat);
+    }
+
+    public void UpdateGameState()
+    {
+        currentEnemyCount = EnemyHealth.ActiveEnemyCount;
+        if (gameState != GameState.Playing || _waveManager == null)
+            return;
+
+        // 최대값과 같을 때는 계속 진행하며 초과한 순간 패배를 확정합니다.
+        if (_enemyLimitExceeded || currentEnemyCount > _waveManager.MaxEnemyCount)
+        {
+            EndGame();
+            return;
+        }
+
+        // 마지막 웨이브의 시간까지 끝난 뒤 남아 있는 적을 모두 처치하면 승리합니다.
+        if (_waveManager.IsComplete && currentEnemyCount == 0)
+            EndGame(true);
+    }
+
+    private void HandleWaveStart(int waveIndex)
+    {
+        currentWave = waveIndex;
+    }
+
+    private void HandleWaveEnd(int waveIndex)
+    {
+        UpdateGameState();
+        if (gameState == GameState.Playing && !_waveManager.IsComplete && !_waveManager.StartWave())
+            EndGame();
+    }
+
+    private void HandleEnemyCountChanged(int count)
+    {
+        currentEnemyCount = count;
+        if (gameState == GameState.Playing && _waveManager != null && count > _waveManager.MaxEnemyCount)
+        {
+            _enemyLimitExceeded = true;
+            EndGame();
+        }
+    }
+
+    private void ChangeGameState(GameState state)
+    {
+        if (gameState == state)
+            return;
+        gameState = state;
+        OnGameStateChanged?.Invoke(state);
+    }
+
+    private void Update()
+    {
+        UpdateGameState();
+    }
+
+    protected override void OnDestroy()
+    {
+        EnemyHealth.OnActiveEnemyCountChanged -= HandleEnemyCountChanged;
+        if (_waveManager != null)
+            UnregisterWaveManager(_waveManager);
+        base.OnDestroy();
+    }
+
     #region ─────────────────────────▶ 내부 변수 ◀─────────────────────────
     private static Transform _uiRoot;
     private static Transform _objectRoot;
@@ -38,6 +186,8 @@ public class GameManager : GlobalSingleton<GameManager>
             return;
         }
         // 생성 및 초기화
+        EnemyHealth.OnActiveEnemyCountChanged += HandleEnemyCountChanged;
+        currentEnemyCount = EnemyHealth.ActiveEnemyCount;
         _curScene = (EScene)SceneManager.GetActiveScene().buildIndex;
         // 초기 부팅 시 씬 전환 이벤트 뿌리기
         if (_bootCoroutine == null)
@@ -192,6 +342,8 @@ public class GameManager : GlobalSingleton<GameManager>
     // 씬 로드 선행처리
     private void PreProcessing(EScene prevScene, string nextScenePath)
     {
+        if (gameState == GameState.Playing)
+            EndGame();
         _uiRoot = null;
         _objectRoot = null;
         EScene nextScene = (EScene)SceneUtility.GetBuildIndexByScenePath(nextScenePath);

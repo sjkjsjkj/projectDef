@@ -22,8 +22,6 @@ public class DragDropController : BaseMono
     private IDraggable _draggingObject;
     private IDropTarget _sourceTarget;
     private IDropTarget _hoverTarget;
-    private Transform _draggingTransform;
-    
 
     private bool _isDragging;
     #endregion
@@ -85,6 +83,12 @@ public class DragDropController : BaseMono
         if (draggable == null)
             return;
 
+        if (!HasValidPlacement(draggable, draggable.CurrentTarget))
+        {
+            Debug.LogError("슬롯과 유닛의 배치 연결이 올바르지 않아 드래그를 시작할 수 없습니다.", hit);
+            return;
+        }
+
         _draggingObject = draggable;
         _sourceTarget = draggable.CurrentTarget;
 
@@ -97,7 +101,7 @@ public class DragDropController : BaseMono
     private void UpdateDrag()
     {
         #region 3D Physics ver
-        if (_draggingObject == null)
+        if (!ValidateSource())
             return;
 
         //마우스 위치에 따라 드래그 오브젝트 이동
@@ -114,22 +118,25 @@ public class DragDropController : BaseMono
             return;
 
         //hover 갱신
-        _hoverTarget?.SetHighlight(false);
+        if (IsAlive(_hoverTarget))
+            _hoverTarget.SetHighlight(false);
 
         _hoverTarget = newTarget;
 
-        _hoverTarget?.SetHighlight(true);
+        if (IsAlive(_hoverTarget))
+            _hoverTarget.SetHighlight(true);
         #endregion
     }
 
     private void EndDrag()
     {
         #region 3D Physics ver
-        if (_draggingObject == null)
+        // 목적지의 점유자를 제거하기 전에 출발 슬롯의 연결부터 확인합니다.
+        if (!ValidateSource())
             return;
 
         // 유효한 DropTarget이 있고 배치 가능
-        if (_hoverTarget != null &&
+        if (IsAlive(_hoverTarget) &&
             _hoverTarget.CanDrop(_draggingObject))
         {
             MoveToTarget(_hoverTarget);
@@ -212,10 +219,9 @@ public class DragDropController : BaseMono
 
     private void CancelDrag()
     {
-        //if (_sourceTarget == null)
-        //    return;
-
-        _sourceTarget?.OnDrop(_draggingObject);
+        // 외부에서 변경된 배치에는 이전 슬롯을 강제로 덮어쓰지 않습니다.
+        if (HasValidPlacement(_draggingObject, _sourceTarget))
+            _sourceTarget.OnDrop(_draggingObject);
     }
 
     private void MoveToTarget(IDropTarget destination)
@@ -229,6 +235,16 @@ public class DragDropController : BaseMono
 
         IDraggable destinationOccupant = destination.Occupant;
 
+        // 교환은 양쪽 배치 관계와 출발 슬롯의 수용 여부를 확인한 뒤 시작합니다.
+        if (destinationOccupant != null &&
+            (!HasValidPlacement(destinationOccupant, destination) ||
+             !_sourceTarget.CanDrop(destinationOccupant)))
+        {
+            Debug.LogError("목적지 유닛의 배치 연결 또는 교환 조건이 올바르지 않습니다.", this);
+            CancelDrag();
+            return;
+        }
+
         // 목적지의 기존 객체 제거
         if (destinationOccupant != null)
         {
@@ -236,21 +252,45 @@ public class DragDropController : BaseMono
         }
 
         // 드래그 중인 객체를 원래 슬롯에서 제거
-        _sourceTarget?.Remove(_draggingObject);
+        _sourceTarget.Remove(_draggingObject);
 
         // 드래그 객체를 목적지에 배치
         destination.OnDrop(_draggingObject);
 
         // 목적지에 원래 객체가 있었다면 출발지로 이동
-        if (destinationOccupant != null && _sourceTarget != null)
+        if (destinationOccupant != null)
         {
             _sourceTarget.OnDrop(destinationOccupant);
         }
     }
 
+    private static bool IsAlive(object value)
+    {
+        // 인터페이스 참조에서도 Unity 오브젝트의 파괴 여부를 확인합니다.
+        return value != null && (value is not Object unityObject || unityObject != null);
+    }
+
+    private static bool HasValidPlacement(IDraggable draggable, IDropTarget target)
+    {
+        return IsAlive(draggable) && IsAlive(target) &&
+               draggable.CurrentTarget == target && target.Occupant == draggable;
+    }
+
+    private bool ValidateSource()
+    {
+        if (HasValidPlacement(_draggingObject, _sourceTarget) &&
+            _draggingObject.Origin.gameObject.activeInHierarchy)
+            return true;
+
+        Debug.LogError("드래그 중 유닛 또는 출발 슬롯의 상태가 변경되어 드래그를 중단합니다.", this);
+        ClearDragState();
+        return false;
+    }
+
     private void ClearDragState()
     {
-        _hoverTarget?.SetHighlight(false);
+        if (IsAlive(_hoverTarget))
+            _hoverTarget.SetHighlight(false);
 
         _draggingObject = null;
         _sourceTarget = null;
@@ -263,14 +303,37 @@ public class DragDropController : BaseMono
     #region ─────────────────────────▶ 메시지 함수 ◀─────────────────────────
     protected override void Awake()
     {
+        base.Awake();
         if (targetCamera == null)
             targetCamera = Camera.main;
+
+        if (targetCamera == null)
+        {
+            Debug.LogError("드래그에 사용할 카메라가 없습니다.", this);
+            enabled = false;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (!_isDragging)
+            return;
+
+        CancelDrag();
+        ClearDragState();
     }
 
     private void Update()
     {
         if (Mouse.current == null)
+        {
+            if (_isDragging)
+            {
+                CancelDrag();
+                ClearDragState();
+            }
             return;
+        }
 
         if (!_isDragging)
         {
@@ -278,13 +341,14 @@ public class DragDropController : BaseMono
             {
                 TryBeginDrag();
             }
-
-            return;
         }
+
+        if (!_isDragging)
+            return;
 
         UpdateDrag();
 
-        if (Mouse.current.leftButton.wasReleasedThisFrame)
+        if (_isDragging && Mouse.current.leftButton.wasReleasedThisFrame)
         {
             EndDrag();
         }
