@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 /// <summary>
 /// 클래스의 설계 의도입니다.
 /// </summary>
@@ -26,6 +29,7 @@ public class DragDropController : BaseMono
     
 
     private bool _isDragging;
+    private readonly List<RaycastResult> _uiHits = new List<RaycastResult>();
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
@@ -35,6 +39,50 @@ public class DragDropController : BaseMono
     #region ─────────────────────────▶ 내부 메서드 ◀─────────────────────────
     private void TryBeginDrag()
     {
+<<<<<<< Updated upstream
+=======
+        // 현재 포인터 위치로 검사해 EventSystem.Update의 실행 순서에 의존하지 않습니다.
+        if (EventSystem.current != null)
+        {
+            _uiHits.Clear();
+            var pointer = new PointerEventData(EventSystem.current) { position = Mouse.current.position.ReadValue() };
+            EventSystem.current.RaycastAll(pointer, _uiHits);
+            foreach (RaycastResult uiHit in _uiHits)
+                if (uiHit.module is GraphicRaycaster) return;
+        }
+        #region 3D Physics ver
+        //Vector2 mousePosition = Mouse.current.position.ReadValue();
+        //Ray ray = targetCamera.ScreenPointToRay(mousePosition);
+
+        //if (!Physics.Raycast(
+        //        ray,
+        //        out RaycastHit hit,
+        //        Mathf.Infinity,
+        //        draggableLayer))
+        //{
+        //    return;
+        //}
+
+        //IDraggable draggable =
+        //    hit.collider.GetComponentInParent<IDraggable>();
+
+        //if (draggable == null)
+        //    return;
+
+
+
+        //_draggingObject = draggable;
+        //_sourceTarget = draggable.CurrentTarget;
+
+        //_isDragging = true;
+
+        //Debug.Log($"Drag Started: {_draggingObject.Origin.name}");
+        #endregion
+
+        UDebug.Print($"TryBeginDrag");
+
+        #region 2D Physics ver
+>>>>>>> Stashed changes
         Vector2 mousePosition = Mouse.current.position.ReadValue();
         Ray ray = targetCamera.ScreenPointToRay(mousePosition);
 
