@@ -25,6 +25,7 @@ public class WaveManager : BaseMono
     // 이벤트 인자는 목록 인덱스가 아닌 WaveData의 웨이브 번호입니다.
     public event Action<int> OnWaveStart;
     public event Action<int> OnWaveEnd;
+    public event Action OnWavesReset;
 
     public WaveData GetCurrentWaveData()
     {
@@ -64,6 +65,7 @@ public class WaveManager : BaseMono
         if (enemySpawner != null)
             enemySpawner.ClearEnemies();
         _currentWaveIndex = 0;
+        OnWavesReset?.Invoke();
     }
 
     private void OnEnable()

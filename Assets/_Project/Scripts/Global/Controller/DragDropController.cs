@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 /// <summary>
 /// 드래그 / 드랍을 관리하는 컨트롤러
 /// </summary>
@@ -24,6 +27,7 @@ public class DragDropController : BaseMono
     private IDropTarget _hoverTarget;
 
     private bool _isDragging;
+    private readonly List<RaycastResult> _uiHits = new List<RaycastResult>();
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
@@ -65,6 +69,7 @@ public class DragDropController : BaseMono
         UDebug.Print($"TryBeginDrag");
 
         #region 2D Physics ver
+
         Vector2 mousePosition = Mouse.current.position.ReadValue();
 
         Vector2 worldPosition =

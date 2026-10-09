@@ -11,6 +11,7 @@ public class UnitData : BaseSO
     [SerializeField] protected Sprite image;
     [SerializeField] protected string unitName;
     [SerializeField] protected string description = "설명";
+    [SerializeField, Range(1, 5)] private int grade = 1;
 
     [Header("유닛 스탯")]
     [SerializeField, Min(1f)] float maxHp = 100;
@@ -27,6 +28,8 @@ public class UnitData : BaseSO
     public string UnitName => unitName;
     public Sprite Image => image;
     public string Description => description;
+    public int Grade => Mathf.Clamp(grade, 1, 5);
+    public int Price => Grade;
 
     public float Attack => attack;
     public float Range => range;
