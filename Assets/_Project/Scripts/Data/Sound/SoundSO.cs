@@ -20,7 +20,7 @@ public class SoundSO : BaseSO
     public override bool IsValid()
     {
         if (!base.IsValid()) return false;
-        if (_type != EResourceType.Audio) return false;
+        if (type != EResourceType.Audio) return false;
         if (_clip == null) return false;
         if (_volume <= 0f) return false;
         return true;
@@ -41,8 +41,8 @@ public class SoundSO : BaseSO
     /// </summary>
     public void InitSO(string name, AudioClip clip, float volume = 0.5f)
     {
-        _type = EResourceType.Audio;
-        _id = name;
+        type = EResourceType.Audio;
+        id = name;
         _clip = clip;
         _volume = volume;
     }
@@ -57,7 +57,7 @@ public class SoundSO : BaseSO
             return;
         }*/
         // 클립 이름 가져와서 Id에 넣기
-        _id = _clip.name;
+        id = _clip.name;
     }
     #endregion
 
@@ -65,10 +65,10 @@ public class SoundSO : BaseSO
     protected override void OnValidate()
     {
         AutomaticallyId();
-        _type = EResourceType.Audio;
+        type = EResourceType.Audio;
         if (!IsValid())
         {
-            UDebug.PrintOnce($"SO 인스턴스({this.name})의 값이 올바르지 않습니다. (ID = {_id}, Type = {this.GetType().Name})", LogType.Warning);
+            UDebug.PrintOnce($"SO 인스턴스({this.name})의 값이 올바르지 않습니다. (ID = {id}, Type = {this.GetType().Name})", LogType.Warning);
         }
     }
     #endregion

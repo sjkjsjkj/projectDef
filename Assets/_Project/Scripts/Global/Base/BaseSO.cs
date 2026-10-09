@@ -7,17 +7,17 @@ public abstract class BaseSO : ScriptableObject
 {
     #region ─────────────────────────▶ 인스펙터 ◀─────────────────────────
     [Header("기본 정보")]
-    [SerializeField] protected string _id;
-    [SerializeField] protected EResourceType _type;
+    [SerializeField] protected string id;
+    [SerializeField] protected EResourceType type;
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
-    public string Id => _id;
+    public string Id => id;
     
     // 정상 값을 가지는지 검사
     public virtual bool IsValid()
     {
-        if (_id.IsEmpty()) return false;
+        if (id.IsEmpty()) return false;
     
         return true;
     }
@@ -29,7 +29,7 @@ public abstract class BaseSO : ScriptableObject
     {
         if (!IsValid())
         {
-            UDebug.PrintOnce($"SO 인스턴스({this.name})의 값이 올바르지 않습니다. (ID = {_id}, Type = {this.GetType().Name})", LogType.Warning);
+            UDebug.PrintOnce($"SO 인스턴스({this.name})의 값이 올바르지 않습니다. (ID = {id}, Type = {this.GetType().Name})", LogType.Warning);
         }
     }
     #endregion

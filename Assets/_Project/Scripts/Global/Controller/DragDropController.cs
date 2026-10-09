@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 /// <summary>
-/// 클래스의 설계 의도입니다.
+/// 드래그 / 드랍을 관리하는 컨트롤러
 /// </summary>
 [System.Serializable]
 public class DragDropController : BaseMono
@@ -25,8 +25,6 @@ public class DragDropController : BaseMono
     private IDraggable _draggingObject;
     private IDropTarget _sourceTarget;
     private IDropTarget _hoverTarget;
-    private Transform _draggingTransform;
-    
 
     private bool _isDragging;
     private readonly List<RaycastResult> _uiHits = new List<RaycastResult>();
@@ -39,17 +37,6 @@ public class DragDropController : BaseMono
     #region ─────────────────────────▶ 내부 메서드 ◀─────────────────────────
     private void TryBeginDrag()
     {
-<<<<<<< Updated upstream
-=======
-        // 현재 포인터 위치로 검사해 EventSystem.Update의 실행 순서에 의존하지 않습니다.
-        if (EventSystem.current != null)
-        {
-            _uiHits.Clear();
-            var pointer = new PointerEventData(EventSystem.current) { position = Mouse.current.position.ReadValue() };
-            EventSystem.current.RaycastAll(pointer, _uiHits);
-            foreach (RaycastResult uiHit in _uiHits)
-                if (uiHit.module is GraphicRaycaster) return;
-        }
         #region 3D Physics ver
         //Vector2 mousePosition = Mouse.current.position.ReadValue();
         //Ray ray = targetCamera.ScreenPointToRay(mousePosition);
@@ -82,45 +69,50 @@ public class DragDropController : BaseMono
         UDebug.Print($"TryBeginDrag");
 
         #region 2D Physics ver
->>>>>>> Stashed changes
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Ray ray = targetCamera.ScreenPointToRay(mousePosition);
 
-        if (!Physics.Raycast(
-                ray,
-                out RaycastHit hit,
-                Mathf.Infinity,
-                draggableLayer))
-        {
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+
+        Vector2 worldPosition =
+            targetCamera.ScreenToWorldPoint(mousePosition);
+
+        Collider2D hit = Physics2D.OverlapPoint(
+            worldPosition,
+            draggableLayer);
+
+        if (hit == null)
             return;
-        }
 
         IDraggable draggable =
-            hit.collider.GetComponentInParent<IDraggable>();
+            hit.GetComponentInParent<IDraggable>();
 
         if (draggable == null)
             return;
 
-
+        if (!HasValidPlacement(draggable, draggable.CurrentTarget))
+        {
+            Debug.LogError("슬롯과 유닛의 배치 연결이 올바르지 않아 드래그를 시작할 수 없습니다.", hit);
+            return;
+        }
 
         _draggingObject = draggable;
         _sourceTarget = draggable.CurrentTarget;
 
         _isDragging = true;
 
-        Debug.Log($"Drag Started: {_draggingObject.Transform.name}");
-
+        Debug.Log($"Drag Started: {_draggingObject.Origin.name}");
+        #endregion
     }
 
     private void UpdateDrag()
     {
-        if (_draggingObject == null)
+        #region 3D Physics ver
+        if (!ValidateSource())
             return;
 
         //마우스 위치에 따라 드래그 오브젝트 이동
         if (TryGetDragPosition(out Vector3 position))
         {
-            _draggingObject.Transform.position = position;
+            _draggingObject.Origin.position = position;
         }
 
         //현재 마우스 아래의 DropTarget 탐색
@@ -131,21 +123,25 @@ public class DragDropController : BaseMono
             return;
 
         //hover 갱신
-        _hoverTarget?.SetHighlight(false);
+        if (IsAlive(_hoverTarget))
+            _hoverTarget.SetHighlight(false);
 
         _hoverTarget = newTarget;
 
-        _hoverTarget?.SetHighlight(true);
-
+        if (IsAlive(_hoverTarget))
+            _hoverTarget.SetHighlight(true);
+        #endregion
     }
 
     private void EndDrag()
     {
-        if (_draggingObject == null)
+        #region 3D Physics ver
+        // 목적지의 점유자를 제거하기 전에 출발 슬롯의 연결부터 확인합니다.
+        if (!ValidateSource())
             return;
 
         // 유효한 DropTarget이 있고 배치 가능
-        if (_hoverTarget != null &&
+        if (IsAlive(_hoverTarget) &&
             _hoverTarget.CanDrop(_draggingObject))
         {
             MoveToTarget(_hoverTarget);
@@ -156,50 +152,81 @@ public class DragDropController : BaseMono
         }
 
         ClearDragState();
+        #endregion
     }
 
     private bool TryGetDragPosition(out Vector3 position)
     {
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Ray ray = targetCamera.ScreenPointToRay(mousePosition);
+        #region 3D Physics ver
+        //Vector2 mousePosition = Mouse.current.position.ReadValue();
+        //Ray ray = targetCamera.ScreenPointToRay(mousePosition);
 
-        Plane plane = new Plane(
-            dragPlaneTransform.up,
-            dragPlaneTransform.position
+        //Plane plane = new Plane(
+        //    dragPlaneTransform.up,
+        //    dragPlaneTransform.position
+        //);
+
+        //if (plane.Raycast(ray, out float distance))
+        //{
+        //    position = ray.GetPoint(distance);
+        //    return true;
+        //}
+
+        //position = default;
+        //return false;
+        #endregion
+
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+
+        Vector3 worldPosition =
+            targetCamera.ScreenToWorldPoint(mousePosition);
+
+        position = new Vector3(
+            worldPosition.x,
+            worldPosition.y,
+            _draggingObject.Origin.position.z
         );
 
-        if (plane.Raycast(ray, out float distance))
-        {
-            position = ray.GetPoint(distance);
-            return true;
-        }
-
-        position = default;
-        return false;
+        return true;
     }
     private IDropTarget FindDropTarget()
     {
+        #region 3D Physics ver
+        //Vector2 mousePosition = Mouse.current.position.ReadValue();
+        //Ray ray = targetCamera.ScreenPointToRay(mousePosition);
+
+        //if (!Physics.Raycast(
+        //        ray,
+        //        out RaycastHit hit,
+        //        Mathf.Infinity,
+        //        dropTargetLayer))
+        //{
+        //    return null;
+        //}
+
+        //return hit.collider.GetComponentInParent<IDropTarget>();
+        #endregion
+
         Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Ray ray = targetCamera.ScreenPointToRay(mousePosition);
 
-        if (!Physics.Raycast(
-                ray,
-                out RaycastHit hit,
-                Mathf.Infinity,
-                dropTargetLayer))
-        {
+        Vector2 worldPosition =
+            targetCamera.ScreenToWorldPoint(mousePosition);
+
+        Collider2D hit = Physics2D.OverlapPoint(
+            worldPosition,
+            dropTargetLayer);
+
+        if (hit == null)
             return null;
-        }
 
-        return hit.collider.GetComponentInParent<IDropTarget>();
+        return hit.GetComponentInParent<IDropTarget>();
     }
 
     private void CancelDrag()
     {
-        //if (_sourceTarget == null)
-        //    return;
-
-        _sourceTarget?.OnDrop(_draggingObject);
+        // 외부에서 변경된 배치에는 이전 슬롯을 강제로 덮어쓰지 않습니다.
+        if (HasValidPlacement(_draggingObject, _sourceTarget))
+            _sourceTarget.OnDrop(_draggingObject);
     }
 
     private void MoveToTarget(IDropTarget destination)
@@ -213,6 +240,16 @@ public class DragDropController : BaseMono
 
         IDraggable destinationOccupant = destination.Occupant;
 
+        // 교환은 양쪽 배치 관계와 출발 슬롯의 수용 여부를 확인한 뒤 시작합니다.
+        if (destinationOccupant != null &&
+            (!HasValidPlacement(destinationOccupant, destination) ||
+             !_sourceTarget.CanDrop(destinationOccupant)))
+        {
+            Debug.LogError("목적지 유닛의 배치 연결 또는 교환 조건이 올바르지 않습니다.", this);
+            CancelDrag();
+            return;
+        }
+
         // 목적지의 기존 객체 제거
         if (destinationOccupant != null)
         {
@@ -220,21 +257,45 @@ public class DragDropController : BaseMono
         }
 
         // 드래그 중인 객체를 원래 슬롯에서 제거
-        _sourceTarget?.Remove(_draggingObject);
+        _sourceTarget.Remove(_draggingObject);
 
         // 드래그 객체를 목적지에 배치
         destination.OnDrop(_draggingObject);
 
         // 목적지에 원래 객체가 있었다면 출발지로 이동
-        if (destinationOccupant != null && _sourceTarget != null)
+        if (destinationOccupant != null)
         {
             _sourceTarget.OnDrop(destinationOccupant);
         }
     }
 
+    private static bool IsAlive(object value)
+    {
+        // 인터페이스 참조에서도 Unity 오브젝트의 파괴 여부를 확인합니다.
+        return value != null && (value is not Object unityObject || unityObject != null);
+    }
+
+    private static bool HasValidPlacement(IDraggable draggable, IDropTarget target)
+    {
+        return IsAlive(draggable) && IsAlive(target) &&
+               draggable.CurrentTarget == target && target.Occupant == draggable;
+    }
+
+    private bool ValidateSource()
+    {
+        if (HasValidPlacement(_draggingObject, _sourceTarget) &&
+            _draggingObject.Origin.gameObject.activeInHierarchy)
+            return true;
+
+        Debug.LogError("드래그 중 유닛 또는 출발 슬롯의 상태가 변경되어 드래그를 중단합니다.", this);
+        ClearDragState();
+        return false;
+    }
+
     private void ClearDragState()
     {
-        _hoverTarget?.SetHighlight(false);
+        if (IsAlive(_hoverTarget))
+            _hoverTarget.SetHighlight(false);
 
         _draggingObject = null;
         _sourceTarget = null;
@@ -247,14 +308,37 @@ public class DragDropController : BaseMono
     #region ─────────────────────────▶ 메시지 함수 ◀─────────────────────────
     protected override void Awake()
     {
+        base.Awake();
         if (targetCamera == null)
             targetCamera = Camera.main;
+
+        if (targetCamera == null)
+        {
+            Debug.LogError("드래그에 사용할 카메라가 없습니다.", this);
+            enabled = false;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (!_isDragging)
+            return;
+
+        CancelDrag();
+        ClearDragState();
     }
 
     private void Update()
     {
         if (Mouse.current == null)
+        {
+            if (_isDragging)
+            {
+                CancelDrag();
+                ClearDragState();
+            }
             return;
+        }
 
         if (!_isDragging)
         {
@@ -262,13 +346,14 @@ public class DragDropController : BaseMono
             {
                 TryBeginDrag();
             }
-
-            return;
         }
+
+        if (!_isDragging)
+            return;
 
         UpdateDrag();
 
-        if (Mouse.current.leftButton.wasReleasedThisFrame)
+        if (_isDragging && Mouse.current.leftButton.wasReleasedThisFrame)
         {
             EndDrag();
         }

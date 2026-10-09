@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// 클래스의 설계 의도입니다.
+/// 아군 유닛을 대기 필드에 배치하는 테스트입니다. 적 소환은 WaveManager가 담당합니다.
 /// </summary>
 public class TestManager : BaseMono
 {
@@ -9,7 +9,6 @@ public class TestManager : BaseMono
     [Header("유닛 생성 테스트")]
     [SerializeField] private Unit[] units;
     [SerializeField] private WaitField waitField;
-    [SerializeField] private EnemySpawner enemySpawner;
     [SerializeField] private bool unitTestFlag;
     
     #endregion
@@ -30,9 +29,23 @@ public class TestManager : BaseMono
 
     private void UnitTest()
     {
+        if (waitField == null)
+        {
+            Debug.LogError("테스트 유닛을 배치할 WaitField가 없습니다.", this);
+        }
+
         for (int i = 0; i < units.Length; i++)
         {
-            waitField.TryAddUnit(units[i]);
+            Unit unit = units[i];
+            if (unit == null || (waitField != null && waitField.TryAddUnit(unit)))
+                continue;
+
+            // 이미 배치된 유닛은 유지하고, 새로 배치하지 못한 테스트 유닛만 비활성화합니다.
+            if (unit.CurrentTarget == null)
+            {
+                unit.gameObject.SetActive(false);
+                Debug.LogWarning($"대기 슬롯 배치에 실패하여 테스트 유닛을 비활성화했습니다: {unit.name}", unit);
+            }
         }
     }
     #endregion
@@ -47,13 +60,6 @@ public class TestManager : BaseMono
         Init();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if(unitTestFlag) enemySpawner.SpawnEnemy();
-        }
-    }
     #endregion
 
     #region ─────────────────────────▶ 중첩 타입 ◀─────────────────────────
