@@ -12,10 +12,19 @@ public class UnitData : BaseSO
     [SerializeField] protected string unitName;
     [SerializeField] protected string description = "설명";
     [SerializeField, Range(1, 5)] private int grade = 1;
+    [Tooltip("선택 사항. 비워 두면 객잔의 공통 유닛 프리팹을 사용합니다.")]
+    [SerializeField] private Unit prefab;
+
+    [Header("소속 및 병종")]
+    [SerializeField] private string region;
+    [SerializeField] private string region2;
+    [SerializeField] private string weaponType;
+    [SerializeField] private string weaponType2;
 
     [Header("유닛 스탯")]
     [SerializeField, Min(1f)] float maxHp = 100;
     [SerializeField, Min(1f)] protected float attack = 100;
+    [SerializeField, Min(0f)] private float defense;
     [SerializeField, Min(0.5f)] protected float attackSpd = 1.0f;
     [SerializeField, Min(1f)] protected float range = 1;
 
@@ -30,8 +39,15 @@ public class UnitData : BaseSO
     public string Description => description;
     public int Grade => Mathf.Clamp(grade, 1, 5);
     public int Price => Grade;
+    public Unit Prefab => prefab;
+    public string Region => region;
+    // CSV의 복수 소속 및 주석 표기를 원문 그대로 보관합니다.
+    public string Region2 => region2;
+    public string WeaponType => weaponType;
+    public string WeaponType2 => weaponType2;
 
     public float Attack => attack;
+    public float Defense => defense;
     public float Range => range;
     public float MaxHp => maxHp;
     public float AttackSpd => attackSpd;

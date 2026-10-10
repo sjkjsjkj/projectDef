@@ -20,6 +20,15 @@ public class Unit : CharacterBaseMono, IDraggable
     public Transform Origin => transform;
     public IDropTarget CurrentTarget { get; set; }
 
+    /// <summary>비활성 상태로 생성한 유닛에 Awake 이전에 테이블 데이터를 주입합니다.</summary>
+    public void InitializeForSpawn(UnitData data)
+    {
+        if (gameObject.activeInHierarchy || data == null || CurrentTarget != null)
+            throw new System.InvalidOperationException("유닛 데이터는 배치 전 비활성 상태에서 지정해야 합니다.");
+        unitData = data;
+        _stats = new UnitStats(data);
+    }
+
     public UnitStats Stat
     {
         get

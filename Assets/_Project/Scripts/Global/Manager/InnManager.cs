@@ -9,10 +9,16 @@ public class InnManager : BaseMono
     [SerializeField] private InnData innData;
     [SerializeField] private ResourceManager resources;
     [SerializeField] private WaitField waitField;
+    [Tooltip("UnitData.Prefab이 없는 장수에 공통으로 사용하는 월드 유닛 프리팹입니다.")]
+    [SerializeField] private Unit defaultUnitPrefab;
+    [SerializeField] private bool createUIOnStart = true;
+    [SerializeField] private TMPro.TMP_FontAsset uiFont;
     [Tooltip("구매 유닛의 부모입니다. 객잔 UI 아래에 두지 마세요.")]
     [SerializeField] private Transform unitRoot;
 
-    private Unit[] _offers = new Unit[OfferCount];
+    private UnitData[] _offers = new UnitData[OfferCount];
+    private Transform _spawnRoot;
+    private InnPanel _generatedPanel;
     private readonly bool[] _sold = new bool[OfferCount];
     private readonly System.Random _random = new System.Random();
     private bool _busy;
@@ -21,7 +27,7 @@ public class InnManager : BaseMono
     public bool IsInitialized { get; private set; }
     public event Action OnOffersChanged;
 
-    public UnitData GetOffer(int index) => IsValidIndex(index) && _offers[index] != null ? _offers[index].Data : null;
+    public UnitData GetOffer(int index) => IsValidIndex(index) ? _offers[index] : null;
     public bool IsSold(int index) => IsValidIndex(index) && _sold[index];
 
     /// <summary>첫 목록만 무료로 구성합니다. UI를 다시 열어도 목록은 유지됩니다.</summary>
@@ -29,7 +35,7 @@ public class InnManager : BaseMono
     {
         if (IsInitialized) return true;
         if (_busy || resources == null || innData == null ||
-            !innData.TryRollOffers(resources.HonorLevel, _random, out Unit[] offers))
+            !TryRollOffers(out UnitData[] offers))
             return false;
         SetOffers(offers);
         return true;
@@ -43,8 +49,8 @@ public class InnManager : BaseMono
         { reason = "객잔 설정을 확인하세요."; return false; }
         if (resources.InnRefreshTickets < 1)
         { reason = "객잔 목록 초기화권이 부족합니다."; return false; }
-        if (!innData.TryRollOffers(resources.HonorLevel, _random, out Unit[] offers))
-        { reason = "등장 확률과 등급별 장수 프리팹을 확인하세요."; return false; }
+        if (!TryRollOffers(out UnitData[] offers))
+        { reason = "유닛 테이블과 등급별 등장 확률을 확인하세요."; return false; }
 
         _busy = true;
         try
@@ -70,13 +76,28 @@ public class InnManager : BaseMono
         { reason = "빈 대기 슬롯이 없습니다."; return false; }
         if (unitRoot != null && !unitRoot.gameObject.activeInHierarchy)
         { reason = "유닛 배치 루트가 비활성 상태입니다."; return false; }
+        Unit prefab = data.Prefab != null ? data.Prefab : defaultUnitPrefab;
+        if (prefab == null || !prefab.enabled)
+        { reason = "장수 생성용 프리팹을 연결하세요."; return false; }
 
         _busy = true;
         Unit unit = null;
         bool purchased = false;
         try
         {
-            unit = Instantiate(_offers[index], unitRoot);
+            if (_spawnRoot == null)
+            {
+                var staging = new GameObject("InnSpawnStaging");
+                staging.SetActive(false);
+                staging.transform.SetParent(transform, false);
+                _spawnRoot = staging.transform;
+            }
+            // 활성화 전에 데이터를 주입해야 전투 컨트롤러도 선택한 장수의 스킬로 초기화됩니다.
+            unit = Instantiate(prefab, _spawnRoot);
+            unit.gameObject.SetActive(false);
+            unit.InitializeForSpawn(data);
+            unit.name = data.UnitName;
+            unit.transform.SetParent(unitRoot, false);
             if (!waitField.TryAddUnit(unit))
             { reason = "대기 슬롯에 장수를 배치할 수 없습니다."; return false; }
 
@@ -89,6 +110,7 @@ public class InnManager : BaseMono
                 return false;
             }
             purchased = true;
+            unit.gameObject.SetActive(true);
             OnOffersChanged?.Invoke();
             return true;
         }
@@ -106,7 +128,14 @@ public class InnManager : BaseMono
 
     private static bool IsValidIndex(int index) => index >= 0 && index < OfferCount;
 
-    private void SetOffers(Unit[] offers)
+    private bool TryRollOffers(out UnitData[] offers)
+    {
+        offers = null;
+        DatabaseManager database = DatabaseManager.Ins;
+        return database != null && innData.TryRollOffers(database.Units, resources.HonorLevel, _random, out offers);
+    }
+
+    private void SetOffers(UnitData[] offers)
     {
         _offers = offers;
         Array.Clear(_sold, 0, _sold.Length);
@@ -117,6 +146,17 @@ public class InnManager : BaseMono
     private void Start()
     {
         if (!TryInitialize())
-            Debug.LogError("객잔 초기화 실패: InnData, ResourceManager, 등장 가능한 등급의 프리팹을 확인하세요.", this);
+            Debug.LogError("객잔 초기화 실패: InnData, ResourceManager, Resources/Table의 UnitTable을 확인하세요.", this);
+        if (createUIOnStart)
+        {
+            foreach (InnPanel panel in FindObjectsByType<InnPanel>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                if (panel.Manager == this) return;
+            _generatedPanel = InnUIFactory.Create(this, uiFont);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (_generatedPanel != null) Destroy(_generatedPanel.gameObject);
     }
 }
