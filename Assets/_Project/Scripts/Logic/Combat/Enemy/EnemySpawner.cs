@@ -9,6 +9,8 @@ public class EnemySpawner : BaseMono
     [Header("적 생성")]
     [SerializeField] private EnemyPath enemyPath;
     [SerializeField] private EnemyMovement enemyPrefab;
+    [Tooltip("적 처치 보상을 받을 전투의 자원 관리자입니다.")]
+    [SerializeField] private ResourceManager resources;
     [Tooltip("비워두면 경로 첫 지점에서 생성합니다. 지정하면 목록 순서대로 사용합니다.")]
     [SerializeField] private List<Transform> spawnPoints = new List<Transform>();
 
@@ -29,8 +31,17 @@ public class EnemySpawner : BaseMono
 
         if (!HasValidPath() || wave == null || !wave.IsValid())
         {
-            Debug.LogError("경로와 WaveData의 Id, 웨이브 번호, 적 프리팹, 소환 수를 확인하세요.", this);
+            Debug.LogError("경로와 WaveData의 Id, 웨이브 번호, 적 프리팹, 소환 수, 보상을 확인하세요.", this);
             return false;
+        }
+
+        foreach (EnemySpawnData data in wave.EnemySpawnDatas)
+        {
+            if (data.Bounties.Count > 0 && resources == null)
+            {
+                Debug.LogError("적 보상을 지급할 ResourceManager를 EnemySpawner에 연결하세요.", this);
+                return false;
+            }
         }
 
         _wave = wave;
@@ -48,10 +59,16 @@ public class EnemySpawner : BaseMono
             SpawnEnemy(enemyPrefab);
     }
 
-    private EnemyMovement SpawnEnemy(EnemyMovement prefab)
+    private EnemyMovement SpawnEnemy(EnemyMovement prefab, IReadOnlyList<Bounty> bounties = null)
     {
         if (!isActiveAndEnabled)
             return null;
+
+        if (bounties != null && bounties.Count > 0 && resources == null)
+        {
+            Debug.LogError("적 보상을 지급할 ResourceManager가 없습니다.", this);
+            return null;
+        }
 
         if (!HasValidPath() || prefab == null || !prefab.gameObject.activeSelf ||
             !prefab.enabled || prefab.GetComponent<EnemyHealth>() == null)
@@ -69,6 +86,7 @@ public class EnemySpawner : BaseMono
 
         Vector3 position = spawnPoint != null ? spawnPoint.position : enemyPath.GetWaypoint(0);
         EnemyMovement enemy = Instantiate(prefab, position, prefab.transform.rotation, transform);
+        enemy.GetComponent<EnemyHealth>().InitializeBounties(resources, bounties);
         _activeEnemies.Add(enemy);
         enemy.OnRemoved += OnEnemyRemoved;
         enemy.Init(enemyPath, spawnPoint);
@@ -118,7 +136,7 @@ public class EnemySpawner : BaseMono
 
         WaveData wave = _wave;
         EnemySpawnData data = wave.EnemySpawnDatas[_spawnDataIndex];
-        if (SpawnEnemy(data.EnemyPrefab) == null)
+        if (SpawnEnemy(data.EnemyPrefab, data.Bounties) == null)
         {
             enabled = false;
             return;

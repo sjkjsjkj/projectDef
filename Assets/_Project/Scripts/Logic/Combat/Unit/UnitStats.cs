@@ -21,7 +21,6 @@ public class UnitStats
     public float Defense { get; private set; }
     public float AttackRange { get; private set; }
     public float AttackSpd { get; private set; }
-    public float GoldGain { get; private set; }
 
     public UnitStats(UnitData data, int level = 1)
     {
@@ -60,8 +59,6 @@ public class UnitStats
         Defense = Calculate(UnitStatType.Defense, _data.Defense * growth);
         AttackRange = Calculate(UnitStatType.AttackRange, _data.Range * growth);
         AttackSpd = Calculate(UnitStatType.AttackSpd, _data.AttackSpd * growth);
-        // 획득 금화는 전투 능력치의 레벨 성장과 독립적으로 보정합니다.
-        GoldGain = Calculate(UnitStatType.GoldGain, _data.GoldGain);
     }
 
     private float Calculate(UnitStatType stat, float baseValue)
