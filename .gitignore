@@ -21,6 +21,9 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
+DontCommitFolder/
+/DontCommitFolder/
+DontCommitFolder.meta
 *.log
 Asset/DontCommitFolder
 Asset/DontCommitFolder/
