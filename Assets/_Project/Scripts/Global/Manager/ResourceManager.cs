@@ -7,10 +7,18 @@ public class ResourceManager : BaseMono
     [SerializeField, Min(0)] private int gold;
     [SerializeField, Min(0)] private int innRefreshTickets;
     [SerializeField, Range(1, 10)] private int honorLevel = 1;
+    [SerializeField, Min(0)] private int honorExperience;
+    [SerializeField] private HonorProgression honorProgression = new HonorProgression();
 
     public int Gold => Mathf.Max(0, gold);
     public int InnRefreshTickets => Mathf.Max(0, innRefreshTickets);
     public int HonorLevel => Mathf.Clamp(honorLevel, 1, 10);
+    public int HonorExperience => Mathf.Max(0, honorExperience);
+    public int RequiredHonorExperience => honorProgression?.RequiredExperience(HonorLevel) ?? 0;
+    public int HonorPurchaseCost => honorProgression?.PurchaseCost ?? 0;
+    public int HonorPerPurchase => honorProgression?.ExperiencePerPurchase ?? 0;
+    public bool IsHonorMax => HonorLevel == HonorProgression.MaxLevel;
+    public bool CanPurchaseHonor => honorProgression != null && honorProgression.IsValid && !IsHonorMax && Gold >= HonorPurchaseCost;
     public event Action OnChanged;
 
     public void SetHonorLevel(int level)
@@ -18,6 +26,28 @@ public class ResourceManager : BaseMono
         int next = Mathf.Clamp(level, 1, 10);
         if (honorLevel == next) return;
         honorLevel = next;
+        honorExperience = 0;
+        OnChanged?.Invoke();
+    }
+
+    public bool TryPurchaseHonor(out string reason)
+    {
+        reason = null;
+        if (honorProgression == null || !honorProgression.IsValid)
+        { reason = "명예 성장 설정을 확인하세요."; return false; }
+        if (IsHonorMax) { reason = "명예가 최고 레벨입니다."; return false; }
+        if (Gold < HonorPurchaseCost) { reason = "골드가 부족합니다."; return false; }
+        // 골드와 경험치를 함께 갱신한 후 한 번만 통지합니다.
+        gold = Gold - HonorPurchaseCost;
+        honorProgression.AddExperience(ref honorLevel, ref honorExperience, HonorPerPurchase);
+        OnChanged?.Invoke();
+        return true;
+    }
+
+    public void AddHonorExperience(int amount)
+    {
+        if (amount <= 0 || IsHonorMax || honorProgression == null || !honorProgression.IsValid) return;
+        honorProgression.AddExperience(ref honorLevel, ref honorExperience, amount);
         OnChanged?.Invoke();
     }
 

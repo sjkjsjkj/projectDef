@@ -12,6 +12,9 @@ public class DatabaseManager : GlobalSingleton<DatabaseManager>
     // 테이블
     
     private SoundTableSO[] _soundTables;
+    private readonly List<UnitData> _units = new List<UnitData>();
+    private readonly Dictionary<string, UnitData> _unitsById = new Dictionary<string, UnitData>();
+    private IReadOnlyList<UnitData> _unitView;
 
     //Todo : private PokemonTableSO[] _pokemonTables;
 
@@ -22,6 +25,8 @@ public class DatabaseManager : GlobalSingleton<DatabaseManager>
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
     public bool IsInit => _isInitialized;
+    public IReadOnlyList<UnitData> Units => _unitView ??= _units.AsReadOnly();
+    public UnitData GetUnit(string id) => id != null && _unitsById.TryGetValue(id, out UnitData data) ? data : null;
     //Todo : public PokemonTableSO[] pokemonTables => _pokemonTables;
     //public RecipeTableSO[] RecipeTeables => _recipeTables;
 
@@ -70,6 +75,23 @@ public class DatabaseManager : GlobalSingleton<DatabaseManager>
     public override void Initialize()
     {
         if (_isInitialized) return;
+
+        UnitTable[] unitTables = Resources.LoadAll<UnitTable>(K.TABLE_RESOURCE_PATH);
+        foreach (UnitTable table in unitTables)
+        {
+            IReadOnlyList<UnitData> list = table.ReadList();
+            if (list == null) continue;
+            foreach (UnitData data in list)
+            {
+                if (data == null || string.IsNullOrWhiteSpace(data.Id)) continue;
+                if (!_unitsById.TryAdd(data.Id, data))
+                {
+                    Debug.LogWarning($"유닛 테이블의 중복 ID를 제외했습니다: {data.Id}", table);
+                    continue;
+                }
+                _units.Add(data);
+            }
+        }
 
 
         //_pokemonTables = LoadTables<PokemonTableSO, PokemonSO>();

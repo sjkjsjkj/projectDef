@@ -10,9 +10,28 @@ public class InnOfferView : UI
     [SerializeField] private TMP_Text gradeText;
     [SerializeField] private TMP_Text priceText;
     [SerializeField] private Button purchaseButton;
+    [SerializeField] private Image gradeBorder;
 
     private InnPanel _panel;
     private int _index;
+
+    public void Configure(TMP_Text name, TMP_Text grade, TMP_Text price, Button button, Image border)
+    {
+        nameText = name;
+        gradeText = grade;
+        priceText = price;
+        purchaseButton = button;
+        gradeBorder = border;
+    }
+
+    public static Color GradeColor(int grade) => grade switch
+    {
+        2 => new Color32(65, 145, 255, 255),
+        3 => new Color32(174, 95, 235, 255),
+        4 => new Color32(255, 210, 64, 255),
+        5 => new Color32(239, 68, 68, 255),
+        _ => new Color32(150, 156, 165, 255)
+    };
 
     public void Bind(InnPanel panel, int index)
     {
@@ -26,9 +45,10 @@ public class InnOfferView : UI
     {
         if (portrait != null)
         {
-            portrait.sprite = data != null ? data.Image : null;
-            portrait.enabled = portrait.sprite != null;
+            // 현재 UI는 초상화 대신 이름을 사용합니다.
+            portrait.enabled = false;
         }
+        if (gradeBorder != null) gradeBorder.color = GradeColor(data != null ? data.Grade : 1);
         if (nameText != null) nameText.text = data != null ? data.UnitName : "준비 중";
         if (gradeText != null) gradeText.text = data != null ? $"{data.Grade}등급" : "";
         if (priceText != null) priceText.text = sold ? "품절" : data != null ? $"{data.Price}원 · 고용" : "";

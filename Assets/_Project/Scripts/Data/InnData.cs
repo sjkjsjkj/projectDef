@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>객잔의 장수 목록과 명예별 등급 가중치입니다. 실행 상태는 저장하지 않습니다.</summary>
+/// <summary>객잔의 명예별 등급 가중치입니다. 판매 후보는 유닛 테이블에서 전달받습니다.</summary>
 [CreateAssetMenu(fileName = "InnData_", menuName = "ScriptableObjects/Inn/InnData")]
 public class InnData : ScriptableObject
 {
-    [Tooltip("UnitData가 연결된 활성 Unit 프리팹을 등록합니다. 같은 프리팹은 한 번만 등록하세요.")]
-    [SerializeField] private List<Unit> unitPrefabs = new List<Unit>();
     [Tooltip("배열의 0~9번이 명예 1~10입니다. 수치는 확정 밸런스가 아닌 임시 가중치입니다.")]
     [SerializeField] private HonorGradeOdds[] honorOdds =
     {
@@ -24,40 +22,39 @@ public class InnData : ScriptableObject
     };
 
     /// <summary>먼저 등급을 추첨하고, 해당 등급의 장수 중 동일 확률로 선택합니다.</summary>
-    public bool TryRollOffers(int honorLevel, System.Random random, out Unit[] offers)
+    public bool TryRollOffers(IReadOnlyList<UnitData> candidates, int honorLevel, System.Random random, out UnitData[] offers)
     {
         offers = null;
         if (random == null || honorLevel < 1 || honorLevel > 10 ||
-            honorOdds == null || honorOdds.Length != 10 || unitPrefabs == null)
+            honorOdds == null || honorOdds.Length != 10 || candidates == null)
             return false;
 
         HonorGradeOdds odds = honorOdds[honorLevel - 1];
         if (odds == null || odds.TotalWeight <= 0)
             return false;
 
-        var pools = new List<Unit>[5];
+        var pools = new List<UnitData>[5];
         for (int i = 0; i < pools.Length; i++)
-            pools[i] = new List<Unit>();
+            pools[i] = new List<UnitData>();
 
-        var registered = new HashSet<Unit>();
-        foreach (Unit prefab in unitPrefabs)
+        var registered = new HashSet<string>();
+        foreach (UnitData data in candidates)
         {
-            if (prefab == null || prefab.Data == null || !prefab.enabled ||
-                !prefab.gameObject.activeSelf || !registered.Add(prefab))
+            if (data == null || string.IsNullOrWhiteSpace(data.Id) || !registered.Add(data.Id))
                 continue;
-            pools[prefab.Data.Grade - 1].Add(prefab);
+            pools[data.Grade - 1].Add(data);
         }
 
-        // 등장 가능한 등급의 프리팹이 빠졌을 때 확률을 임의로 바꾸지 않습니다.
+        // 등장 가능한 등급의 데이터가 빠졌을 때 확률을 임의로 바꾸지 않습니다.
         for (int i = 0; i < pools.Length; i++)
             if (odds.GetWeight(i + 1) > 0 && pools[i].Count == 0)
                 return false;
 
-        offers = new Unit[InnManager.OfferCount];
+        offers = new UnitData[InnManager.OfferCount];
         for (int i = 0; i < offers.Length; i++)
         {
             int grade = odds.SelectGrade(random.Next(odds.TotalWeight));
-            List<Unit> pool = pools[grade - 1];
+            List<UnitData> pool = pools[grade - 1];
             offers[i] = pool[random.Next(pool.Count)];
         }
         return true;

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba7d7c3928396fd4f818b2b5066f31c2, type: 3}
+  m_Name: UnitData_054
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  id: 054
+  type: 2
+  image: {fileID: 0}
+  unitName: "\uD669\uAC1C"
+  description: "\uC124\uBA85"
+  grade: 3
+  region: "\uC624"
+  region2: "\uC624"
+  weaponType: "\uBC29\uD328\uBCD1"
+  weaponType2: 
+  maxHp: 100
+  attack: 10
+  defense: 5
+  attackSpd: 1
+  range: 2
+  basicAttack: {fileID: 0}
+  skill: {fileID: 0}

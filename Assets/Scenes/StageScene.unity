@@ -150,6 +150,59 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1959097001}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &915760903
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 915760905}
+  - component: {fileID: 915760904}
+  m_Layer: 0
+  m_Name: InnManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &915760904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915760903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c0c2214644445eb1c65322418898e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InnManager
+  _uniqueId: f5f8c8d2-b373-49f6-889b-65ab6c95635c
+  _instanceId: -7104
+  innData: {fileID: 11400000, guid: a67d52069b17b5944b2e0121e4bd6531, type: 2}
+  resources: {fileID: 1129153035}
+  waitField: {fileID: 7786302791907246864}
+  defaultUnitPrefab: {fileID: 3973326283816249408, guid: 2e325a539d1693241be320f7f2a8d072, type: 3}
+  createUIOnStart: 1
+  uiFont: {fileID: 11400000, guid: 8ba918cc63812e04f9801e4d77b18231, type: 2}
+  unitRoot: {fileID: 0}
+--- !u!4 &915760905
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915760903}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.42822, y: 0.60344, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &926380287
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,8 +308,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b8ebc574ab58a64ea2e34cd04ce0be9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unit
-  _uniqueId: 2b56be5e-0fe1-482f-b20d-0a45793638ad
-  _instanceId: 55882
+  _uniqueId: 84ca9163-d657-4c82-85d5-98e6c12728c0
+  _instanceId: 53908
   unitData: {fileID: 11400000, guid: 9dd0370b3242e1747b5ab835d153514c, type: 2}
 --- !u!61 &926380292
 BoxCollider2D:
@@ -328,13 +381,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 928763019}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca406ddfe726bcf4b9c1b273e89b4f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestManager
-  _uniqueId: a1270d66-52b9-42a8-a04e-3dc71d62d198
-  _instanceId: 55888
+  _uniqueId: 1842e9ad-0e32-4e33-ba34-c8f9daab2389
+  _instanceId: 53914
   units:
   - {fileID: 926380291}
   - {fileID: 1935742070}
@@ -367,6 +420,7 @@ GameObject:
   - component: {fileID: 1129153031}
   - component: {fileID: 1129153033}
   - component: {fileID: 1129153034}
+  - component: {fileID: 1129153035}
   m_Layer: 0
   m_Name: BattleSceneSystem
   m_TagString: Untagged
@@ -386,8 +440,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5978c34b847c144b840bed2fb3e9ff3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DragDropController
-  _uniqueId: 4c396b58-9fc6-4c7d-a045-1df1597688fb
-  _instanceId: 55894
+  _uniqueId: e4bd2bad-0fbd-4daf-a0ce-1b9aeda7cfe8
+  _instanceId: 53920
   targetCamera: {fileID: 1501859693}
   draggableLayer:
     serializedVersion: 2
@@ -423,8 +477,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e094acdeb9f29134291018eb65cafb2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  _uniqueId: b8db3185-10ba-4cf7-92bf-1e6d51297636
-  _instanceId: 55898
+  _uniqueId: 04848b0c-6a10-4afa-ad7e-6dacdd446808
+  _instanceId: 53924
   enemyPath: {fileID: 1959097002}
   enemyPrefab: {fileID: 1188136741374686675, guid: e921b782bab0df2459e046325451887e, type: 3}
   spawnPoints: []
@@ -440,13 +494,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c6706d098b6460a83697040dbe3ddc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveManager
-  _uniqueId: cd186f84-4871-433d-b23e-fd7fed6cd4e0
-  _instanceId: 55900
+  _uniqueId: 949774d2-372d-4c99-88a1-47720c003e9d
+  _instanceId: 53926
   waveDatas:
   - {fileID: 11400000, guid: 46bbec33e23068148855ba6fc8be5b23, type: 2}
   enemySpawner: {fileID: 1129153033}
   startGameOnStart: 1
   maxEnemyCount: 100
+--- !u!114 &1129153035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129153030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6032a73400264f36961d9187a7923fcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResourceManager
+  _uniqueId: d0f50737-cc6f-480c-902a-5c91e5db6e35
+  _instanceId: -10206
+  gold: 30
+  innRefreshTickets: 5
+  honorLevel: 1
+  honorExperience: 0
+  honorProgression:
+    purchaseCost: 4
+    experiencePerPurchase: 4
+    requiredExperience: 04000000080000000c000000140000002000000030000000400000005000000064000000
 --- !u!1 &1501859691
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,8 +781,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3adb0d8fad54c044bd36daf4ca09c8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPath
-  _uniqueId: 93735ccd-7637-4504-80f8-f98a1f93f007
-  _instanceId: 55926
+  _uniqueId: 80f7674a-11b0-478f-b33b-b8e04c05554a
+  _instanceId: 53952
   waypointRadius: 0.15
   directionSize: 0.25
 --- !u!1 &2101228191
@@ -1431,3 +1507,4 @@ SceneRoots:
   - {fileID: 1129153032}
   - {fileID: 7786302791907246863}
   - {fileID: 1959097001}
+  - {fileID: 915760905}
