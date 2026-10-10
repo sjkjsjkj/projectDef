@@ -13,6 +13,7 @@ public class Unit : CharacterBaseMono, IDraggable
 
     #region ─────────────────────────▶ 내부 변수 ◀─────────────────────────
     private UnitStats _stats;
+    private GlobalUnitStatManager _statManager;
     private int _level = 1;
     #endregion
 
@@ -34,6 +35,7 @@ public class Unit : CharacterBaseMono, IDraggable
         unitData = data;
         _level = 1;
         _stats = new UnitStats(data);
+        RegisterStats();
     }
 
     public bool TryLevelUp()
@@ -53,7 +55,12 @@ public class Unit : CharacterBaseMono, IDraggable
         get
         {
             if (_stats == null)
+            {
                 _stats = new UnitStats(unitData, Level);
+                RegisterStats();
+            }
+            else if (_statManager == null && Application.isPlaying)
+                RegisterStats();
 
             return _stats;
         }
@@ -61,6 +68,15 @@ public class Unit : CharacterBaseMono, IDraggable
     #endregion
 
     #region ─────────────────────────▶ 내부 메서드 ◀─────────────────────────
+    private void RegisterStats()
+    {
+        if (!Application.isPlaying) return;
+        if (_statManager == null)
+            _statManager = GlobalUnitStatManager.Ins;
+        if (_statManager != null)
+            _statManager.Register(this, _stats);
+    }
+
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
@@ -98,6 +114,18 @@ public class Unit : CharacterBaseMono, IDraggable
         // 비활성 생성/레벨업 중 먼저 만들어진 스탯과 문맥을 보존합니다.
         if (_stats == null)
             _stats = new UnitStats(unitData, Level);
+        RegisterStats();
+    }
+
+    private void OnEnable()
+    {
+        if (unitData != null && _stats != null) RegisterStats();
+    }
+
+    private void OnDestroy()
+    {
+        // 종료 중 새 싱글톤을 만들지 않도록 보관한 참조만 사용합니다.
+        if (_statManager != null) _statManager.Unregister(this);
     }
     #endregion
 
