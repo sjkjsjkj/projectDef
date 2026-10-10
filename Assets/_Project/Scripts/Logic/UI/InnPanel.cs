@@ -20,6 +20,7 @@ public class InnPanel : UI
     [SerializeField] private TMP_Text goldText;
     [SerializeField] private TMP_Text ticketsText;
     private ResourceManager _resources;
+    private TMP_FontAsset _appliedManagerFont;
     public InnManager Manager => innManager;
 
     // 비활성 UI 루트에서 Awake 전에 호출합니다.
@@ -45,9 +46,6 @@ public class InnPanel : UI
     protected override void Awake()
     {
         base.Awake();
-        foreach (TMP_Text label in GetComponentsInChildren<TMP_Text>(true))
-            if (label.font == null || !label.font.HasCharacter('객'))
-                label.font = InnUIFactory.ResolveFont(null);
         if (offerViews == null || offerViews.Length != InnManager.OfferCount)
         {
             Debug.LogError("객잔 UI에는 정확히 다섯 개의 InnOfferView를 연결하세요.", this);
@@ -66,6 +64,7 @@ public class InnPanel : UI
 
     private void OnEnable()
     {
+        ApplyManagerFont();
         if (innManager == null) return;
         innManager.OnOffersChanged += RefreshView;
         _resources = innManager.Resources;
@@ -90,8 +89,35 @@ public class InnPanel : UI
 
     public void Open()
     {
+        ApplyManagerFont();
         SetMinimized(false);
         RefreshView();
+    }
+
+    /// <summary>닫힌 상점의 텍스트까지 매니저 폰트를 적용합니다. 지정 폰트는 글리프 유무로 교체하지 않습니다.</summary>
+    private void ApplyManagerFont()
+    {
+        TMP_FontAsset preferred = innManager != null ? innManager.UIFont : null;
+        bool managerFontRemoved = _appliedManagerFont != null && preferred == null;
+        TMP_FontAsset fallback = null;
+        foreach (TMP_Text label in GetComponentsInChildren<TMP_Text>(true))
+        {
+            if (preferred != null)
+                label.font = preferred;
+            else if (managerFontRemoved || label.font == null || !label.font.HasCharacter('객'))
+            {
+                if (fallback == null) fallback = InnUIFactory.ResolveFont(null);
+                if (fallback != null) label.font = fallback;
+            }
+        }
+        _appliedManagerFont = preferred;
+    }
+
+    private void LateUpdate()
+    {
+        // 플레이 중 인스펙터에서 변경해도 매 프레임 전체 텍스트를 순회하지 않습니다.
+        TMP_FontAsset preferred = innManager != null ? innManager.UIFont : null;
+        if (_appliedManagerFont != preferred) ApplyManagerFont();
     }
     public void Minimize() => SetMinimized(true);
     public void Close() => SetMinimized(true);

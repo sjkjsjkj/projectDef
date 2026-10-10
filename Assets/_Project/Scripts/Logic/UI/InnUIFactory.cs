@@ -29,7 +29,7 @@ public static class InnUIFactory
 
     public static InnPanel Create(InnManager manager, TMP_FontAsset font = null)
     {
-        font = ResolveFont(font);
+        font = ResolveFont(manager != null && manager.UIFont != null ? manager.UIFont : font);
         var root = new GameObject("InnCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
         root.SetActive(false);
         Canvas canvas = root.GetComponent<Canvas>();
