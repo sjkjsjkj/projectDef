@@ -13,10 +13,16 @@ public class Unit : CharacterBaseMono, IDraggable
 
     #region ─────────────────────────▶ 내부 변수 ◀─────────────────────────
     private UnitStats _stats;
+    private int _level = 1;
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
     public UnitData Data => unitData;
+    public int Level => _level;
+    public bool IsMaxLevel => Level >= UnitLevelProgression.MaxLevel;
+    public int SkillLevel => UnitLevelProgression.GetSkillLevel(Level);
+    public AbilityData CurrentSkill => unitData != null ? unitData.GetSkillForLevel(Level) : null;
+    public event System.Action OnLevelChanged;
     public Transform Origin => transform;
     public IDropTarget CurrentTarget { get; set; }
 
@@ -26,7 +32,20 @@ public class Unit : CharacterBaseMono, IDraggable
         if (gameObject.activeInHierarchy || data == null || CurrentTarget != null)
             throw new System.InvalidOperationException("유닛 데이터는 배치 전 비활성 상태에서 지정해야 합니다.");
         unitData = data;
+        _level = 1;
         _stats = new UnitStats(data);
+    }
+
+    public bool TryLevelUp()
+    {
+        if (unitData == null || IsMaxLevel)
+            return false;
+
+        UnitStats stats = Stat;
+        _level++;
+        stats.ApplyLevel(unitData, Level);
+        OnLevelChanged?.Invoke();
+        return true;
     }
 
     public UnitStats Stat
@@ -34,7 +53,7 @@ public class Unit : CharacterBaseMono, IDraggable
         get
         {
             if (_stats == null)
-                _stats = new UnitStats(unitData);
+                _stats = new UnitStats(unitData, Level);
 
             return _stats;
         }
@@ -76,7 +95,9 @@ public class Unit : CharacterBaseMono, IDraggable
             return;
         }
 
-        _stats = new UnitStats(unitData);
+        // 비활성 생성/레벨업 중 먼저 만들어진 스탯과 문맥을 보존합니다.
+        if (_stats == null)
+            _stats = new UnitStats(unitData, Level);
     }
     #endregion
 

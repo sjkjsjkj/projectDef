@@ -2,7 +2,7 @@
 
 ## 변경된 데이터 흐름
 
-`Resources/Table`의 모든 `UnitTable` → `DatabaseManager.Units` → `InnData.TryRollOffers(candidates, ...)` → `InnManager`의 판매 목록 → `UnitSpawner.TrySpawn()` → `Unit` 생성 및 `WaitField` 배치 순서입니다.
+`Resources/Table`의 모든 `UnitTable` → `DatabaseManager.Units` → `InnData.TryRollOffers(candidates, ...)` → `InnManager`의 판매 목록 → `UnitSpawner.TrySpawn()` → 기존 `Unit` 레벨업 또는 신규 생성 및 `WaitField` 배치 순서입니다.
 
 - `InnData.UnitPrefabs`는 제거했습니다. 기존 InnData 에셋의 명예별 확률은 유지됩니다.
 - 기존 `UnitTable : TableSO<UnitData>`를 그대로 사용합니다. CSV 생성 도구가 만든 `Assets/Resources/Table/UnitTable.asset`을 자동으로 읽습니다.
@@ -25,7 +25,7 @@
 ## 상점과 이벤트의 유닛 생성
 
 - `InnManager`: 판매 칸과 골드를 검사하고, 비용 차감 후 선택한 `UnitData`를 생성기로 전달합니다. 획득에 실패하면 골드를 돌려주고 품절 상태를 복구합니다. 비용 차감/환불 각각 자원 변경 이벤트가 발생합니다.
-- `UnitSpawner`: 프리팹 선택, 비활성 생성, 데이터 주입, 부모 Transform 설정, 대기 슬롯 배치, 활성화, 실패한 생성의 정리를 담당합니다. 골드/객잔/UI에는 의존하지 않습니다.
+- `UnitSpawner`: 중복 보유 판정과 레벨업, 신규 유닛의 프리팹 선택, 비활성 생성, 데이터 주입, 부모 Transform 설정, 대기 슬롯 배치, 활성화, 실패한 생성의 정리를 담당합니다. 골드/객잔/UI에는 의존하지 않습니다.
 - `WaitField`와 `Slot`: 빈 슬롯 검색 및 유닛과 슬롯 사이의 배치 관계를 관리합니다.
 
 이벤트 보상은 `UnitSpawner`를 참조해 동일한 API를 호출합니다. 골드는 소모하지 않습니다.
@@ -38,7 +38,7 @@ if (!unitSpawner.TrySpawn(rewardData, out Unit unit, out string reason))
 }
 ```
 
-동일 유닛을 합쳐 업그레이드하는 규칙은 아직 구현하지 않았습니다. 추가할 때는 `TrySpawn()` 내부에서 빈 슬롯을 검사하기 전에 합성 가능 여부를 판단하도록 확장할 수 있습니다. 상점이 미리 빈 슬롯을 검사하지 않으므로 대기 슬롯이 가득 차도 합성으로 획득할 수 있는 경로를 이곳에 모을 수 있습니다.
+중복 획득은 빈 슬롯 검사 전에 처리합니다. 반환되는 `unit`은 신규 생성된 유닛 또는 레벨업한 기존 유닛입니다. 대기 슬롯이 가득 차도 기존 장수는 강화할 수 있습니다. 상세 설정은 [유닛 레벨 시스템](UNIT_LEVEL_SETUP.md)을 참고하세요.
 
 ## 상점 UI
 
@@ -50,7 +50,7 @@ if (!unitSpawner.TrySpawn(rewardData, out Unit unit, out string reason))
 - 목록 초기화는 초기화권 1장을 소모합니다. 첫 목록은 무료이며 이후 명예 레벨업만으로 현재 목록이 바뀌지 않습니다.
 - 장수 이름을 표시하는 5개 카드 전체가 구매 버튼입니다. 현재 이미지는 표시하지 않습니다.
 - 테두리는 1등급 회색, 2등급 파란색, 3등급 보라색, 4등급 노란색, 5등급 빨간색입니다. 가격은 등급과 동일합니다.
-- 구매 성공 시 빈 대기 슬롯에 장수가 추가되고 그 칸은 다음 초기화까지 품절입니다. 돈이 부족하면 버튼이 비활성화됩니다. 빈 슬롯이 없으면 클릭 시 안내하고 재화/판매 상태는 유지합니다.
+- 구매 성공 시 신규 장수는 빈 대기 슬롯에 추가되고, 보유 장수는 기존 위치에서 레벨이 1 상승합니다. 구매한 판매 칸은 다음 초기화까지 품절입니다. 돈이 부족하면 버튼이 비활성화됩니다. 신규 장수의 빈 슬롯 부족 또는 보유 장수의 최대 레벨 도달 시 안내하고 재화/판매 상태는 유지합니다.
 - 패널을 클릭할 때 뒤쪽 유닛의 드래그가 시작되지 않습니다. UI를 열어도 전투 시간은 흐릅니다.
 
 씬에서 직접 편집하려면 `InnManager` 오브젝트를 선택하고 **GameObject → 삼국지 디펜스 → 객잔 UI 생성**을 실행합니다. 같은 매니저의 UI가 이미 있으면 중복 생성하지 않습니다. 이전 버전 UI에는 새 필드가 없으므로 기존 InnCanvas를 제거하고 다시 생성하거나 새 버튼/텍스트/테두리 참조를 직접 연결하세요. 변경 후 씬을 저장합니다.

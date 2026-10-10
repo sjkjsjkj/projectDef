@@ -12,7 +12,7 @@ public class AbilityInstance
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
-    public AbilityData Data { get; }
+    public AbilityData Data { get; private set; }
 
     public float RemainingCooldown => _remainingCooldown;
     public bool IsReady => _remainingCooldown <= 0f;
@@ -34,6 +34,14 @@ public class AbilityInstance
             return;
 
         _remainingCooldown = Mathf.Max(0f, _remainingCooldown - Mathf.Max(0f, deltaTime));
+    }
+
+    /// <summary>스킬 승급 시 실행 문맥과 남은 쿨다운을 보존합니다.</summary>
+    public void ChangeData(AbilityData data)
+    {
+        if (data == null)
+            throw new System.ArgumentNullException(nameof(data));
+        Data = data;
     }
 
     public bool TryActivate()

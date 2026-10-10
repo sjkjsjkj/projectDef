@@ -55,11 +55,22 @@ public class UnitCombatController : BaseMono
                 _unit.Data.BasicAttack.CreateInstance(new AbilityContext(_unit));
         }
 
-        if (_unit.Data.Skill != null)
+        RefreshSkill();
+    }
+
+    private void RefreshSkill()
+    {
+        AbilityData data = _unit.CurrentSkill;
+        if (data == null)
         {
-            _skill =
-                _unit.Data.Skill.CreateInstance(new AbilityContext(_unit));
+            _skill = null;
+            return;
         }
+
+        if (_skill == null)
+            _skill = data.CreateInstance(new AbilityContext(_unit));
+        else if (_skill.Data != data)
+            _skill.ChangeData(data);
     }
 
     private bool TryActivateAutomatically(AbilityInstance ability, ref float nextRetryTime)
@@ -92,6 +103,20 @@ public class UnitCombatController : BaseMono
         }
 
         CreateAbilities();
+    }
+
+    private void OnEnable()
+    {
+        if (_unit == null || _unit.Data == null) return;
+        _unit.OnLevelChanged += RefreshSkill;
+        // 비활성 상태에서 레벨이 바뀌었더라도 현재 단계로 동기화합니다.
+        RefreshSkill();
+    }
+
+    private void OnDisable()
+    {
+        if (_unit != null)
+            _unit.OnLevelChanged -= RefreshSkill;
     }
 
     private void Update()
