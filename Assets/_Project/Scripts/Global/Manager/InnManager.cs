@@ -1,29 +1,31 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-/// <summary>객잔의 다섯 판매 칸, 초기화권 사용 및 대기 필드로의 구매 배치를 담당합니다.</summary>
+/// <summary>객잔의 판매 목록과 구매 비용을 관리하며 유닛 획득은 UnitSpawner에 요청합니다.</summary>
 public class InnManager : BaseMono
 {
     public const int OfferCount = 5;
 
     [SerializeField] private InnData innData;
     [SerializeField] private ResourceManager resources;
-    [SerializeField] private WaitField waitField;
-    [Tooltip("UnitData.Prefab이 없는 장수에 공통으로 사용하는 월드 유닛 프리팹입니다.")]
-    [SerializeField] private Unit defaultUnitPrefab;
+    [SerializeField] private UnitSpawner unitSpawner;
     [SerializeField] private bool createUIOnStart = true;
     [SerializeField] private TMPro.TMP_FontAsset uiFont;
-    [Tooltip("구매 유닛의 부모입니다. 객잔 UI 아래에 두지 마세요.")]
-    [SerializeField] private Transform unitRoot;
+
+    // 기존 씬/프리팹의 참조를 보존하기 위한 이전 전용 필드입니다. 구매 로직에서는 사용하지 않습니다.
+    [FormerlySerializedAs("waitField"), SerializeField, HideInInspector] private WaitField legacyWaitField;
+    [FormerlySerializedAs("defaultUnitPrefab"), SerializeField, HideInInspector] private Unit legacyDefaultUnitPrefab;
+    [FormerlySerializedAs("unitRoot"), SerializeField, HideInInspector] private Transform legacyUnitRoot;
 
     private UnitData[] _offers = new UnitData[OfferCount];
-    private Transform _spawnRoot;
     private InnPanel _generatedPanel;
     private readonly bool[] _sold = new bool[OfferCount];
     private readonly System.Random _random = new System.Random();
     private bool _busy;
 
     public ResourceManager Resources => resources;
+    public TMPro.TMP_FontAsset UIFont => uiFont;
     public bool IsInitialized { get; private set; }
     public event Action OnOffersChanged;
 
@@ -72,58 +74,74 @@ public class InnManager : BaseMono
         { reason = "구매할 수 없는 장수입니다."; return false; }
         if (resources == null || resources.Gold < data.Price)
         { reason = "돈이 부족합니다."; return false; }
-        if (waitField == null || waitField.GetEmptySlot() == null)
-        { reason = "빈 대기 슬롯이 없습니다."; return false; }
-        if (unitRoot != null && !unitRoot.gameObject.activeInHierarchy)
-        { reason = "유닛 배치 루트가 비활성 상태입니다."; return false; }
-        Unit prefab = data.Prefab != null ? data.Prefab : defaultUnitPrefab;
-        if (prefab == null || !prefab.enabled)
-        { reason = "장수 생성용 프리팹을 연결하세요."; return false; }
+        EnsureUnitSpawner();
+        if (unitSpawner == null)
+        { reason = "유닛 생성기를 연결하세요."; return false; }
 
         _busy = true;
-        Unit unit = null;
+        int price = data.Price;
+        bool paid = false;
         bool purchased = false;
         try
         {
-            if (_spawnRoot == null)
-            {
-                var staging = new GameObject("InnSpawnStaging");
-                staging.SetActive(false);
-                staging.transform.SetParent(transform, false);
-                _spawnRoot = staging.transform;
-            }
-            // 활성화 전에 데이터를 주입해야 전투 컨트롤러도 선택한 장수의 스킬로 초기화됩니다.
-            unit = Instantiate(prefab, _spawnRoot);
-            unit.gameObject.SetActive(false);
-            unit.InitializeForSpawn(data);
-            unit.name = data.UnitName;
-            unit.transform.SetParent(unitRoot, false);
-            if (!waitField.TryAddUnit(unit))
-            { reason = "대기 슬롯에 장수를 배치할 수 없습니다."; return false; }
-
-            // 자원 변경 이벤트가 같은 판매 칸을 다시 구매하지 못하게 잠급니다.
+            // 활성화 콜백보다 먼저 비용을 확보합니다. 획득 실패 시 비용과 판매 상태를 복구합니다.
             _sold[index] = true;
-            if (!resources.TrySpendGold(data.Price))
+            paid = resources.TrySpendGold(price);
+            if (!paid)
             {
-                _sold[index] = false;
                 reason = "돈이 부족합니다.";
                 return false;
             }
+            if (!unitSpawner.TrySpawn(data, out _, out reason))
+                return false;
+
             purchased = true;
-            unit.gameObject.SetActive(true);
             OnOffersChanged?.Invoke();
             return true;
         }
         finally
         {
-            if (!purchased && unit != null)
+            try
             {
-                unit.CurrentTarget?.Remove(unit);
-                unit.gameObject.SetActive(false);
-                Destroy(unit.gameObject);
+                if (!purchased)
+                {
+                    _sold[index] = false;
+                    if (paid) resources.AddGold(price);
+                    OnOffersChanged?.Invoke();
+                }
             }
-            _busy = false;
+            finally { _busy = false; }
         }
+    }
+
+    // 예전 InnManager만 연결된 씬도 실행할 수 있도록 설정을 한 번 옮깁니다.
+    [ContextMenu("기존 유닛 생성 설정을 UnitSpawner로 이전")]
+    private void EnsureUnitSpawner()
+    {
+        if (unitSpawner != null) return;
+#if UNITY_EDITOR
+        if (!Application.isPlaying) UnityEditor.Undo.RecordObject(this, "유닛 생성 설정 이전");
+#endif
+        unitSpawner = GetComponent<UnitSpawner>();
+        if (unitSpawner != null || legacyWaitField == null) return;
+#if UNITY_EDITOR
+        unitSpawner = Application.isPlaying ? gameObject.AddComponent<UnitSpawner>()
+            : UnityEditor.Undo.AddComponent<UnitSpawner>(gameObject);
+#else
+        unitSpawner = gameObject.AddComponent<UnitSpawner>();
+#endif
+        unitSpawner.Configure(legacyWaitField, legacyDefaultUnitPrefab, legacyUnitRoot);
+        legacyWaitField = null;
+        legacyDefaultUnitPrefab = null;
+        legacyUnitRoot = null;
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+        {
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.EditorUtility.SetDirty(unitSpawner);
+            UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
+        }
+#endif
     }
 
     private static bool IsValidIndex(int index) => index >= 0 && index < OfferCount;
@@ -145,6 +163,7 @@ public class InnManager : BaseMono
 
     private void Start()
     {
+        EnsureUnitSpawner();
         if (!TryInitialize())
             Debug.LogError("객잔 초기화 실패: InnData, ResourceManager, Resources/Table의 UnitTable을 확인하세요.", this);
         if (createUIOnStart)

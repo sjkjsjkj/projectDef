@@ -2,7 +2,7 @@
 
 ## 변경된 데이터 흐름
 
-`Resources/Table`의 모든 `UnitTable` → `DatabaseManager.Units` → `InnData.TryRollOffers(candidates, ...)` → `InnManager`의 판매 목록 → 구매 시 `Unit` 생성 → `WaitField` 배치 순서입니다.
+`Resources/Table`의 모든 `UnitTable` → `DatabaseManager.Units` → `InnData.TryRollOffers(candidates, ...)` → `InnManager`의 판매 목록 → `UnitSpawner.TrySpawn()` → `Unit` 생성 및 `WaitField` 배치 순서입니다.
 
 - `InnData.UnitPrefabs`는 제거했습니다. 기존 InnData 에셋의 명예별 확률은 유지됩니다.
 - 기존 `UnitTable : TableSO<UnitData>`를 그대로 사용합니다. CSV 생성 도구가 만든 `Assets/Resources/Table/UnitTable.asset`을 자동으로 읽습니다.
@@ -14,11 +14,31 @@
 ## 씬 설정
 
 1. 항상 활성인 오브젝트에 `ResourceManager`를 하나 추가하고 시작 Gold, Inn Refresh Tickets, Honor Level을 지정합니다. 기본 돈/초기화권은 0입니다.
-2. `InnManager`에 기존 `InnData`, 동일한 `ResourceManager`, 기존 `WaitField`를 연결합니다.
-3. `Default Unit Prefab`에 공통 월드 유닛 프리팹을 지정합니다. 예를 들어 기존 `Unit_ZhaoYun.prefab`으로 구매 동작을 테스트할 수 있지만 이 경우 모든 장수가 같은 외형을 사용합니다. Unit, Collider2D, 표시/전투 컴포넌트 및 드래그 레이어가 구성된 프리팹을 사용하세요.
+2. 항상 활성인 월드 오브젝트에 `UnitSpawner`를 추가하고 `Wait Field`에 기존 대기 필드를 연결합니다. `InnManager`에는 기존 `InnData`, 동일한 `ResourceManager`, 이 `UnitSpawner`를 연결합니다.
+3. `UnitSpawner.Default Unit Prefab`에 공통 월드 유닛 프리팹을 지정합니다. 예를 들어 기존 `Unit_ZhaoYun.prefab`으로 구매 동작을 테스트할 수 있지만 이 경우 모든 장수가 같은 외형을 사용합니다. Unit, Collider2D, 표시/전투 컴포넌트 및 드래그 레이어가 구성된 프리팹을 사용하세요.
 4. 개별 외형을 사용할 장수만 `UnitData.Prefab`에 전용 프리팹을 지정합니다. 비어 있으면 공통 프리팹을 사용합니다. CSV 재생성은 이 필드를 덮어쓰지 않습니다.
 5. 구매 시 선택한 `UnitData`를 비활성 유닛에 주입한 뒤 활성화하므로 능력치와 스킬은 테이블의 장수 데이터로 초기화됩니다. 기존 프리팹에 연결된 장수 데이터는 변경하지 않습니다. 생성용 프리팹 자체가 없으면 구매는 실패하며 골드는 보존합니다.
-6. `Unit Root`는 선택 사항입니다. 지정한다면 항상 활성인 월드 오브젝트를 사용하고 UI 아래에 두지 마세요.
+6. `UnitSpawner.Unit Root`는 선택 사항인 생성 유닛의 부모 Transform입니다. 지정한다면 항상 활성인 월드 오브젝트를 사용하고 UI 아래에 두지 마세요. 실제 배치 위치는 `WaitField`의 빈 슬롯 위치입니다.
+
+기존 씬의 `InnManager`에 연결했던 Wait Field / Default Unit Prefab / Unit Root는 숨겨진 이전 전용 필드로 보존됩니다. 새 UnitSpawner가 연결되지 않았다면 실행 시 같은 오브젝트에 생성기를 추가하고 설정을 옮깁니다. 에디터에 영구 반영하려면 **플레이 모드 밖에서 InnManager 컴포넌트 메뉴 → 기존 유닛 생성 설정을 UnitSpawner로 이전**을 실행하고 씬/프리팹을 저장하세요. 이벤트 시스템에도 같은 생성기를 연결하면 됩니다. 이미 명시적으로 연결한 생성기의 설정은 덮어쓰지 않습니다.
+
+## 상점과 이벤트의 유닛 생성
+
+- `InnManager`: 판매 칸과 골드를 검사하고, 비용 차감 후 선택한 `UnitData`를 생성기로 전달합니다. 획득에 실패하면 골드를 돌려주고 품절 상태를 복구합니다. 비용 차감/환불 각각 자원 변경 이벤트가 발생합니다.
+- `UnitSpawner`: 프리팹 선택, 비활성 생성, 데이터 주입, 부모 Transform 설정, 대기 슬롯 배치, 활성화, 실패한 생성의 정리를 담당합니다. 골드/객잔/UI에는 의존하지 않습니다.
+- `WaitField`와 `Slot`: 빈 슬롯 검색 및 유닛과 슬롯 사이의 배치 관계를 관리합니다.
+
+이벤트 보상은 `UnitSpawner`를 참조해 동일한 API를 호출합니다. 골드는 소모하지 않습니다.
+
+```csharp
+if (!unitSpawner.TrySpawn(rewardData, out Unit unit, out string reason))
+{
+    Debug.LogWarning(reason);
+    // 지급 보류/재시도 정책은 이벤트 시스템에서 처리합니다.
+}
+```
+
+동일 유닛을 합쳐 업그레이드하는 규칙은 아직 구현하지 않았습니다. 추가할 때는 `TrySpawn()` 내부에서 빈 슬롯을 검사하기 전에 합성 가능 여부를 판단하도록 확장할 수 있습니다. 상점이 미리 빈 슬롯을 검사하지 않으므로 대기 슬롯이 가득 차도 합성으로 획득할 수 있는 경로를 이곳에 모을 수 있습니다.
 
 ## 상점 UI
 
@@ -66,5 +86,7 @@ UI는 1280×720을 기준으로 Canvas Scaler의 Expand를 사용합니다. Even
 - 전체 런타임 및 에디터 스크립트를 프로젝트의 Unity 참조 DLL로 C# 컴파일했습니다.
 - 순수 C# 검사 79건: 등급 확률 1000개 정수 표본, 0 가중치 제외, 잘못된 경계값, 경험치 경계/이월/다중 레벨업/상한을 확인했습니다.
 - Unity 플레이 모드에서 실제 버튼 입력/렌더링/프리팹 생성은 별도 확인이 필요합니다.
+
+생성 분리 후 플레이 확인: 상점 구매와 이벤트 지급이 동일한 UnitSpawner를 통해 배치되는지, 빈 슬롯 없음/프리팹 미설정/비활성 생성기에서 구매 골드 및 품절 상태가 복구되는지, 이전 설정을 가진 씬에서 생성기 참조가 자동 이전되는지 확인합니다.
 
 플레이 확인: 시작 골드 20, 초기화권 2, 명예 1로 설정 → 버튼으로 열기 → 명예 구매 후 16골드/명예2/0XP → 새로고침 시 초기화권 1 → 장수 구매 후 등급만큼 차감 및 대기 슬롯 등록 → 품절 재구매 방지 → 대기 슬롯 가득 찬 상태에서 실패 안내 → 닫기/열기 상태 유지 → 명예10에서 구매 비활성화를 확인합니다.
