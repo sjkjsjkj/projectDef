@@ -5,6 +5,5 @@ public enum UnitStatType
     AttackPower,
     Defense,
     AttackRange,
-    AttackSpd,
-    GoldGain
+    AttackSpd
 }

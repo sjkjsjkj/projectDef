@@ -28,8 +28,6 @@ public class UnitData : BaseSO
     [SerializeField, Min(0f)] private float defense;
     [SerializeField, Min(0.5f)] protected float attackSpd = 1.0f;
     [SerializeField, Min(1f)] protected float range = 1;
-    [Tooltip("이 유닛이 금화를 획득할 때의 기본량입니다. 실제 지급은 보상 로직에서 처리합니다.")]
-    [SerializeField, Min(0f)] private float goldGain;
 
     [Header("스킬")]
     [SerializeField] protected AbilityData basicAttack;
@@ -59,7 +57,6 @@ public class UnitData : BaseSO
     public float Range => range;
     public float MaxHp => maxHp;
     public float AttackSpd => attackSpd;
-    public float GoldGain => goldGain;
     public AbilityData BasicAttack => basicAttack; 
     public AbilityData Skill => skillLevel1;
     public AbilityData SkillLevel1 => skillLevel1;

@@ -27,7 +27,7 @@ public class WaveData : BaseSO
         {
             if (data == null || data.Count < 1 || data.EnemyPrefab == null ||
                 !data.EnemyPrefab.gameObject.activeSelf || !data.EnemyPrefab.enabled ||
-                data.EnemyPrefab.GetComponent<EnemyHealth>() == null)
+                data.EnemyPrefab.GetComponent<EnemyHealth>() == null || !data.HasValidBounties())
                 return false;
         }
         return true;
@@ -39,7 +39,18 @@ public class EnemySpawnData
 {
     [SerializeField] private EnemyMovement enemyPrefab;
     [SerializeField, Min(1)] private int count = 30;
+    [Tooltip("적 한 마리를 처치했을 때 지급하는 보상입니다. 빈 목록은 보상 없음입니다.")]
+    [SerializeReference] private List<Bounty> bounties = new List<Bounty>();
 
     public EnemyMovement EnemyPrefab => enemyPrefab;
     public int Count => count;
+    public IReadOnlyList<Bounty> Bounties => bounties;
+
+    public bool HasValidBounties()
+    {
+        if (bounties == null) return false;
+        foreach (Bounty bounty in bounties)
+            if (bounty == null || !bounty.IsValid) return false;
+        return true;
+    }
 }
