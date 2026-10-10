@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// 각 유닛을의 기본 데이터들이 들어갈 SO
@@ -30,7 +31,12 @@ public class UnitData : BaseSO
 
     [Header("스킬")]
     [SerializeField] protected AbilityData basicAttack;
-    [SerializeField] protected AbilityData skill;
+    [Tooltip("유닛 1~3레벨에서 사용하는 스킬입니다. 기존 Skill 참조를 보존합니다.")]
+    [FormerlySerializedAs("skill"), SerializeField] private AbilityData skillLevel1;
+    [Tooltip("유닛 4~6레벨에서 사용하는 스킬입니다. 비워 두면 이전 단계 스킬을 사용합니다.")]
+    [SerializeField] private AbilityData skillLevel2;
+    [Tooltip("유닛 7~10레벨에서 사용하는 스킬입니다. 비워 두면 이전 단계 스킬을 사용합니다.")]
+    [SerializeField] private AbilityData skillLevel3;
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
@@ -52,7 +58,18 @@ public class UnitData : BaseSO
     public float MaxHp => maxHp;
     public float AttackSpd => attackSpd;
     public AbilityData BasicAttack => basicAttack; 
-    public AbilityData Skill => skill;
+    public AbilityData Skill => skillLevel1;
+    public AbilityData SkillLevel1 => skillLevel1;
+    public AbilityData SkillLevel2 => skillLevel2;
+    public AbilityData SkillLevel3 => skillLevel3;
+
+    public AbilityData GetSkillForLevel(int level)
+    {
+        int skillLevel = UnitLevelProgression.GetSkillLevel(level);
+        if (skillLevel >= 3 && skillLevel3 != null) return skillLevel3;
+        if (skillLevel >= 2 && skillLevel2 != null) return skillLevel2;
+        return skillLevel1;
+    }
     
     // 값 유효성 검사
     public override bool IsValid()

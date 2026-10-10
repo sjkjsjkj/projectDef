@@ -1,6 +1,6 @@
 using UnityEngine;
 
-/// <summary>상점과 이벤트에서 공통으로 사용하는 아군 유닛 생성 및 대기 슬롯 배치 담당입니다.</summary>
+/// <summary>상점과 이벤트에서 공통으로 사용하는 유닛 획득(생성 또는 중복 레벨업) 담당입니다.</summary>
 [DisallowMultipleComponent]
 public class UnitSpawner : BaseMono
 {
@@ -24,9 +24,9 @@ public class UnitSpawner : BaseMono
     }
 
     /// <summary>
-    /// 데이터를 받아 유닛 생성과 배치를 완료합니다. 골드나 판매 상태는 호출자가 관리합니다.
+    /// 동일 유닛을 보유 중이면 레벨업하고 반환하며, 처음 획득할 때만 생성 및 배치합니다.
+    /// 골드나 판매 상태는 호출자가 관리합니다. 최대 레벨 중복은 실패로 반환합니다.
     /// 실패하면 이번 호출에서 생성한 유닛과 슬롯 점유를 정리합니다.
-    /// 향후 동일 유닛 합성 판정은 이 진입점에서 빈 슬롯 검사보다 먼저 처리합니다.
     /// </summary>
     public bool TrySpawn(UnitData data, out Unit unit, out string reason)
     {
@@ -35,6 +35,25 @@ public class UnitSpawner : BaseMono
         if (_isSpawning) { reason = "유닛 생성 처리 중입니다."; return false; }
         if (!isActiveAndEnabled) { reason = "유닛 생성기가 비활성 상태입니다."; return false; }
         if (data == null) { reason = "생성할 장수 데이터가 없습니다."; return false; }
+
+        // 대기 칸/프리팹이 없어도 전투 또는 대기 중인 기존 장수는 강화할 수 있습니다.
+        Unit owned = FindOwnedUnit(data);
+        if (owned != null)
+        {
+            if (owned.IsMaxLevel)
+            { reason = "이미 최대 레벨(10)인 장수입니다."; return false; }
+
+            _isSpawning = true;
+            try
+            {
+                if (!owned.TryLevelUp())
+                { reason = "장수의 레벨을 올릴 수 없습니다."; return false; }
+                unit = owned;
+                return true;
+            }
+            finally { _isSpawning = false; }
+        }
+
         if (waitField == null || waitField.GetEmptySlot() == null)
         { reason = "빈 대기 슬롯이 없습니다."; return false; }
         if (unitRoot != null && !unitRoot.gameObject.activeInHierarchy)
@@ -84,5 +103,24 @@ public class UnitSpawner : BaseMono
             }
             finally { _isSpawning = false; }
         }
+    }
+
+    private Unit FindOwnedUnit(UnitData data)
+    {
+        // 현재 구조에서 보유 유닛은 같은 필드 씬의 슬롯에 등록된 아군입니다.
+        // 비활성 슬롯도 포함하고, 미배치 테스트 유닛/생성 대기 객체는 제외합니다.
+        var fieldScene = waitField != null ? waitField.gameObject.scene : gameObject.scene;
+        foreach (Slot slot in FindObjectsByType<Slot>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID))
+        {
+            if (slot.gameObject.scene != fieldScene || slot.Occupant is not Unit candidate ||
+                candidate == null || !ReferenceEquals(candidate.CurrentTarget, slot))
+                continue;
+
+            UnitData ownedData = candidate.Data;
+            if (ownedData == data || (ownedData != null && !string.IsNullOrWhiteSpace(data.Id) &&
+                string.Equals(ownedData.Id, data.Id, System.StringComparison.Ordinal)))
+                return candidate;
+        }
+        return null;
     }
 }
