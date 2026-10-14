@@ -58,13 +58,19 @@ public class Slot : BaseMono , IDropTarget
     public bool CanDrop(IDraggable draggable)
     {
         // 점유 중이어도 교환 후보가 될 수 있습니다. 실제 교환은 컨트롤러가 처리합니다.
-        return draggable is Unit unit && unit != null;
+        return draggable is Unit unit && unit != null && unit.gameObject.scene.IsValid();
     }
 
     public void OnDrop(IDraggable draggable)
     {
         if (draggable is not Unit unit || unit == null)
             return;
+
+        if (!unit.gameObject.scene.IsValid())
+        {
+            Debug.LogError($"프리팹 원본은 슬롯에 배치할 수 없습니다. 인스턴스를 생성하세요: {unit.name}", this);
+            return;
+        }
 
         if (_unit != null && _unit != unit)
         {
