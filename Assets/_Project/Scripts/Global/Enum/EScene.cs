@@ -8,4 +8,6 @@ public enum EScene : byte
     Main = 2,
     Forest = 3,
     Cave = 4,
+    Stage = 5,
+    Unknown = 255,
 }

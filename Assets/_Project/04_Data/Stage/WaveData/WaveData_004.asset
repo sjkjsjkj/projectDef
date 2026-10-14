@@ -18,7 +18,7 @@ MonoBehaviour:
   duration: 30
   spawnInterval: 1
   enemySpawnDatas:
-  - enemyPrefab: {fileID: 1188136741374686675, guid: e921b782bab0df2459e046325451887e, type: 3}
+  - enemyPrefab: {fileID: 0}
     count: 10
     bounties:
     - rid: 5825585668941414472

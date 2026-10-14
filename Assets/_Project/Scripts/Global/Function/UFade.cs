@@ -12,6 +12,7 @@ public static class UFade
     private static Image _fadeImage;
     private static CanvasGroup _canvasGroup;
     private static MonoBehaviour _coroutineRunner; // 코루틴 실행자
+    private static Text _loadingText;
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
@@ -19,6 +20,17 @@ public static class UFade
     /// 현재 페이드 연출 진행 여부를 반환합니다.
     /// </summary>
     public static bool IsFading { get; private set; }
+
+    /// <summary>씬 전환 관리자가 로딩 중 검은 화면과 입력 차단을 유지합니다.</summary>
+    public static void SetOverlay(float alpha, bool blockRaycasts, bool showLoading)
+    {
+        if (!_isInitialize) Initialize();
+        _coroutineRunner.StopAllCoroutines();
+        IsFading = false;
+        _canvasGroup.alpha = alpha;
+        _canvasGroup.blocksRaycasts = blockRaycasts;
+        _loadingText.gameObject.SetActive(showLoading);
+    }
 
     /// <summary>
     /// 페이드 아웃 효과를 실행합니다.
@@ -53,11 +65,13 @@ public static class UFade
     private static void ExecuteFade(float startAlpha, float targetAlpha, float duration, bool blockRaycasts)
     {
         _coroutineRunner.StopAllCoroutines(); // 기존 페이드 효과 종료
+        _canvasGroup.alpha = startAlpha;
         _canvasGroup.blocksRaycasts = blockRaycasts; // 레이캐스트 차단 설정
         // 지속시간 0 방어
         if (duration <= 0f)
         {
             _canvasGroup.alpha = targetAlpha;
+            if (targetAlpha <= 0f) _canvasGroup.blocksRaycasts = false;
             IsFading = false;
             return;
         }
@@ -78,7 +92,8 @@ public static class UFade
         }
         // 페이드 완료
         _canvasGroup.alpha = targetAlpha;
-        _canvasGroup.blocksRaycasts = false;
+        // 검은 화면에서는 차단을 유지하고 페이드 인이 끝나면 해제합니다.
+        if (targetAlpha <= 0f) _canvasGroup.blocksRaycasts = false;
         IsFading = false; // 대기 플래그 OFF
     }
 
@@ -108,6 +123,16 @@ public static class UFade
         _canvasGroup = imageObj.AddComponent<CanvasGroup>();
         _canvasGroup.alpha = 0f;
         _canvasGroup.blocksRaycasts = false;
+        GameObject label = new GameObject("Loading", typeof(RectTransform));
+        label.transform.SetParent(imageObj.transform, false);
+        _loadingText = label.AddComponent<Text>();
+        _loadingText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        _loadingText.text = "Loading...";
+        _loadingText.fontSize = 28;
+        _loadingText.alignment = TextAnchor.MiddleCenter;
+        _loadingText.raycastTarget = false;
+        _loadingText.rectTransform.sizeDelta = new Vector2(320f, 80f);
+        label.SetActive(false);
         // 정적 클래스이므로 코루틴을 돌리기 위한 컴포넌트 추가
         _coroutineRunner = root.AddComponent<FadeRunner>();
 
@@ -122,6 +147,8 @@ public static class UFade
         _fadeImage = null;
         _canvasGroup = null;
         _coroutineRunner = null;
+        _loadingText = null;
+        IsFading = false;
     }
 
     // 코루틴 실행용 은닉 클래스

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -75,9 +76,13 @@ public class WaveManager : BaseMono
             _gameManager.RegisterWaveManager(this);
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
-        if (startGameOnStart && _gameManager != null && _gameManager.WaveManager == this)
+        // 직접 StageScene을 실행한 경우도 부팅/페이드가 끝나기 전에 전투를 시작하지 않습니다.
+        while (SceneFlowManager.Ins != null && SceneFlowManager.Ins.IsTransitioning)
+            yield return null;
+        if (startGameOnStart && _gameManager != null && _gameManager.WaveManager == this &&
+            _gameManager.State != GameState.Playing)
             _gameManager.StartGame();
     }
 

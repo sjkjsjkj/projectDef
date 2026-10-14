@@ -18,14 +18,28 @@ MonoBehaviour:
   duration: 30
   spawnInterval: 1
   enemySpawnDatas:
-  - enemyPrefab: {fileID: 1188136741374686675, guid: e921b782bab0df2459e046325451887e, type: 3}
-    count: 10
+  - enemyPrefab: {fileID: 1188136741374686675, guid: bd9e6b641c9345a42af3c236766897d5, type: 3}
+    count: 1
     bounties:
     - rid: 5825585668941414472
+    - rid: 5825585668941414474
+    - rid: 5825585668941414475
   references:
     version: 2
     RefIds:
     - rid: 5825585668941414472
       type: {class: GoldBounty, ns: , asm: Assembly-CSharp}
       data:
+        amount: 50
+    - rid: 5825585668941414474
+      type: {class: ItemBounty, ns: , asm: Assembly-CSharp}
+      data:
         amount: 1
+        itemType: 0
+        unitGrade: 1
+    - rid: 5825585668941414475
+      type: {class: ItemBounty, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 1
+        itemType: 1
+        unitGrade: 1
