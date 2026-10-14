@@ -1,121 +1,117 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 오브젝트를 풀링으로 저장 및 관리해주는 추상화 클래스
-/// </summary>
-public class ObjectPool<T> where T : BaseMono, IPoolable
+/// <summary>비활성 상태로 생성/초기화하며, 대여와 반환을 중복 없이 관리합니다.</summary>
+public class ObjectPool<T> : IDisposable where T : BaseMono, IPoolable
 {
-    #region ─────────────────────────▶ 내부 변수 ◀─────────────────────────
-    private Queue<T> _pool;
-    private T _prefab;
-    private bool _useOverFlow; // 동적 생성을 허용하는가?
-    #endregion
+    private readonly Queue<T> _available = new Queue<T>();
+    private readonly HashSet<T> _owned = new HashSet<T>();
+    private readonly HashSet<T> _leased = new HashSet<T>();
+    private readonly T _prefab;
+    private readonly Transform _root;
+    private readonly Transform _storage;
+    private bool _useOverFlow;
+    private bool _disposed;
 
-    #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
-    // 생성자
-    public ObjectPool(T prefab, bool useOverFlow = true, int capacity = 10)
+    public ObjectPool(T prefab, bool useOverFlow = true, int capacity = 10, Transform parent = null)
     {
-        Initialize(prefab, useOverFlow, capacity);
+        if (prefab == null) throw new ArgumentNullException(nameof(prefab));
+        if (capacity < 0) throw new ArgumentOutOfRangeException(nameof(capacity));
+        _prefab = prefab;
+        _root = parent;
+        _useOverFlow = useOverFlow;
+        var storage = new GameObject(prefab.name + "_Inactive");
+        storage.SetActive(false);
+        storage.transform.SetParent(parent, false);
+        _storage = storage.transform;
+        for (int i = 0; i < capacity; i++) _available.Enqueue(CreateInstance());
     }
 
-    /// <summary>
-    /// 크기 초과시 동적 생성 허용 여부를 결정합니다.
-    /// </summary>
     public void SetOverFlow(bool active) => _useOverFlow = active;
 
-    /// <summary>
-    /// 풀 크기를 개발자가 직접 재설정합니다.
-    /// </summary>
+    /// <summary>대기 객체 수를 조절합니다. 사용 중인 객체는 유지합니다.</summary>
     public void SetCapacity(int capacity)
     {
-        // 새로운 풀 생성
-        Queue<T> newPool = new(capacity);
-        int activeCount = _pool.Count;
-        int length = activeCount > capacity ? capacity : activeCount; // 기존 크기보다 축소되는 경우를 대비
-        // 새로운 풀로 인스턴스 옮기기
-        for (int i = 0; i < length; ++i)
+        if (capacity < 0) throw new ArgumentOutOfRangeException(nameof(capacity));
+        if (_disposed) return;
+        while (_available.Count > capacity)
         {
-            T instance = _pool.Dequeue();
-            newPool.Enqueue(instance);
+            T instance = _available.Dequeue();
+            _owned.Remove(instance);
+            if (instance != null) DestroyObject(instance.gameObject);
         }
-        // 새로운 풀에 들어가지 못한 인스턴스는 삭제
-        while(_pool.Count > 0)
-        {
-            T instance = _pool.Dequeue();
-            UObject.Destroy(instance);
-        }
-        // 마무리 → 주소 덮어씌우고 기존 풀은 가비지가 되게 하기
-        _pool = newPool;
+        while (_available.Count < capacity) _available.Enqueue(CreateInstance());
     }
 
-    /// <summary>
-    /// 오브젝트를 풀에 넣습니다.
-    /// </summary>
     public void Push(T instance)
     {
-        if(instance == null)
-        {
-            UDebug.Print($"오브젝트 풀({(_prefab == null ? null : _prefab.name)})에서 비어있는 인스턴스를 푸쉬받았습니다.", LogType.Warning);
-            return;
-        }
-        _pool.Enqueue(instance);
+        // OnDisable에서 다시 반환해도 한 번만 처리합니다. 다른 풀의 객체도 받지 않습니다.
+        if (_disposed || instance == null || !_leased.Remove(instance)) return;
         instance.gameObject.SetActive(false);
+        if (instance == null) return;
+        // 부모 비활성화 중 OnDisable에서 반환될 수 있어 여기서는 계층을 바꾸지 않습니다.
+        _available.Enqueue(instance);
     }
 
-    /// <summary>
-    /// 오브젝트를 풀에서 꺼냅니다.
-    /// </summary>
     public bool Pull(out T instance)
     {
-        // 꺼내기 시도
-        while(_pool.TryDequeue(out instance))
-        {
-            if(instance != null)
-            {
-                instance.gameObject.SetActive(true);
-                return true;
-            }
-        }
-        // 동적 생성이 허용
-        if (_useOverFlow)
-        {
-            instance = CreateInstance();
-            return true;
-        }
-        // 꺼낼 수 없음
-        instance = null;
-        UDebug.Print($"오브젝트 풀({_prefab.name})에서 인스턴스를 꺼내지 못했습니다.", LogType.Warning);
-        return false;
+        if (!PullInactive(out instance)) return false;
+        instance.gameObject.SetActive(true);
+        return true;
     }
-    #endregion
 
-    #region ─────────────────────────▶ 내부 메서드 ◀─────────────────────────
-    // 프리펩을 생성하여 반환합니다.
+    /// <summary>Setup 후 비활성 객체를 반환합니다. 호출자가 데이터 주입 후 활성화합니다.</summary>
+    public bool PullInactive(out T instance)
+    {
+        instance = null;
+        if (_disposed) return false;
+        while (_available.Count > 0)
+        {
+            T candidate = _available.Dequeue();
+            if (candidate != null) { instance = candidate; break; }
+            _owned.Remove(candidate);
+        }
+        if (instance == null)
+        {
+            if (!_useOverFlow) return false;
+            instance = CreateInstance();
+        }
+        _leased.Add(instance);
+        instance.transform.SetParent(_root, false);
+        instance.transform.localScale = _prefab.transform.localScale;
+        try { instance.Setup(); }
+        catch { Push(instance); throw; }
+        return true;
+    }
+
     private T CreateInstance()
     {
-        if(_prefab == null)
-        {
-            UDebug.Print($"오브젝트 풀에서 프리펩이 없는 상태에서 인스턴스 생성을 시도했습니다.", LogType.Warning);
-            return null;
-        }
-        T instance = UObject.Spawn(_prefab, Vector3.zero, Quaternion.identity, GameManager.ObjectRoot);
-        instance.gameObject.SetActive(true); // 비활성화되어있는 프리펩일 경우를 위한 활성화 코드
+        T instance = UnityEngine.Object.Instantiate(_prefab, _storage);
+        instance.gameObject.SetActive(false);
+        _owned.Add(instance);
         return instance;
     }
 
-    // 오브젝트 풀링의 초기 세팅 → 크기만큼 오브젝트를 생성해둡니다.
-    private void Initialize(T prefab, bool useOverFlow, int capacity)
+    public void Dispose()
     {
-        this._prefab = prefab;
-        this._pool = new(capacity);
-        this._useOverFlow = useOverFlow;
-        // 초기 크기만큼 인스턴스 생성
-        for (int i = 0; i < capacity; ++i)
+        if (_disposed) return;
+        _disposed = true;
+        foreach (T instance in _owned)
         {
-            T instance = CreateInstance();
-            Push(instance);
+            if (instance == null) continue;
+            instance.gameObject.SetActive(false);
+            DestroyObject(instance.gameObject);
         }
+        _owned.Clear();
+        _leased.Clear();
+        _available.Clear();
+        if (_storage != null) DestroyObject(_storage.gameObject);
     }
-    #endregion
+
+    private static void DestroyObject(GameObject instance)
+    {
+        if (Application.isPlaying) UnityEngine.Object.Destroy(instance);
+        else UnityEngine.Object.DestroyImmediate(instance);
+    }
 }

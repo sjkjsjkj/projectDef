@@ -25,9 +25,11 @@ public class WaveData : BaseSO
 
         foreach (EnemySpawnData data in enemySpawnDatas)
         {
-            if (data == null || data.Count < 1 || data.EnemyPrefab == null ||
-                !data.EnemyPrefab.gameObject.activeSelf || !data.EnemyPrefab.enabled ||
-                data.EnemyPrefab.GetComponent<EnemyHealth>() == null || !data.HasValidBounties())
+            if (data == null || data.Count < 1 || !data.HasValidBounties())
+                return false;
+            // 빈 프리팹은 스포너의 공통 프리팹 + 현재 라운드 CSV 데이터로 대체합니다.
+            if (data.EnemyPrefab != null && (!data.EnemyPrefab.enabled ||
+                data.EnemyPrefab.GetComponent<EnemyHealth>() == null))
                 return false;
         }
         return true;
@@ -37,6 +39,7 @@ public class WaveData : BaseSO
 [Serializable]
 public class EnemySpawnData
 {
+    [Tooltip("지정하면 프리팹 능력치를 사용합니다. 비워두면 공통 Enemy에 WaveIndex와 같은 INDEX의 CSV 데이터를 적용합니다.")]
     [SerializeField] private EnemyMovement enemyPrefab;
     [SerializeField, Min(1)] private int count = 30;
     [Tooltip("적 한 마리를 처치했을 때 지급하는 보상입니다. 빈 목록은 보상 없음입니다.")]
