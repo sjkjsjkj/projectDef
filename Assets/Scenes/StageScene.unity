@@ -308,8 +308,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ef2d68f89f84535b4e940a593cdc0bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleInfoPanel
+<<<<<<< Updated upstream
   _uniqueId: 59ced0cd-98d2-4e25-b014-cf34252c4c55
   _instanceId: -16026
+=======
+  _uniqueId: 0c8e4f4d-3c23-4884-a491-e65a7f962251
+  _instanceId: 65628
+>>>>>>> Stashed changes
   _width: 0
   _height: 0
   _pos: {x: 0, y: 0}
@@ -707,8 +712,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c0c2214644445eb1c65322418898e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InnManager
+<<<<<<< Updated upstream
   _uniqueId: b9cbcae4-44c1-40ae-a8f4-d5214741a6a6
   _instanceId: 54238
+=======
+  _uniqueId: c31f2d79-33bf-488e-bf90-e4627c05d44f
+  _instanceId: 65668
+>>>>>>> Stashed changes
   innData: {fileID: 11400000, guid: a67d52069b17b5944b2e0121e4bd6531, type: 2}
   resources: {fileID: 1129153035}
   unitSpawner: {fileID: 0}
@@ -761,8 +771,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca406ddfe726bcf4b9c1b273e89b4f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestManager
+<<<<<<< Updated upstream
   _uniqueId: efd46a92-65a5-417c-aeac-7f183a33917f
   _instanceId: 54254
+=======
+  _uniqueId: 5d281ba4-fe48-484b-99bf-09ef618f339d
+  _instanceId: 65674
+>>>>>>> Stashed changes
   units:
   - {fileID: 3973326283816249408, guid: 2e325a539d1693241be320f7f2a8d072, type: 3}
   waitField: {fileID: 7786302791907246864}
@@ -1690,8 +1705,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5978c34b847c144b840bed2fb3e9ff3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DragDropController
+<<<<<<< Updated upstream
   _uniqueId: 5dccda16-6269-43b1-b516-e86175ea3d79
   _instanceId: 54260
+=======
+  _uniqueId: 017142e0-61e8-4368-b97c-d3394a55a2f2
+  _instanceId: 65702
+>>>>>>> Stashed changes
   targetCamera: {fileID: 1501859693}
   draggableLayer:
     serializedVersion: 2
@@ -1727,8 +1747,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e094acdeb9f29134291018eb65cafb2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
+<<<<<<< Updated upstream
   _uniqueId: 7d992fb4-352e-4048-a91e-c8611673b868
   _instanceId: 54264
+=======
+  _uniqueId: 5da5a51f-5ced-4866-8230-f51fefa07524
+  _instanceId: 65706
+>>>>>>> Stashed changes
   enemyPath: {fileID: 1959097002}
   enemyPrefab: {fileID: 1188136741374686675, guid: e921b782bab0df2459e046325451887e, type: 3}
   resources: {fileID: 0}
@@ -1745,10 +1770,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c6706d098b6460a83697040dbe3ddc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveManager
+<<<<<<< Updated upstream
   _uniqueId: 38784b30-d567-4822-b954-60c2ecb07a8a
   _instanceId: 54266
+=======
+  _uniqueId: f0186817-c4bc-49bf-ab29-6099b79d5ba6
+  _instanceId: 65708
+>>>>>>> Stashed changes
   waveDatas:
   - {fileID: 11400000, guid: 46bbec33e23068148855ba6fc8be5b23, type: 2}
+  - {fileID: 11400000, guid: 4267d80d8fd62014aadfaf7077d820cd, type: 2}
   enemySpawner: {fileID: 1129153033}
   startGameOnStart: 1
   maxEnemyCount: 100
@@ -1764,8 +1795,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6032a73400264f36961d9187a7923fcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceManager
+<<<<<<< Updated upstream
   _uniqueId: bef94bec-d8fa-417d-86c6-5cfd10e2c6c1
   _instanceId: 54268
+=======
+  _uniqueId: 5e30853e-b605-4a2c-bd38-203c70790ff3
+  _instanceId: 65710
+>>>>>>> Stashed changes
   gold: 30
   innRefreshTickets: 5
   unitSelectionTickets: 0000000000000000000000000000000000000000
@@ -2651,8 +2687,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3adb0d8fad54c044bd36daf4ca09c8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPath
+<<<<<<< Updated upstream
   _uniqueId: 854b8174-fe78-441a-bbf8-49313d99c19b
   _instanceId: 54294
+=======
+  _uniqueId: 3267aabd-825d-4e49-8622-9c47afd35ead
+  _instanceId: 65790
+>>>>>>> Stashed changes
   waypointRadius: 0.15
   directionSize: 0.25
 --- !u!114 &2035484699
