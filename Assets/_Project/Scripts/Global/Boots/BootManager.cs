@@ -8,13 +8,15 @@ using UnityEngine.UI;
 public class BootManager : MonoBehaviour
 {
     private Coroutine _co;
+    private bool _started;
     public void StartBootSequence(GameObject root)
     {
-        if(_co != null)
+        if(_started)
         {
             UDebug.Print("부트 시퀀스가 중복 호출되었습니다.", LogType.Assert);
             return;
         }
+        _started = true;
         _co = StartCoroutine(CoInitialize(root));
     }
 
@@ -33,6 +35,8 @@ public class BootManager : MonoBehaviour
         globalCanvas.Initialize(canvasRoot.transform, K.BOOT_CANVAS_RESOURCE_PATH);
         // 완료
         yield return null;
+        GameManager.Ins.BootComplete();
+        SceneFlowManager.Ins.CompleteBoot();
         UDebug.Print("▷ 부트 시퀀스가 완료되었습니다. ◁");
         _co = null;
     }
@@ -66,6 +70,8 @@ public class BootManager : MonoBehaviour
 
     private void ManagerSpawner(GameObject root)
     {
+        // 첫 화면을 가린 뒤 공용 서비스만 생성합니다. 전투 오브젝트는 StageScene 소유입니다.
+        UObject.AddComponent<SceneFlowManager>(root).Initialize();
         // 순서 의존성 없음 ↓
         var inputManager = UObject.AddComponent<InputManager>(root); // Input Action을 읽음
         inputManager.Initialize();
@@ -91,6 +97,5 @@ public class BootManager : MonoBehaviour
             UDebug.Print($"글로벌 매니저 루트가 파괴되었습니다!", LogType.Assert);
             return;
         }
-        gameManager.BootComplete();
     }
 }
