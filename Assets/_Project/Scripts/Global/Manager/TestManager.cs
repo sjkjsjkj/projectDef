@@ -7,6 +7,7 @@ public class TestManager : BaseMono
 {
     #region ─────────────────────────▶ 인스펙터 ◀─────────────────────────
     [Header("유닛 생성 테스트")]
+    [Tooltip("씬 유닛은 그대로 배치하고, 프리팹은 인스턴스를 생성한 뒤 배치합니다.")]
     [SerializeField] private Unit[] units;
     [SerializeField] private WaitField waitField;
     [SerializeField] private bool unitTestFlag;
@@ -32,13 +33,30 @@ public class TestManager : BaseMono
         if (waitField == null)
         {
             Debug.LogError("테스트 유닛을 배치할 WaitField가 없습니다.", this);
+            return;
         }
 
         for (int i = 0; i < units.Length; i++)
         {
             Unit unit = units[i];
-            if (unit == null || (waitField != null && waitField.TryAddUnit(unit)))
+            if (unit == null)
                 continue;
+
+            // 프리팹 원본을 등록하면 화면에 없는 객체가 슬롯을 점유하게 됩니다.
+            bool created = !unit.gameObject.scene.IsValid();
+            if (created)
+                unit = Instantiate(unit);
+
+            if (waitField.TryAddUnit(unit))
+                continue;
+
+            if (created)
+            {
+                unit.gameObject.SetActive(false);
+                Destroy(unit.gameObject);
+                Debug.LogWarning("대기 슬롯 배치에 실패하여 생성한 테스트 유닛을 제거했습니다.", this);
+                continue;
+            }
 
             // 이미 배치된 유닛은 유지하고, 새로 배치하지 못한 테스트 유닛만 비활성화합니다.
             if (unit.CurrentTarget == null)
