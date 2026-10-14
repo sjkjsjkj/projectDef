@@ -15,6 +15,8 @@ public class SoundEmitter : Frameable, IPoolable
     {
         _tr = null;
         _source = UObject.AddComponent<AudioSource>(this.gameObject);
+        _source.Stop();
+        _source.clip = null;
         _source.playOnAwake = false;
         _source.spatialBlend = 1f;
         _source.rolloffMode = AudioRolloffMode.Linear;

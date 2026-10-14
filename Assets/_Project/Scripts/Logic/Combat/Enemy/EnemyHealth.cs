@@ -45,20 +45,38 @@ public class EnemyHealth : BaseMono, IDamageable
     #region ─────────────────────────▶ 내부 변수 ◀─────────────────────────
     [SerializeField] private float _currentHealth;
     private bool _isDead;
+    private bool _initialized;
+    private float _spawnMaxHealth;
     private ResourceManager _resources;
     private List<Bounty> _bounties = new List<Bounty>();
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
     public float CurrentHealth => _currentHealth;
-    public float MaxHealth => maxHealth;
+    public float MaxHealth => _initialized ? _spawnMaxHealth : maxHealth;
     public bool IsDead => _isDead;
 
     public event Action OnDead;
 
-    public bool IsAlive => _currentHealth > 0f;
+    public bool IsAlive => isActiveAndEnabled && !_isDead && _currentHealth > 0f;
 
     public Transform TargetTransform => transform;
+
+    /// <summary>풀에서 대여한 비활성 적의 체력/사망/보상 상태를 새 개체처럼 초기화합니다.</summary>
+    public void InitializeForSpawn(float? hp = null)
+    {
+        if (gameObject.activeInHierarchy)
+            throw new InvalidOperationException("적의 능력치는 활성화 전에 설정해야 합니다.");
+        float value = hp ?? maxHealth;
+        if (value <= 0f || float.IsNaN(value) || float.IsInfinity(value))
+            throw new ArgumentOutOfRangeException(nameof(hp));
+        _spawnMaxHealth = value;
+        _currentHealth = value;
+        _isDead = false;
+        _initialized = true;
+        _resources = null;
+        _bounties.Clear();
+    }
 
     /// <summary>생성 시 호출합니다. 웨이브 원본을 복사해 이후 웨이브 변경의 영향을 받지 않습니다.</summary>
     public void InitializeBounties(ResourceManager resources, IReadOnlyList<Bounty> bounties)
@@ -83,7 +101,7 @@ public class EnemyHealth : BaseMono, IDamageable
 
     public void TakeDamage(float damage)
     {
-        if (_isDead)
+        if (_isDead || !gameObject.activeInHierarchy)
             return;
 
         if (damage <= 0)
@@ -108,15 +126,20 @@ public class EnemyHealth : BaseMono, IDamageable
             return;
 
         _isDead = true;
-        // 제거/비활성화 경로에서는 지급하지 않습니다. 사망 이벤트 전에 보상을 확정합니다.
-        if (_resources != null)
-            _resources.GrountEnemyBounty(_bounties);
-        UnregisterEnemy();
-
-        OnDead?.Invoke();
-        Debug.Log($"{name} 사망");
-
-        Destroy(gameObject);
+        try
+        {
+            // 제거/비활성화 경로에서는 지급하지 않습니다. 사망 이벤트 전에 보상을 확정합니다.
+            if (_resources != null) _resources.GrountEnemyBounty(_bounties);
+            UnregisterEnemy();
+            OnDead?.Invoke();
+            Debug.Log($"{name} 사망");
+        }
+        finally
+        {
+            UnregisterEnemy();
+            if (TryGetComponent(out EnemyMovement movement)) movement.Despawn();
+            else Destroy(gameObject);
+        }
     }
     #endregion
 
@@ -124,7 +147,13 @@ public class EnemyHealth : BaseMono, IDamageable
     protected override void Awake()
     {
         base.Awake();
-        _currentHealth = maxHealth;
+        // 풀의 비활성 초기화에서 이미 주입한 CSV 능력치를 덮어쓰지 않습니다.
+        if (!_initialized)
+        {
+            _spawnMaxHealth = maxHealth;
+            _currentHealth = maxHealth;
+            _initialized = true;
+        }
     }
     #endregion
 

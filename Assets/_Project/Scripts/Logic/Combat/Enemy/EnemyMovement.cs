@@ -6,7 +6,7 @@ using UnityEngine;
 /// 에너미에게 Path를 따라 움직이게 할 스크립트.
 /// </summary>
 [RequireComponent(typeof(EnemyHealth))]
-public class EnemyMovement : BaseMono
+public class EnemyMovement : BaseMono, IPoolable
 {
     #region ─────────────────────────▶ 인스펙터 ◀─────────────────────────
     [Header("이동 관련")]
@@ -24,11 +24,65 @@ public class EnemyMovement : BaseMono
 
     private bool _isMoving = false;
     private bool _removalReported;
+    private float? _spawnSpeed;
+    private Action<EnemyMovement> _returnToPool;
+    private SpriteRenderer _spriteRenderer;
+    private Sprite _defaultSprite;
+    private bool _cached;
+    private bool _returning;
 
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
     public event Action<EnemyMovement> OnRemoved;
+    public float MoveSpeed => _spawnSpeed ?? moveSpeed;
+
+    public void Setup()
+    {
+        CacheComponents();
+        _enemyHealth.InitializeForSpawn();
+        _spawnSpeed = moveSpeed;
+        _path = null;
+        _currentWaypointIndex = 0;
+        _canMove = true;
+        _isMoving = false;
+        _removalReported = false;
+        _returning = false;
+        if (_spriteRenderer != null) _spriteRenderer.sprite = _defaultSprite;
+    }
+
+    public void ApplyData(EnemyData data, Sprite sprite)
+    {
+        if (data == null) return;
+        CacheComponents();
+        _enemyHealth.InitializeForSpawn(data.Hp);
+        _spawnSpeed = data.Speed;
+        if (sprite != null && _spriteRenderer != null) _spriteRenderer.sprite = sprite;
+    }
+
+    internal void SetPoolReturn(Action<EnemyMovement> callback) => _returnToPool = callback;
+
+    public void Despawn()
+    {
+        if (_returning) return;
+        _returning = true;
+        ReportRemoval();
+        if (_returnToPool != null) _returnToPool(this);
+        else
+        {
+            gameObject.SetActive(false);
+            Destroy(gameObject);
+        }
+    }
+
+    private void CacheComponents()
+    {
+        if (_cached) return;
+        _cached = true;
+        _enemyHealth = GetComponent<EnemyHealth>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
+        if (_spriteRenderer != null) _defaultSprite = _spriteRenderer.sprite;
+    }
 
     public void Init(EnemyPath enemyPath, Transform spawnPoint = null)
     {
@@ -48,12 +102,15 @@ public class EnemyMovement : BaseMono
     #region ─────────────────────────▶ 내부 메서드 ◀─────────────────────────
     private void OnEnable()
     {
+        CacheComponents();
         _enemyHealth.OnDead += StopMovement;
     }
     private void OnDisable()
     {
-        _enemyHealth.OnDead -= StopMovement;
+        if (_enemyHealth != null) _enemyHealth.OnDead -= StopMovement;
         ReportRemoval();
+        // 외부에서 비활성화한 적도 대여 상태로 남지 않도록 반환합니다.
+        if (_returnToPool != null && !_returning) Despawn();
     }
     private void Move()
     {
@@ -70,7 +127,7 @@ public class EnemyMovement : BaseMono
             Vector3.MoveTowards(
                 transform.position,
                 targetPosition,
-                moveSpeed * Time.deltaTime
+                MoveSpeed * Time.deltaTime
             );
 
         float distance =
@@ -113,7 +170,7 @@ public class EnemyMovement : BaseMono
     protected override void Awake()
     {
         base.Awake();
-        _enemyHealth = GetComponent<EnemyHealth>();
+        CacheComponents();
     }
 
     private void Update()

@@ -82,9 +82,11 @@ public class PoolManager : GlobalSingleton<PoolManager>
         if (prefab == null || id.IsEmpty())
         {
             UDebug.Print($"팩토리 생성 함수에서 초기화되지 않은 매개변수를 받았습니다.", LogType.Assert);
+            return;
         }
+        if (_factoryDict.ContainsKey(id)) return;
         // 팩토리 생성
-        var factory = new PoolFactory<T>(prefab, 10);
+        var factory = new PoolFactory<T>(prefab, 10, transform);
         if (_factoryDict.TryAdd(id, factory))
         {
             return;
@@ -93,4 +95,11 @@ public class PoolManager : GlobalSingleton<PoolManager>
         UDebug.Print($"이미 존재하는 팩토리를 중복 생성했습니다. (ID = {id}, Factory = {factory})", LogType.Assert);
     }
     #endregion
+
+    protected override void OnDestroy()
+    {
+        foreach (IPoolFactory factory in _factoryDict.Values) factory.Clear();
+        _factoryDict.Clear();
+        base.OnDestroy();
+    }
 }
