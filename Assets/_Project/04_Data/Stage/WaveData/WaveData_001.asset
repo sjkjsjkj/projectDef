@@ -20,3 +20,12 @@ MonoBehaviour:
   enemySpawnDatas:
   - enemyPrefab: {fileID: 0}
     count: 10
+    bounties:
+    - rid: 5825585668941414472
+  references:
+    version: 2
+    RefIds:
+    - rid: 5825585668941414472
+      type: {class: GoldBounty, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 1

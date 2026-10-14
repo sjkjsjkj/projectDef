@@ -10,9 +10,9 @@ public sealed class PoolFactory<T> : IPoolFactory where T : BaseMono, IPoolable
     /// </summary>
     /// <param name="prefab">프리펩</param>
     /// <param name="capacity">초기 풀 크기</param>
-    public PoolFactory(T prefab, int capacity)
+    public PoolFactory(T prefab, int capacity, UnityEngine.Transform parent = null)
     {
-        _pool = new ObjectPool<T>(prefab, true, capacity);
+        _pool = new ObjectPool<T>(prefab, true, capacity, parent);
     }
 
     /// <summary>
@@ -20,10 +20,10 @@ public sealed class PoolFactory<T> : IPoolFactory where T : BaseMono, IPoolable
     /// </summary>
     public BaseMono Spawn()
     {
-        if (_pool.Pull(out T instance))
+        if (_pool != null && _pool.PullInactive(out T instance))
         {
-            instance.Setup();
             instance.transform.SetParent(GameManager.EnableObjectRoot);
+            instance.gameObject.SetActive(true);
             return instance;
         }
         return null;
@@ -36,12 +36,11 @@ public sealed class PoolFactory<T> : IPoolFactory where T : BaseMono, IPoolable
     {
         if (instance is T ins)
         {
-            _pool.Push(ins);
-            instance.transform.SetParent(GameManager.DisableObjectRoot);
+            _pool?.Push(ins);
         }
         else
         {
-            UObject.Destroy(instance);
+            if (instance != null) UObject.Destroy(instance.gameObject);
         }
     }
 
@@ -50,6 +49,7 @@ public sealed class PoolFactory<T> : IPoolFactory where T : BaseMono, IPoolable
     /// </summary>
     public void Clear()
     {
+        _pool?.Dispose();
         _pool = null;
     }
 }
