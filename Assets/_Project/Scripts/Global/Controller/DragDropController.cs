@@ -37,6 +37,7 @@ public class DragDropController : BaseMono
     #region ─────────────────────────▶ 내부 메서드 ◀─────────────────────────
     private void TryBeginDrag()
     {
+        if (IsPointerOverUI()) return;
         #region 3D Physics ver
         //Vector2 mousePosition = Mouse.current.position.ReadValue();
         //Ray ray = targetCamera.ScreenPointToRay(mousePosition);
@@ -141,7 +142,7 @@ public class DragDropController : BaseMono
             return;
 
         // 유효한 DropTarget이 있고 배치 가능
-        if (IsAlive(_hoverTarget) &&
+        if (!IsPointerOverUI() && IsAlive(_hoverTarget) &&
             _hoverTarget.CanDrop(_draggingObject))
         {
             MoveToTarget(_hoverTarget);
@@ -273,6 +274,17 @@ public class DragDropController : BaseMono
     {
         // 인터페이스 참조에서도 Unity 오브젝트의 파괴 여부를 확인합니다.
         return value != null && (value is not Object unityObject || unityObject != null);
+    }
+
+    private bool IsPointerOverUI()
+    {
+        if (EventSystem.current == null || Mouse.current == null) return false;
+        _uiHits.Clear();
+        var pointer = new PointerEventData(EventSystem.current) { position = Mouse.current.position.ReadValue() };
+        EventSystem.current.RaycastAll(pointer, _uiHits);
+        foreach (RaycastResult hit in _uiHits)
+            if (hit.module is GraphicRaycaster) return true;
+        return false;
     }
 
     private static bool HasValidPlacement(IDraggable draggable, IDropTarget target)

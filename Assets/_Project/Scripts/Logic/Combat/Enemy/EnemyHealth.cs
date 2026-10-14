@@ -39,10 +39,11 @@ public class EnemyHealth : BaseMono, IDamageable
     #region ─────────────────────────▶ 인스펙터 ◀─────────────────────────
     [Header("체력")]
     [SerializeField] private float maxHealth = 100;
+    
     #endregion
 
     #region ─────────────────────────▶ 내부 변수 ◀─────────────────────────
-    private float _currentHealth;
+    [SerializeField] private float _currentHealth;
     private bool _isDead;
     private ResourceManager _resources;
     private List<Bounty> _bounties = new List<Bounty>();
