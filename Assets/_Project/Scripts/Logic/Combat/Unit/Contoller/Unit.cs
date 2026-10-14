@@ -120,10 +120,17 @@ public class Unit : CharacterBaseMono, IDraggable
     private void OnEnable()
     {
         if (unitData != null && _stats != null) RegisterStats();
+        if (CurrentTarget is Slot slot && slot != null) slot.NotifyBattleFormationChanged();
+    }
+
+    private void OnDisable()
+    {
+        if (CurrentTarget is Slot slot && slot != null) slot.NotifyBattleFormationChanged();
     }
 
     private void OnDestroy()
     {
+        if (CurrentTarget is Slot slot && slot != null) slot.Remove(this);
         // 종료 중 새 싱글톤을 만들지 않도록 보관한 참조만 사용합니다.
         if (_statManager != null) _statManager.Unregister(this);
     }

@@ -5,10 +5,14 @@ using UnityEngine;
 /// </summary>
 public class Slot : BaseMono , IDropTarget
 {
+    public enum PlacementArea { Auto, Battle, Waiting }
+
     #region ─────────────────────────▶ 인스펙터 ◀─────────────────────────
     [Header("슬롯 정보")]
     [SerializeField] private int slotIndex;
     [SerializeField] private Unit initialUnit;
+    [Tooltip("Auto: WaitField 아래는 대기석, 나머지는 전투 슬롯입니다. 필요한 경우 직접 지정하세요.")]
+    [SerializeField] private PlacementArea placementArea = PlacementArea.Auto;
 
     [Header("Highlight")]
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -23,6 +27,15 @@ public class Slot : BaseMono , IDropTarget
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
     public bool IsEmpty => _unit == null;
     public IDraggable Occupant => _unit;
+    public int SlotIndex => slotIndex;
+    public bool IsBattleSlot => placementArea == PlacementArea.Battle ||
+        (placementArea == PlacementArea.Auto && GetComponentInParent<WaitField>(true) == null);
+
+    public void NotifyBattleFormationChanged()
+    {
+        if (Application.isPlaying && IsBattleSlot)
+            OnBattleFormationChanged.Publish(gameObject.scene);
+    }
 
 
     public void Remove(IDraggable draggable)
@@ -39,6 +52,7 @@ public class Slot : BaseMono , IDropTarget
         {
             unit.CurrentTarget = null;
         }
+        NotifyBattleFormationChanged();
     }
 
     public bool CanDrop(IDraggable draggable)
@@ -77,10 +91,13 @@ public class Slot : BaseMono , IDropTarget
 
     private void SetUnit(Unit unit)
     {
+        bool changed = _unit != unit;
         _unit = unit;
 
         unit.CurrentTarget = this;
         unit.transform.position = transform.position;
+        // 같은 슬롯에 다시 놓거나 드래그를 취소한 경우에는 갱신하지 않습니다.
+        if (changed) NotifyBattleFormationChanged();
     }
     #endregion
 
@@ -102,6 +119,9 @@ public class Slot : BaseMono , IDropTarget
             OnDrop(initialUnit);
         }
     }
+
+    private void OnEnable() => NotifyBattleFormationChanged();
+    private void OnDisable() => NotifyBattleFormationChanged();
     #endregion
 
     #region ─────────────────────────▶ 중첩 타입 ◀─────────────────────────
