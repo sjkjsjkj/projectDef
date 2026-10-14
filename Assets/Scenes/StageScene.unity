@@ -766,7 +766,7 @@ MonoBehaviour:
   units:
   - {fileID: 3973326283816249408, guid: 2e325a539d1693241be320f7f2a8d072, type: 3}
   waitField: {fileID: 7786302791907246864}
-  unitTestFlag: 1
+  unitTestFlag: 0
 --- !u!4 &928763021
 Transform:
   m_ObjectHideFlags: 0

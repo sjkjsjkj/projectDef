@@ -19,6 +19,7 @@ public class InnPanel : UI
     [SerializeField] private TMP_Text honorText;
     [SerializeField] private TMP_Text goldText;
     [SerializeField] private TMP_Text ticketsText;
+    [SerializeField] private InnRecruitmentView recruitmentView;
     private ResourceManager _resources;
     private TMP_FontAsset _appliedManagerFont;
     public InnManager Manager => innManager;
@@ -46,6 +47,8 @@ public class InnPanel : UI
     protected override void Awake()
     {
         base.Awake();
+        EnsureRecruitmentUI();
+        if (recruitmentView != null) recruitmentView.Bind();
         if (offerViews == null || offerViews.Length != InnManager.OfferCount)
         {
             Debug.LogError("객잔 UI에는 정확히 다섯 개의 InnOfferView를 연결하세요.", this);
@@ -74,6 +77,7 @@ public class InnPanel : UI
 
     private void OnDisable()
     {
+        if (recruitmentView != null) recruitmentView.Close();
         if (innManager != null) innManager.OnOffersChanged -= RefreshView;
         if (_resources != null) _resources.OnChanged -= RefreshView;
         _resources = null;
@@ -92,6 +96,32 @@ public class InnPanel : UI
         ApplyManagerFont();
         SetMinimized(false);
         RefreshView();
+    }
+
+    /// <summary>기존 씬에 저장된 객잔 UI에도 실행 시 지명영입 UI를 추가합니다.</summary>
+    public void EnsureRecruitmentUI()
+    {
+        if (openButton != null)
+        {
+            TMP_Text label = openButton.GetComponentInChildren<TMP_Text>(true);
+            if (label != null)
+            {
+                label.text = "객잔";
+                label.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 92);
+            }
+            var rect = (RectTransform)openButton.transform;
+            // 기존 버튼의 오른쪽 가장자리 위치를 유지합니다.
+            float width = rect.rect.width;
+            rect.anchoredPosition += new Vector2((width - 104) * (1 - rect.pivot.x), 0);
+            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 104);
+        }
+        if (recruitmentView == null && contentRoot != null)
+            recruitmentView = InnUIFactory.CreateRecruitmentUI(this, contentRoot.transform);
+    }
+
+    public void ShowRecruitmentMessage(string message)
+    {
+        if (messageText != null) messageText.text = message;
     }
 
     /// <summary>닫힌 상점의 텍스트까지 매니저 폰트를 적용합니다. 지정 폰트는 글리프 유무로 교체하지 않습니다.</summary>
@@ -152,12 +182,14 @@ public class InnPanel : UI
 
     private void SetMinimized(bool minimized)
     {
+        if (minimized && recruitmentView != null) recruitmentView.Close();
         if (contentRoot != null) contentRoot.SetActive(!minimized);
         if (openButton != null) openButton.gameObject.SetActive(minimized);
     }
 
     private void RefreshView()
     {
+        if (recruitmentView != null) recruitmentView.Refresh();
         if (innManager == null || _resources == null) return;
         if (resourcesText != null)
             resourcesText.text = $"명예 {_resources.HonorLevel} ({_resources.HonorExperience}/{_resources.RequiredHonorExperience})   |   {_resources.Gold}골드   |   초기화권 {_resources.InnRefreshTickets}장";

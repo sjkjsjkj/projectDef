@@ -7,7 +7,7 @@ public class ResourceManager : BaseMono
 {
     [SerializeField, Min(0)] private int gold;
     [SerializeField, Min(0)] private int innRefreshTickets;
-    [Tooltip("인덱스 0부터 1~5등급 유닛 선택권의 보유 수량입니다.")]
+    [Tooltip("인덱스 0부터 1~5급 지명영입권의 보유 수량입니다. 기존 유닛 선택권과 같은 재화입니다.")]
     [SerializeField] private int[] unitSelectionTickets = new int[5];
     [SerializeField, Range(1, 10)] private int honorLevel = 1;
     [SerializeField, Min(0)] private int honorExperience;
@@ -144,6 +144,23 @@ public class ResourceManager : BaseMono
         if (grade < 1 || grade > 5 || unitSelectionTickets == null || grade > unitSelectionTickets.Length)
             return 0;
         return Mathf.Max(0, unitSelectionTickets[grade - 1]);
+    }
+
+    /// <summary>라운드 및 이벤트에서 지급하는 등급별 지명영입권입니다.</summary>
+    public void AddUnitSelectionTickets(int grade, int amount)
+    {
+        if (grade < 1 || grade > 5 || amount <= 0) return;
+        EnsureSelectionTicketStorage();
+        unitSelectionTickets[grade - 1] = AddClamped(GetUnitSelectionTickets(grade), amount);
+        OnChanged?.Invoke();
+    }
+
+    public bool TrySpendUnitSelectionTicket(int grade)
+    {
+        if (GetUnitSelectionTickets(grade) < 1) return false;
+        unitSelectionTickets[grade - 1] = GetUnitSelectionTickets(grade) - 1;
+        OnChanged?.Invoke();
+        return true;
     }
 
     private void EnsureSelectionTicketStorage()

@@ -82,13 +82,14 @@ public static class InnUIFactory
         Button honor = MakeButton("BuyHonor", panel, 28, 48, 310, 44, "명예 획득", font);
         Button refresh = MakeButton("Refresh", panel, 768, 48, 324, 44, "목록 초기화 · 초기화권 1장", font);
         TMP_Text message = Label("Message", panel, 28, 8, 1064, 30, "", 16, font, TextAlignmentOptions.MidlineLeft);
-        Button open = MakeButton("OpenShop", root.transform, -188, 28, 160, 52, "객잔 / 상점", font);
+        Button open = MakeButton("OpenShop", root.transform, -132, 28, 104, 52, "객잔", font);
         var openRect = (RectTransform)open.transform;
         openRect.anchorMin = openRect.anchorMax = new Vector2(1, 0);
 
         InnPanel view = root.AddComponent<InnPanel>();
         view.Configure(manager, panel.gameObject, open, close, refresh, honor,
             honor.GetComponentInChildren<TMP_Text>(), honorStatus, gold, tickets, message, views);
+        view.EnsureRecruitmentUI();
         panel.gameObject.SetActive(false);
         root.SetActive(true);
         if (Application.isPlaying) EnsureEventSystem();
@@ -103,7 +104,67 @@ public static class InnUIFactory
         return events;
     }
 
-    private static RectTransform Rect(string name, Transform parent, float x, float y, float width, float height)
+    public static InnRecruitmentView CreateRecruitmentUI(InnPanel owner, Transform panel)
+    {
+        TMP_FontAsset font = ResolveFont(owner.Manager != null ? owner.Manager.UIFont : null);
+        RectTransform row = Rect("RecruitmentTickets", panel, 350, 40, 406, 64);
+        var buttons = new Button[5];
+        var icons = new Image[5];
+        var counts = new TMP_Text[5];
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            RectTransform cell = Rect($"Grade_{i + 1}", row, i * 82, 0, 78, 64);
+            Image face = cell.gameObject.AddComponent<Image>();
+            face.color = Surface;
+            buttons[i] = cell.gameObject.AddComponent<Button>();
+            buttons[i].targetGraphic = face;
+            // 별도 이미지 에셋 없이 영입권 모양과 등급 숫자를 아이콘으로 표시합니다.
+            RectTransform icon = Rect("TicketIcon", cell, 17, 29, 44, 32);
+            icons[i] = icon.gameObject.AddComponent<Image>();
+            icons[i].raycastTarget = false;
+            Label("Grade", icon, 0, 0, 44, 32, $"{i + 1}급", 17, font).color = new Color32(20, 23, 30, 255);
+            counts[i] = Label("Count", cell, 0, 1, 78, 26, "0장", 16, font);
+            counts[i].enableAutoSizing = true;
+            counts[i].fontSizeMin = 9;
+            counts[i].fontSizeMax = 16;
+        }
+
+        RectTransform overlay = Rect("RecruitmentOverlay", owner.transform, 0, 0, 0, 0);
+        overlay.anchorMax = Vector2.one;
+        Image shade = overlay.gameObject.AddComponent<Image>();
+        shade.color = new Color(0, 0, 0, 0.6f);
+        Button dismiss = overlay.gameObject.AddComponent<Button>();
+        dismiss.targetGraphic = shade;
+        dismiss.transition = Selectable.Transition.None;
+        RectTransform popup = Rect("RecruitmentList", overlay, -380, -214, 760, 428);
+        popup.anchorMin = popup.anchorMax = new Vector2(0.5f, 0.5f);
+        popup.gameObject.AddComponent<Image>().color = Background;
+        // 내부의 빈 공간을 눌러도 바깥 닫기 버튼으로 이벤트가 전파되지 않습니다.
+        Button surface = popup.gameObject.AddComponent<Button>();
+        surface.transition = Selectable.Transition.None;
+        TMP_Text title = Label("Title", popup, 20, 374, 600, 36, "지명영입", 24, font, TextAlignmentOptions.MidlineLeft);
+        Button close = MakeButton("Close", popup, 652, 376, 88, 32, "닫기 ×", font);
+        TMP_Text message = Label("Message", popup, 20, 12, 720, 32, "", 16, font, TextAlignmentOptions.MidlineLeft);
+
+        RectTransform viewport = Rect("Viewport", popup, 20, 54, 720, 306);
+        viewport.gameObject.AddComponent<Image>().color = Surface;
+        viewport.gameObject.AddComponent<RectMask2D>();
+        RectTransform content = Rect("Candidates", viewport, 0, 0, 720, 306);
+        content.anchorMin = content.anchorMax = content.pivot = new Vector2(0, 1);
+        ScrollRect scroll = viewport.gameObject.AddComponent<ScrollRect>();
+        scroll.viewport = viewport;
+        scroll.content = content;
+        scroll.horizontal = false;
+        scroll.movementType = ScrollRect.MovementType.Clamped;
+        scroll.scrollSensitivity = 30;
+
+        var view = row.gameObject.AddComponent<InnRecruitmentView>();
+        view.Configure(owner, buttons, icons, counts, overlay.gameObject, dismiss, close, title, message, scroll);
+        overlay.gameObject.SetActive(false);
+        return view;
+    }
+
+    internal static RectTransform Rect(string name, Transform parent, float x, float y, float width, float height)
     {
         var rect = new GameObject(name, typeof(RectTransform)).GetComponent<RectTransform>();
         rect.SetParent(parent, false);
@@ -113,7 +174,7 @@ public static class InnUIFactory
         return rect;
     }
 
-    private static TMP_Text Label(string name, Transform parent, float x, float y, float width, float height,
+    internal static TMP_Text Label(string name, Transform parent, float x, float y, float width, float height,
         string text, int size, TMP_FontAsset font, TextAlignmentOptions alignment = TextAlignmentOptions.Center)
     {
         var label = Rect(name, parent, x, y, width, height).gameObject.AddComponent<TextMeshProUGUI>();
@@ -126,7 +187,7 @@ public static class InnUIFactory
         return label;
     }
 
-    private static Button MakeButton(string name, Transform parent, float x, float y, float width, float height,
+    internal static Button MakeButton(string name, Transform parent, float x, float y, float width, float height,
         string text, TMP_FontAsset font)
     {
         RectTransform rect = Rect(name, parent, x, y, width, height);
