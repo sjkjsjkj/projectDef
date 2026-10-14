@@ -18,6 +18,7 @@ MonoBehaviour:
   unitName: "\uC190\uBD80\uC778\u3014\uD1B5\uCE6D \uC190\uC0C1\uD5A5\u3015"
   description: "\uC124\uBA85"
   grade: 3
+  prefab: {fileID: 0}
   region: "\uC624"
   region2: "\uC624\xB7\uCD09\u3014\uD63C\uC778\u3015"
   weaponType: "\uAD81\uBCD1"
@@ -27,5 +28,7 @@ MonoBehaviour:
   defense: 5
   attackSpd: 1
   range: 2
-  basicAttack: {fileID: 0}
-  skill: {fileID: 0}
+  basicAttack: {fileID: 11400000, guid: 4ddba8a9b3ea4f84199854b231886217, type: 2}
+  skillLevel1: {fileID: 0}
+  skillLevel2: {fileID: 0}
+  skillLevel3: {fileID: 0}

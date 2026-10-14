@@ -1,8 +1,9 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-/// <summary>객잔의 판매 목록과 구매 비용을 관리하며 유닛 획득은 UnitSpawner에 요청합니다.</summary>
+/// <summary>객잔의 일반 구매와 지명영입을 관리하며 유닛 획득은 UnitSpawner에 요청합니다.</summary>
 public class InnManager : BaseMono
 {
     public const int OfferCount = 5;
@@ -12,6 +13,10 @@ public class InnManager : BaseMono
     [SerializeField] private UnitSpawner unitSpawner;
     [SerializeField] private bool createUIOnStart = true;
     [SerializeField] private TMPro.TMP_FontAsset uiFont;
+
+    [Header("테스트용 초기 지명영입권")]
+    [Tooltip("플레이 시작 시 한 번만 추가 지급합니다. 각 등급의 기본값은 0장입니다.")]
+    [SerializeField] private RecruitmentTicketAmounts initialRecruitmentTickets = new RecruitmentTicketAmounts();
 
     // 기존 씬/프리팹의 참조를 보존하기 위한 이전 전용 필드입니다. 구매 로직에서는 사용하지 않습니다.
     [FormerlySerializedAs("waitField"), SerializeField, HideInInspector] private WaitField legacyWaitField;
@@ -114,6 +119,52 @@ public class InnManager : BaseMono
         }
     }
 
+    /// <summary>명예/일반 판매 목록과 무관하게 해당 등급의 등록된 장수를 모두 반환합니다.</summary>
+    public List<UnitData> GetRecruitmentCandidates(int grade)
+    {
+        var candidates = new List<UnitData>();
+        DatabaseManager database = DatabaseManager.Ins;
+        if (grade < 1 || grade > 5 || database == null) return candidates;
+        foreach (UnitData data in database.Units)
+            if (data != null && data.Grade == grade) candidates.Add(data);
+        return candidates;
+    }
+
+    public bool TryRecruit(int grade, UnitData data, out string reason)
+    {
+        reason = null;
+        if (_busy) { reason = "객잔 처리 중입니다."; return false; }
+        DatabaseManager database = DatabaseManager.Ins;
+        if (grade < 1 || grade > 5 || data == null || data.Grade != grade ||
+            database == null || database.GetUnit(data.Id) != data)
+        { reason = "지명영입할 수 없는 장수입니다."; return false; }
+        if (resources == null || resources.GetUnitSelectionTickets(grade) < 1)
+        { reason = $"{grade}급 지명영입권이 부족합니다."; return false; }
+        EnsureUnitSpawner();
+        if (unitSpawner == null)
+        { reason = "유닛 생성기를 연결하세요."; return false; }
+
+        _busy = true;
+        bool paid = false;
+        bool recruited = false;
+        try
+        {
+            // 재진입으로 같은 영입권을 사용할 수 없도록 먼저 확보하고 실패 시 복원합니다.
+            paid = resources.TrySpendUnitSelectionTicket(grade);
+            if (!paid) { reason = $"{grade}급 지명영입권이 부족합니다."; return false; }
+            recruited = unitSpawner.TrySpawn(data, out _, out reason);
+            return recruited;
+        }
+        finally
+        {
+            try
+            {
+                if (paid && !recruited) resources.AddUnitSelectionTickets(grade, 1);
+            }
+            finally { _busy = false; }
+        }
+    }
+
     // 예전 InnManager만 연결된 씬도 실행할 수 있도록 설정을 한 번 옮깁니다.
     [ContextMenu("기존 유닛 생성 설정을 UnitSpawner로 이전")]
     private void EnsureUnitSpawner()
@@ -163,6 +214,7 @@ public class InnManager : BaseMono
 
     private void Start()
     {
+        initialRecruitmentTickets?.GrantTo(resources);
         EnsureUnitSpawner();
         if (!TryInitialize())
             Debug.LogError("객잔 초기화 실패: InnData, ResourceManager, Resources/Table의 UnitTable을 확인하세요.", this);
