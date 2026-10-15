@@ -16,6 +16,9 @@ public class AbilityInstance
 
     public float RemainingCooldown => _remainingCooldown;
     public bool IsReady => _remainingCooldown <= 0f;
+    public float EffectiveCooldown => Mathf.Max(0f, _context.IsBasicAttack
+        ? Data.GetCooldown(_context) / Mathf.Max(0.01f, _context.OwnerStats.AttackSpd)
+        : Data.GetCooldown(_context) * _context.OwnerStats.SkillCooldownMultiplier);
 
     public AbilityInstance(AbilityData data, AbilityContext context)
     {
@@ -52,7 +55,7 @@ public class AbilityInstance
         if (!Data.TryExecute(_context))
             return false;
 
-        _remainingCooldown = Mathf.Max(0f, Data.GetCooldown(_context));
+        _remainingCooldown = EffectiveCooldown;
 
         return true;
     }

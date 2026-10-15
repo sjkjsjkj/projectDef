@@ -41,6 +41,7 @@ public class InnManager : BaseMono
     public bool TryInitialize()
     {
         if (IsInitialized) return true;
+        if (resources != null) resources.EnsureMetaInitialized();
         if (_busy || resources == null || innData == null ||
             !TryRollOffers(out UnitData[] offers))
             return false;

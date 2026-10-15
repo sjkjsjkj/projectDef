@@ -1,0 +1,137 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf4d8c2dd47ddfc4eb236fa7e31f68a2, type: 3}
+  m_Name: MetaProgressionSettings
+  m_EditorClassIdentifier:
+  pointsPerCompletedWave: 10
+  victoryBonus: 100
+  upgrades:
+  - id: attack
+    title: 기물 공격력
+    description: 모든 기물의 공격력을 높입니다.
+    category: 0
+    effect: 0
+    maxLevel: 30
+    baseCost: 10
+    costPerLevel: 5
+    valuePerLevel: 0.05
+    ticketGrade: 5
+  - id: attack_speed
+    title: 기물 공격속도
+    description: 기본 공격 간격을 줄입니다. 스킬 쿨타임에는 영향을 주지 않습니다.
+    category: 0
+    effect: 1
+    maxLevel: 20
+    baseCost: 15
+    costPerLevel: 10
+    valuePerLevel: 0.05
+    ticketGrade: 5
+  - id: basic_range
+    title: 기본 공격 사거리
+    description: 기본 공격의 대상 탐색 범위를 넓힙니다.
+    category: 0
+    effect: 2
+    maxLevel: 10
+    baseCost: 20
+    costPerLevel: 15
+    valuePerLevel: 0.05
+    ticketGrade: 5
+  - id: skill_cooldown
+    title: 스킬 쿨타임
+    description: 스킬을 사용한 뒤 다음 사용까지의 시간을 줄입니다.
+    category: 1
+    effect: 3
+    maxLevel: 15
+    baseCost: 20
+    costPerLevel: 10
+    valuePerLevel: 0.03
+    ticketGrade: 5
+  - id: skill_range
+    title: 스킬 공격 범위
+    description: 스킬의 대상 탐색 범위를 넓힙니다.
+    category: 1
+    effect: 4
+    maxLevel: 10
+    baseCost: 20
+    costPerLevel: 15
+    valuePerLevel: 0.05
+    ticketGrade: 5
+  - id: enemy_health
+    title: 적 체력 감소
+    description: 새로 출현하는 모든 적의 최대 체력을 줄입니다.
+    category: 2
+    effect: 5
+    maxLevel: 20
+    baseCost: 20
+    costPerLevel: 10
+    valuePerLevel: 0.02
+    ticketGrade: 5
+  - id: enemy_capacity
+    title: 최대 적 허용 수
+    description: 패배하기 전까지 허용되는 생존 적 수를 늘립니다.
+    category: 2
+    effect: 6
+    maxLevel: 20
+    baseCost: 10
+    costPerLevel: 5
+    valuePerLevel: 5
+    ticketGrade: 5
+  - id: gold_gain
+    title: 획득 골드
+    description: 적 처치와 이벤트의 골드 보상을 늘립니다. 시작 골드와 환불은 제외됩니다.
+    category: 3
+    effect: 7
+    maxLevel: 20
+    baseCost: 15
+    costPerLevel: 10
+    valuePerLevel: 0.05
+    ticketGrade: 5
+  - id: starting_gold
+    title: 시작 골드
+    description: 매 게임 시작 시 추가 골드를 지급합니다.
+    category: 3
+    effect: 8
+    maxLevel: 20
+    baseCost: 10
+    costPerLevel: 5
+    valuePerLevel: 5
+    ticketGrade: 5
+  - id: starting_honor
+    title: 시작 명예
+    description: 매 게임 시작 시 명예 경험치를 추가합니다. 필요 경험치를 채우면 명예 레벨도 오릅니다.
+    category: 4
+    effect: 9
+    maxLevel: 20
+    baseCost: 15
+    costPerLevel: 10
+    valuePerLevel: 4
+    ticketGrade: 5
+  - id: starting_refresh
+    title: 시작 객잔 초기화권
+    description: 매 게임 시작 시 객잔 목록 초기화권을 추가 지급합니다.
+    category: 4
+    effect: 10
+    maxLevel: 10
+    baseCost: 20
+    costPerLevel: 20
+    valuePerLevel: 1
+    ticketGrade: 5
+  - id: starting_recruitment
+    title: 시작 5급 지명영입권
+    description: 매 게임 시작 시 5급 기물을 선택할 수 있는 영입권을 추가 지급합니다.
+    category: 4
+    effect: 11
+    maxLevel: 3
+    baseCost: 100
+    costPerLevel: 100
+    valuePerLevel: 1
+    ticketGrade: 5

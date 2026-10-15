@@ -13,7 +13,7 @@ public class RoundEventGoldEffect : RoundEventEffect
         reason = null;
         if (!IsValid() || context?.Resources == null)
         { reason = "골드 보상 설정과 ResourceManager를 확인하세요."; return false; }
-        context.Resources.AddGold(amount);
+        context.Resources.GrantGold(amount);
         return true;
     }
 }

@@ -52,6 +52,15 @@ public class AbilityData : BaseSO
         return new AbilityInstance(this, context);
     }
 
+    /// <summary>같은 SO를 기본 공격/스킬이 공유해도 각 실행 문맥의 강화만 적용합니다.</summary>
+    public float GetEffectiveRange(AbilityContext context)
+    {
+        float baseRange = rangeType == EAbilityRangeType.OwnerAttackRange
+            ? context.OwnerStats.RangeBeforeMeta : range;
+        return Mathf.Max(0f, baseRange * (context.IsBasicAttack
+            ? context.OwnerStats.BasicRangeMultiplier : context.OwnerStats.SkillRangeMultiplier));
+    }
+
     public virtual float GetCooldown(AbilityContext context)
     {
         return cooldown;

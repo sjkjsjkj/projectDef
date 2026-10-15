@@ -19,9 +19,13 @@ public static class InnUIFactory
         if (!Application.isPlaying) return standard;
         if (_fallbackFont == null)
         {
-            Font source = Font.CreateDynamicFontFromOSFont(
-                new[] { "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans CJK KR", "Arial" }, 24);
-            _fallbackFont = TMP_FontAsset.CreateFontAsset(source);
+            // Unity 6에서는 동적 UnityEngine.Font를 다시 TMP로 변환하면 폰트 데이터가
+            // 없어 실패할 수 있습니다. TMP의 OS 폰트 API로 직접 생성합니다.
+            foreach (string family in new[] { "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans CJK KR" })
+            {
+                _fallbackFont = TMP_FontAsset.CreateFontAsset(family, "Regular");
+                if (_fallbackFont != null) break;
+            }
             if (_fallbackFont != null) _fallbackFont.isMultiAtlasTexturesEnabled = true;
         }
         return _fallbackFont != null ? _fallbackFont : standard;

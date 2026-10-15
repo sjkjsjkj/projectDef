@@ -16,6 +16,8 @@ public class ResourceManager : BaseMono
     private readonly Dictionary<string, GoldGainModifier> _goldGainEffects =
         new Dictionary<string, GoldGainModifier>(StringComparer.Ordinal);
     private GoldGainModifier _goldGainModifier = new GoldGainModifier(0f, 1f);
+    private bool _metaInitialized;
+    private decimal _goldGainRemainder;
 
     public int Gold => Mathf.Max(0, gold);
     public int InnRefreshTickets => Mathf.Max(0, innRefreshTickets);
@@ -30,9 +32,39 @@ public class ResourceManager : BaseMono
     public bool CanPurchaseHonor => honorProgression != null && honorProgression.IsValid && !IsHonorMax && Gold >= HonorPurchaseCost;
     public event Action OnChanged;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        EnsureMetaInitialized();
+    }
+
+    /// <summary>객잔 첫 추첨 전에 시작 명예를 적용합니다. 재활성화/재호출로 중복 지급하지 않습니다.</summary>
+    public void EnsureMetaInitialized()
+    {
+        if (!Application.isPlaying || _metaInitialized) return;
+        ApplyStartingMetaBonuses(MetaProgressionManager.CurrentBonuses);
+    }
+
+    public void ApplyStartingMetaBonuses(MetaUpgradeBonuses bonuses)
+    {
+        if (_metaInitialized || bonuses == null) return;
+        _metaInitialized = true;
+        SetGoldGainEffect("meta", multiplier: bonuses.GoldGain);
+        AddGold(bonuses.StartingGold);
+        AddHonorExperience(bonuses.StartingHonor);
+        AddInnRefreshTickets(bonuses.StartingRefreshTickets);
+        for (int grade = 1; grade <= 5; grade++) AddUnitSelectionTickets(grade, bonuses.RecruitmentTickets(grade));
+    }
+
+    /// <summary>획득 보상에만 배율을 적용합니다. 시작 자원과 환불은 AddGold를 사용합니다.</summary>
+    public void GrantGold(int amount)
+    {
+        if (amount > 0) AddGold(CalculateGoldBounty(amount));
+    }
+
     /// <summary>
     /// 적 한 마리의 보상 묶음을 지급합니다. 골드 합계에 사망 시점의 보정을 한 번 적용하고
-    /// 소수점은 버립니다. 아이템 수량과 AddGold를 통한 환불에는 보정을 적용하지 않습니다.
+    /// 소수점은 다음 획득으로 이월합니다. 아이템 수량과 AddGold를 통한 환불에는 보정을 적용하지 않습니다.
     /// </summary>
     public void GrountEnemyBounty(List<Bounty> bounties)
     {
@@ -86,11 +118,14 @@ public class ResourceManager : BaseMono
         // float의 표현 오차 때문에 10 * 1.4가 13골드로 버려지지 않도록 십진수로 계산합니다.
         try
         {
-            decimal adjusted = baseGold * (decimal)GoldGainMultiplier + (decimal)GoldGainFlat;
-            return (int)Math.Min(int.MaxValue, Math.Max(0m, decimal.Floor(adjusted)));
+            decimal adjusted = Math.Max(0m, baseGold * (decimal)GoldGainMultiplier + (decimal)GoldGainFlat + _goldGainRemainder);
+            decimal whole = decimal.Floor(adjusted);
+            _goldGainRemainder = whole >= int.MaxValue ? 0m : adjusted - whole;
+            return (int)Math.Min(int.MaxValue, whole);
         }
         catch (OverflowException)
         {
+            _goldGainRemainder = 0m;
             // decimal 범위보다 큰 보정도 기존 골드와 같은 int 상한으로 제한합니다.
             double adjusted = baseGold * (double)GoldGainMultiplier + GoldGainFlat;
             return (int)Math.Min(int.MaxValue, Math.Max(0d, Math.Floor(adjusted)));

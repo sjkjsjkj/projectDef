@@ -36,7 +36,7 @@ public class UnitCombatController : BaseMono
 
     public bool TryUseSkill()
     {
-        if (!combatEnabled || (GameManager.Ins != null && GameManager.Ins.IsRoundEventActive))
+        if (!combatEnabled || (GameManager.Ins != null && GameManager.Ins.IsCombatPaused))
             return false;
 
         if (_skill == null)
@@ -52,7 +52,7 @@ public class UnitCombatController : BaseMono
         if (_unit.Data.BasicAttack != null)
         {
             _basicAttack =
-                _unit.Data.BasicAttack.CreateInstance(new AbilityContext(_unit));
+                _unit.Data.BasicAttack.CreateInstance(new AbilityContext(_unit, isBasicAttack: true));
         }
 
         RefreshSkill();
@@ -121,7 +121,7 @@ public class UnitCombatController : BaseMono
 
     private void Update()
     {
-        if (GameManager.Ins != null && GameManager.Ins.IsRoundEventActive) return;
+        if (GameManager.Ins != null && GameManager.Ins.IsCombatPaused) return;
         // 전투가 비활성화되어도 이미 시작된 쿨다운은 경과합니다.
         _basicAttack?.Tick(Time.deltaTime);
         _skill?.Tick(Time.deltaTime);

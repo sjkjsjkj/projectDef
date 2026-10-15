@@ -21,7 +21,8 @@ public class WaveManager : BaseMono
     public bool IsRunning { get; private set; }
     public bool IsComplete => _currentWaveIndex >= waveDatas.Count;
     public float RemainingTime { get; private set; }
-    public int MaxEnemyCount => Mathf.Max(1, maxEnemyCount);
+    public int MaxEnemyCount => (int)Math.Min(int.MaxValue,
+        (long)Mathf.Max(1, maxEnemyCount) + MetaProgressionManager.CurrentBonuses.EnemyCapacity);
     public EnemySpawner EnemySpawner => enemySpawner;
     public RoundEventManager RoundEventManager => roundEventManager;
     public WaveData LastCompletedWaveData { get; private set; }

@@ -11,6 +11,7 @@ public class UnitStats
     private float _hpRatio = 1f;
     // 관리자는 합계가 바뀔 때 새 사전을 전달하며, 전달한 사전은 이후 변경하지 않습니다.
     private IReadOnlyDictionary<UnitStatType, UnitStatModifier> _globalModifiers;
+    private MetaUpgradeBonuses _meta = MetaUpgradeBonuses.None;
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
@@ -21,6 +22,10 @@ public class UnitStats
     public float Defense { get; private set; }
     public float AttackRange { get; private set; }
     public float AttackSpd { get; private set; }
+    public float RangeBeforeMeta { get; private set; }
+    public float BasicRangeMultiplier => _meta.BasicRange;
+    public float SkillRangeMultiplier => _meta.SkillRange;
+    public float SkillCooldownMultiplier => _meta.SkillCooldown;
 
     public UnitStats(UnitData data, int level = 1)
     {
@@ -44,6 +49,12 @@ public class UnitStats
         _globalModifiers = modifiers;
         Recalculate();
     }
+
+    public void ApplyMetaBonuses(MetaUpgradeBonuses bonuses)
+    {
+        _meta = bonuses ?? MetaUpgradeBonuses.None;
+        Recalculate();
+    }
     #endregion
 
     #region ─────────────────────────▶ 내부 메서드 ◀─────────────────────────
@@ -55,10 +66,11 @@ public class UnitStats
         // 이미 보정된 현재 값에 재적용하지 않고, 항상 레벨별 기본값부터 계산합니다.
         MaxHp = Calculate(UnitStatType.MaxHp, _data.MaxHp * growth);
         CurrentHp = MaxHp * _hpRatio;
-        AttackPower = Calculate(UnitStatType.AttackPower, _data.Attack * growth);
+        AttackPower = Calculate(UnitStatType.AttackPower, _data.Attack * growth * _meta.AttackPower);
         Defense = Calculate(UnitStatType.Defense, _data.Defense * growth);
-        AttackRange = Calculate(UnitStatType.AttackRange, _data.Range * growth);
-        AttackSpd = Calculate(UnitStatType.AttackSpd, _data.AttackSpd * growth);
+        RangeBeforeMeta = Calculate(UnitStatType.AttackRange, _data.Range * growth);
+        AttackRange = RangeBeforeMeta * _meta.BasicRange;
+        AttackSpd = Calculate(UnitStatType.AttackSpd, _data.AttackSpd * growth * _meta.AttackSpeed);
     }
 
     private float Calculate(UnitStatType stat, float baseValue)
