@@ -342,7 +342,7 @@ public class DragDropController : BaseMono
 
     private void Update()
     {
-        if (Mouse.current == null)
+        if (Mouse.current == null || (GameManager.Ins != null && GameManager.Ins.IsRoundEventActive))
         {
             if (_isDragging)
             {

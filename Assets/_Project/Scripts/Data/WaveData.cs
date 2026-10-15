@@ -13,10 +13,14 @@ public class WaveData : BaseSO
     [Tooltip("목록 순서대로 소환합니다. 시간이 끝나면 아직 소환하지 않은 수량은 취소됩니다.")]
     [SerializeField] private List<EnemySpawnData> enemySpawnDatas = new List<EnemySpawnData>();
 
+    [Header("종료 후 이벤트 (선택)")]
+    [SerializeField] private RoundEventData completionEvent;
+
     public int WaveIndex => waveIndex;
     public float Duration => Mathf.Max(0.1f, duration);
     public float SpawnInterval => Mathf.Max(0f, spawnInterval);
     public IReadOnlyList<EnemySpawnData> EnemySpawnDatas => enemySpawnDatas;
+    public RoundEventData CompletionEvent => completionEvent;
 
     public override bool IsValid()
     {
