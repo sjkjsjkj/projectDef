@@ -6,7 +6,7 @@
 
 - `Assets/Scenes/MainScene.unity`가 Build Settings의 첫 씬입니다. `StageScene`도 활성 등록하고 기존 `SampleScene`은 뒤에 유지했습니다.
 - 별도의 로딩 씬 대신 최초 MainScene 위에 전역 로딩 오버레이를 표시합니다. Bootstrapper는 첫 씬의 Awake 전에 실행됩니다.
-- 에디터에서는 `MainScene`을 열고 Play로 전체 흐름을 확인합니다. `StageScene`만 열어 Play하는 기존 작업 방식도 유지됩니다.
+- 에디터에서는 어떤 씬을 편집 중이든 Play를 누르면 `MainScene`에서 시작합니다. `Editor/MainScenePlayModeSetup.cs`가 Unity의 `playModeStartScene`을 자동 설정하며 Play 종료 후에는 원래 편집하던 씬으로 돌아옵니다. 씬을 수동으로 전환하거나 저장하지 않습니다.
 - MainSceneController가 카메라, 메뉴 Canvas, Input System용 EventSystem을 씬 내부에 생성합니다. 카메라와 UI를 직접 배치하면 기존 객체를 사용합니다.
 - 게임시작은 SceneFlowManager.StartStage()를 호출합니다. 전환이 끝난 후 GameManager.StartGame()을 호출합니다.
 - WaveManager의 자동 시작도 전환 완료를 기다리므로 검은 화면 뒤에서 웨이브 시간이 소모되거나 이중 시작되지 않습니다. StageScene 단독 실행에서는 기존 startGameOnStart 설정을 따릅니다.
@@ -47,7 +47,7 @@
 2. 게임시작을 연속 클릭: StageScene이 한 번만 로드되고 페이드가 끝난 뒤 웨이브가 시작되는지 확인합니다.
 3. 전환 동안 FadeCanvas가 화면과 포인터 입력을 가리고, 완료 후 객잔/드래그 입력이 복구되는지 확인합니다.
 4. 전역 매니저 루트는 하나이며 MainMenuCanvas/메인 카메라는 StageScene에 남지 않는지 확인합니다.
-5. StageScene 단독 Play와 Play 종료 후 재실행을 확인합니다.
+5. StageScene을 편집하다가 Play를 눌러도 MainScene에서 시작하고, 종료하면 StageScene으로 돌아오는지 확인합니다. Play를 반복해도 동일하게 동작해야 합니다.
 6. 향후 복귀 버튼을 연결할 때 ReturnToMain() 후 재시작하여 골드/적/영입 목록/시너지가 새 판으로 초기화되는지 확인합니다.
 7. StageScene 빌드 등록을 임시 해제한 경우 오류 메시지 후 메뉴 입력이 유지되는지 확인합니다.
 
