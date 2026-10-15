@@ -71,6 +71,7 @@ public class Unit : CharacterBaseMono, IDraggable
     private void RegisterStats()
     {
         if (!Application.isPlaying) return;
+        _stats.ApplyMetaBonuses(MetaProgressionManager.CurrentBonuses);
         if (_statManager == null)
             _statManager = GlobalUnitStatManager.Ins;
         if (_statManager != null)

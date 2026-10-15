@@ -70,8 +70,8 @@ public class EnemyHealth : BaseMono, IDamageable
         float value = hp ?? maxHealth;
         if (value <= 0f || float.IsNaN(value) || float.IsInfinity(value))
             throw new ArgumentOutOfRangeException(nameof(hp));
-        _spawnMaxHealth = value;
-        _currentHealth = value;
+        _spawnMaxHealth = value * MetaProgressionManager.CurrentBonuses.EnemyHealth;
+        _currentHealth = _spawnMaxHealth;
         _isDead = false;
         _initialized = true;
         _resources = null;
@@ -150,8 +150,8 @@ public class EnemyHealth : BaseMono, IDamageable
         // 풀의 비활성 초기화에서 이미 주입한 CSV 능력치를 덮어쓰지 않습니다.
         if (!_initialized)
         {
-            _spawnMaxHealth = maxHealth;
-            _currentHealth = maxHealth;
+            _spawnMaxHealth = maxHealth * MetaProgressionManager.CurrentBonuses.EnemyHealth;
+            _currentHealth = _spawnMaxHealth;
             _initialized = true;
         }
     }

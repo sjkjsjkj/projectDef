@@ -14,7 +14,7 @@ public class AllEnemiesTargetSelector : TargetSelector
         List<IDamageable> results)
     {
         var position = context.Origin.position;
-        var range = data.GetRange(context.OwnerStats);
+        var range = data.GetEffectiveRange(context);
 
         var colliders = Physics2D.OverlapCircleAll(
             position,

@@ -175,7 +175,7 @@ public class EnemyMovement : BaseMono, IPoolable
 
     private void Update()
     {
-        if (GameManager.Ins != null && GameManager.Ins.IsRoundEventActive) return;
+        if (GameManager.Ins != null && GameManager.Ins.IsCombatPaused) return;
         if (!_canMove)
             return;
         if (!_isMoving || _path == null)

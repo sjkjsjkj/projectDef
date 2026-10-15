@@ -15,12 +15,15 @@ public class GameManager : GlobalSingleton<GameManager>
     private WaveManager _waveManager;
     private bool _enemyLimitExceeded;
     private RoundEventManager _roundEventManager;
+    private string _metaRunId;
+    private int _completedWaves;
 
     public GameState State => gameState;
     public int CurrentWave => currentWave;
     public int CurrentEnemyCount => EnemyHealth.ActiveEnemyCount;
     public WaveManager WaveManager => _waveManager;
     public bool IsRoundEventActive => gameState == GameState.RoundEvent;
+    public bool IsCombatPaused => IsRoundEventActive || gameState == GameState.Victory || gameState == GameState.Defeat;
     public event Action<GameState> OnGameStateChanged;
 
     /// <summary>부팅 시 생성되는 GameManager에 씬의 WaveManager를 연결합니다.</summary>
@@ -70,7 +73,15 @@ public class GameManager : GlobalSingleton<GameManager>
             return false;
         }
 
+        if (Application.isPlaying && !MetaProgressionManager.Ins.TrySettlePending())
+        {
+            Debug.LogError(MetaProgressionManager.Ins.LastError, this);
+            return false;
+        }
+
         _waveManager.ResetWaves();
+        _metaRunId = Guid.NewGuid().ToString("N");
+        _completedWaves = 0;
         _enemyLimitExceeded = false;
         currentWave = 0;
         ChangeGameState(GameState.Playing);
@@ -85,6 +96,7 @@ public class GameManager : GlobalSingleton<GameManager>
             return true;
 
         ChangeGameState(GameState.Ready);
+        _metaRunId = null;
         return false;
     }
 
@@ -97,7 +109,13 @@ public class GameManager : GlobalSingleton<GameManager>
         CancelRoundEvent();
         if (_waveManager != null)
             _waveManager.StopWave();
+        string runId = _metaRunId;
+        _metaRunId = null;
+        if (Application.isPlaying && runId != null)
+            MetaProgressionManager.Ins.CompleteRun(runId, _completedWaves, victory);
         ChangeGameState(victory ? GameState.Victory : GameState.Defeat);
+        if (Application.isPlaying && !ApplicationLifetime.IsQuitting)
+            MetaRunResultView.Show(victory);
     }
 
     public void UpdateGameState()
@@ -126,6 +144,7 @@ public class GameManager : GlobalSingleton<GameManager>
     private void HandleWaveEnd(int waveIndex)
     {
         if (gameState != GameState.Playing || _waveManager == null) return;
+        _completedWaves++;
         if (_enemyLimitExceeded || CurrentEnemyCount > _waveManager.MaxEnemyCount)
         { EndGame(); return; }
 

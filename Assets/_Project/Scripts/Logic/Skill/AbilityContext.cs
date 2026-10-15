@@ -16,16 +16,18 @@ public class AbilityContext
     public UnitStats OwnerStats { get; }
     public Transform Origin { get; }
     public IReadOnlyList<IDamageable> Targets { get; }
+    public bool IsBasicAttack { get; }
 
     // 타깃 선택 결과는 문맥에 보관하며 공유 SO에는 저장하지 않습니다.
     internal List<IDamageable> TargetBuffer { get; } = new();
 
-    public AbilityContext(Unit unit)
+    public AbilityContext(Unit unit, bool isBasicAttack = false)
     {
         if (unit == null)
             throw new System.ArgumentNullException(nameof(unit));
 
         Owner = unit;
+        IsBasicAttack = isBasicAttack;
         OwnerStats = unit.Stat;
         Origin = unit.Origin;
         Targets = TargetBuffer.AsReadOnly();
