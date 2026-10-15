@@ -36,7 +36,7 @@ public class UnitCombatController : BaseMono
 
     public bool TryUseSkill()
     {
-        if (!combatEnabled)
+        if (!combatEnabled || (GameManager.Ins != null && GameManager.Ins.IsRoundEventActive))
             return false;
 
         if (_skill == null)
@@ -121,6 +121,7 @@ public class UnitCombatController : BaseMono
 
     private void Update()
     {
+        if (GameManager.Ins != null && GameManager.Ins.IsRoundEventActive) return;
         // 전투가 비활성화되어도 이미 시작된 쿨다운은 경과합니다.
         _basicAttack?.Tick(Time.deltaTime);
         _skill?.Tick(Time.deltaTime);

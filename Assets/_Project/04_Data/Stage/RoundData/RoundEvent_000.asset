@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beada27cbec64b698faa7d5cf846c015, type: 3}
+  m_Name: RoundEvent_000
+  m_EditorClassIdentifier: Assembly-CSharp::RoundEventData
+  id: 000
+  type: 0
+  title: "\uC0C8\uB85C\uC6B4 \uAE30\uD68C"
+  description: "\uC774\uBC88 \uC804\uD22C\uB97C \uC774\uB04C \uD798\uC744 \uC120\uD0DD\uD558\uC138\uC694."
+  monsterPortrait: {fileID: 0}
+  choiceCount: 3
+  initialRefreshCost: 20
+  refreshCostIncrease: 10
+  options:
+  - {fileID: 11400000, guid: 754a56e778e9bb643a6e1409a021dc38, type: 2}
+  - {fileID: 11400000, guid: 5f308217897d7cd408d579c603dc7bc0, type: 2}
+  - {fileID: 11400000, guid: 17843e723dc935f40968c5b504c4baca, type: 2}
+  - {fileID: 11400000, guid: 82d31b53666fec24dae3054c971fd851, type: 2}
+  - {fileID: 11400000, guid: 6f755d1054aa40749a5e04e2e6877442, type: 2}
+  - {fileID: 11400000, guid: 191fb7438a62e3c45b3425530a5f8aef, type: 2}

@@ -14,11 +14,13 @@ public class GameManager : GlobalSingleton<GameManager>
 
     private WaveManager _waveManager;
     private bool _enemyLimitExceeded;
+    private RoundEventManager _roundEventManager;
 
     public GameState State => gameState;
     public int CurrentWave => currentWave;
     public int CurrentEnemyCount => EnemyHealth.ActiveEnemyCount;
     public WaveManager WaveManager => _waveManager;
+    public bool IsRoundEventActive => gameState == GameState.RoundEvent;
     public event Action<GameState> OnGameStateChanged;
 
     /// <summary>부팅 시 생성되는 GameManager에 씬의 WaveManager를 연결합니다.</summary>
@@ -36,6 +38,7 @@ public class GameManager : GlobalSingleton<GameManager>
         _waveManager = manager;
         _waveManager.OnWaveStart += HandleWaveStart;
         _waveManager.OnWaveEnd += HandleWaveEnd;
+        _waveManager.OnWavesReset += HandleWavesReset;
         currentWave = 0;
         _enemyLimitExceeded = false;
         ChangeGameState(GameState.Ready);
@@ -46,8 +49,10 @@ public class GameManager : GlobalSingleton<GameManager>
         if (_waveManager != manager)
             return;
 
+        CancelRoundEvent();
         _waveManager.OnWaveStart -= HandleWaveStart;
         _waveManager.OnWaveEnd -= HandleWaveEnd;
+        _waveManager.OnWavesReset -= HandleWavesReset;
         _waveManager.StopWave();
         _waveManager = null;
         _enemyLimitExceeded = false;
@@ -57,7 +62,7 @@ public class GameManager : GlobalSingleton<GameManager>
 
     public bool StartGame()
     {
-        if (gameState == GameState.Playing)
+        if (gameState == GameState.Playing || gameState == GameState.RoundEvent)
             return false;
         if (_waveManager == null || !_waveManager.isActiveAndEnabled)
         {
@@ -86,9 +91,10 @@ public class GameManager : GlobalSingleton<GameManager>
     /// <summary>웨이브/소환을 멈추고 결과를 통지합니다. 결과 화면을 위해 적은 유지합니다.</summary>
     public void EndGame(bool victory = false)
     {
-        if (gameState != GameState.Playing)
+        if (gameState != GameState.Playing && gameState != GameState.RoundEvent)
             return;
 
+        CancelRoundEvent();
         if (_waveManager != null)
             _waveManager.StopWave();
         ChangeGameState(victory ? GameState.Victory : GameState.Defeat);
@@ -119,9 +125,67 @@ public class GameManager : GlobalSingleton<GameManager>
 
     private void HandleWaveEnd(int waveIndex)
     {
+        if (gameState != GameState.Playing || _waveManager == null) return;
+        if (_enemyLimitExceeded || CurrentEnemyCount > _waveManager.MaxEnemyCount)
+        { EndGame(); return; }
+
+        RoundEventData data = _waveManager.LastCompletedWaveData?.CompletionEvent;
+        // 최종 라운드에 연결된 이벤트도 승리 판정보다 먼저 처리합니다.
+        if (data != null)
+        {
+            _roundEventManager = _waveManager.RoundEventManager;
+            if (_roundEventManager == null)
+            {
+                Debug.LogError("웨이브에 이벤트가 설정되어 있지만 RoundEventManager가 연결되지 않았습니다.", this);
+                EndGame();
+                return;
+            }
+            _roundEventManager.OnCompleted += HandleRoundEventCompleted;
+            _roundEventManager.OnCancelled += HandleRoundEventCancelled;
+            ChangeGameState(GameState.RoundEvent);
+            // 상태 변경 구독자가 게임을 종료했을 수 있습니다.
+            if (gameState != GameState.RoundEvent || _roundEventManager == null) return;
+            if (!_roundEventManager.TryBegin(data, _waveManager, waveIndex, out string reason))
+            {
+                Debug.LogError(reason, this);
+                EndGame();
+            }
+            return;
+        }
+        ContinueWaves();
+    }
+
+    private void ContinueWaves()
+    {
         UpdateGameState();
         if (gameState == GameState.Playing && !_waveManager.IsComplete && !_waveManager.StartWave())
             EndGame();
+    }
+
+    private void HandleRoundEventCompleted()
+    {
+        CancelRoundEvent();
+        if (gameState != GameState.RoundEvent || _waveManager == null) return;
+        ChangeGameState(GameState.Playing);
+        ContinueWaves();
+    }
+
+    private void HandleRoundEventCancelled() => EndGame();
+
+    private void CancelRoundEvent()
+    {
+        if (_roundEventManager == null) return;
+        RoundEventManager manager = _roundEventManager;
+        _roundEventManager = null;
+        manager.OnCompleted -= HandleRoundEventCompleted;
+        manager.OnCancelled -= HandleRoundEventCancelled;
+        manager.Cancel();
+    }
+
+    private void HandleWavesReset()
+    {
+        CancelRoundEvent();
+        if (gameState == GameState.RoundEvent) ChangeGameState(GameState.Ready);
     }
 
     private void HandleEnemyCountChanged(int count)
@@ -218,7 +282,7 @@ public class GameManager : GlobalSingleton<GameManager>
 
     internal void PrepareSceneChange()
     {
-        if (gameState == GameState.Playing) EndGame();
+        if (gameState == GameState.Playing || gameState == GameState.RoundEvent) EndGame();
         _uiRoot = null;
         _objectRoot = null;
         _enableObjectRoot = null;

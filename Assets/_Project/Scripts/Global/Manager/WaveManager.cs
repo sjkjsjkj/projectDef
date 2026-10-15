@@ -9,6 +9,7 @@ public class WaveManager : BaseMono
     [Header("웨이브 구성")]
     [SerializeField] private List<WaveData> waveDatas = new List<WaveData>();
     [SerializeField] private EnemySpawner enemySpawner;
+    [SerializeField] private RoundEventManager roundEventManager;
     [SerializeField] private bool startGameOnStart = true;
     [Tooltip("맵 전체의 살아 있는 적 수가 이 값을 초과하면 패배합니다.")]
     [SerializeField, Min(1)] private int maxEnemyCount = 100;
@@ -22,6 +23,8 @@ public class WaveManager : BaseMono
     public float RemainingTime { get; private set; }
     public int MaxEnemyCount => Mathf.Max(1, maxEnemyCount);
     public EnemySpawner EnemySpawner => enemySpawner;
+    public RoundEventManager RoundEventManager => roundEventManager;
+    public WaveData LastCompletedWaveData { get; private set; }
 
     // 이벤트 인자는 목록 인덱스가 아닌 WaveData의 웨이브 번호입니다.
     public event Action<int> OnWaveStart;
@@ -35,7 +38,8 @@ public class WaveManager : BaseMono
 
     public bool StartWave()
     {
-        if (IsRunning || IsComplete || !isActiveAndEnabled)
+        if (IsRunning || IsComplete || !isActiveAndEnabled ||
+            (_gameManager != null && _gameManager.State == GameState.RoundEvent))
             return false;
 
         WaveData wave = GetCurrentWaveData();
@@ -66,6 +70,7 @@ public class WaveManager : BaseMono
         if (enemySpawner != null)
             enemySpawner.ClearEnemies();
         _currentWaveIndex = 0;
+        LastCompletedWaveData = null;
         OnWavesReset?.Invoke();
     }
 
@@ -103,7 +108,8 @@ public class WaveManager : BaseMono
         if (RemainingTime > 0f)
             return;
 
-        int waveIndex = GetCurrentWaveData().WaveIndex;
+        LastCompletedWaveData = GetCurrentWaveData();
+        int waveIndex = LastCompletedWaveData.WaveIndex;
         StopWave();
         _currentWaveIndex++;
         OnWaveEnd?.Invoke(waveIndex);
