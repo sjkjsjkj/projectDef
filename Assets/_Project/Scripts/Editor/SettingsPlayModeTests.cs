@@ -62,10 +62,31 @@ public class SettingsPlayModeTests
             deadline = Time.realtimeSinceStartup + 20f;
             while (SceneFlowManager.Ins.IsTransitioning && Time.realtimeSinceStartup < deadline) yield return null;
             Button battleOpen = GameObject.Find("BattleSettingsCanvas/Settings").GetComponent<Button>();
+            Button speedButton = GameObject.Find("BattleSettingsCanvas/Speed").GetComponent<Button>();
+            Button autoButton = GameObject.Find("BattleSettingsCanvas/AutoAdvance").GetComponent<Button>();
+            var playback = battleOpen.GetComponentInParent<BattlePlaybackController>();
+            Assert.That(battleOpen.GetComponentInChildren<TMP_Text>().font.name, Is.EqualTo("Shilla_Culture(B) SDF"));
+            Assert.That(playback.Speed, Is.EqualTo(1f));
+            foreach (float expected in new[] { 2f, 3f, 0.5f, 1f })
+            {
+                speedButton.onClick.Invoke();
+                Assert.That(playback.Speed, Is.EqualTo(expected));
+                Assert.That(Time.timeScale, Is.EqualTo(expected));
+            }
+            Assert.That(GameManager.Ins.WaveManager.AutoAdvance, Is.False);
+            autoButton.onClick.Invoke();
+            Assert.That(GameManager.Ins.WaveManager.AutoAdvance, Is.True);
+            Assert.That(autoButton.GetComponentInChildren<TMP_Text>().text, Does.Contain("ON"));
+            autoButton.onClick.Invoke();
+            Assert.That(GameManager.Ins.WaveManager.AutoAdvance, Is.False);
             Time.timeScale = 1.5f;
             battleOpen.onClick.Invoke();
             panel = Object.FindAnyObjectByType<SettingsPanel>();
             Assert.That(Time.timeScale, Is.Zero);
+            speedButton.onClick.Invoke();
+            autoButton.onClick.Invoke();
+            Assert.That(Time.timeScale, Is.Zero, "설정창의 일시정지를 배속 버튼이 해제하면 안 됩니다.");
+            Assert.That(GameManager.Ins.WaveManager.AutoAdvance, Is.False);
             Assert.That(GameManager.Ins.IsCombatPaused, Is.True);
             Assert.That(panel.GetComponentsInChildren<Slider>().Length, Is.EqualTo(3));
             Assert.That(panel.GetComponentsInChildren<Toggle>().Length, Is.EqualTo(1));
