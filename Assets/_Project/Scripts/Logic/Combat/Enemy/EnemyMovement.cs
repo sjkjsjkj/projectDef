@@ -20,6 +20,7 @@ public class EnemyMovement : BaseMono, IPoolable
     private EnemyPath _path;
 
     private EnemyHealth _enemyHealth;
+    private EnemyStatusController _status;
     private bool _canMove = true;
 
     private bool _isMoving = false;
@@ -35,12 +36,14 @@ public class EnemyMovement : BaseMono, IPoolable
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
     public event Action<EnemyMovement> OnRemoved;
-    public float MoveSpeed => _spawnSpeed ?? moveSpeed;
+    public float MoveSpeed => (_spawnSpeed ?? moveSpeed) *
+        (_status != null && _status.isActiveAndEnabled ? _status.MovementSpeedMultiplier : 1f);
 
     public void Setup()
     {
         CacheComponents();
         _enemyHealth.InitializeForSpawn();
+        _status = _enemyHealth.StatusEffects;
         _spawnSpeed = moveSpeed;
         _path = null;
         _currentWaypointIndex = 0;
@@ -80,6 +83,7 @@ public class EnemyMovement : BaseMono, IPoolable
         if (_cached) return;
         _cached = true;
         _enemyHealth = GetComponent<EnemyHealth>();
+        _status = _enemyHealth.StatusEffects;
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
         if (_spriteRenderer != null) _defaultSprite = _spriteRenderer.sprite;
     }
@@ -103,6 +107,7 @@ public class EnemyMovement : BaseMono, IPoolable
     private void OnEnable()
     {
         CacheComponents();
+        _status = _enemyHealth.StatusEffects;
         _enemyHealth.OnDead += StopMovement;
     }
     private void OnDisable()
@@ -177,6 +182,8 @@ public class EnemyMovement : BaseMono, IPoolable
     {
         if (GameManager.Ins != null && GameManager.Ins.IsCombatPaused) return;
         if (!_canMove)
+            return;
+        if (_status != null && _status.isActiveAndEnabled && _status.IsMovementBlocked)
             return;
         if (!_isMoving || _path == null)
             return;
