@@ -31,6 +31,19 @@ public class EnemySpawner : BaseMono
     public int ActiveEnemyCount => _activeEnemies.Count;
     public bool IsSpawning => _wave != null;
 
+    /// <summary>현재 웨이브에서 아직 생성하지 않은 적 수입니다. 중단으로 취소된 소환은 제외합니다.</summary>
+    public int RemainingSpawnCount
+    {
+        get
+        {
+            if (_wave == null) return 0;
+            long remaining = -_spawnedInGroup;
+            for (int i = _spawnDataIndex; i < _wave.EnemySpawnDatas.Count; i++)
+                remaining += _wave.EnemySpawnDatas[i].Count;
+            return (int)Math.Min(int.MaxValue, Math.Max(0, remaining));
+        }
+    }
+
     public bool SpawnWave(WaveData wave)
     {
         if (!isActiveAndEnabled || IsSpawning) return false;
