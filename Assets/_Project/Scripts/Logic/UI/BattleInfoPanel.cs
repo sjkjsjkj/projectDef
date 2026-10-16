@@ -28,6 +28,7 @@ public class BattleInfoPanel : UI
     private UnityAction[] _clickHandlers;
     public int CurrentTabIndex { get; private set; } = -1;
     public int TabCount => tabs != null ? tabs.Length : 0;
+    public SpecialSynergyDefinition[] SpecialSynergies => specialSynergies;
 
     // 비활성 UI 루트에서 Awake 전에 호출합니다.
     public void Configure(Tab[] entries, TMP_FontAsset font = null)

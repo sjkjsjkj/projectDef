@@ -29,6 +29,9 @@ public class AbilityData : BaseSO
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
+    public string SkillName => skillName;
+    public string SkillDescription => skillDescription;
+    public Sprite Image => image;
     public float Range => range;
     public float Cooldown => cooldown;
     public LayerMask TargetLayer => targetLayer;
