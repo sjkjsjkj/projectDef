@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>적 생존 여부와 관계없이 제한 시간으로 웨이브를 진행합니다.</summary>
+/// <summary>제한 시간 또는 자동 진행의 전멸 조건으로 웨이브를 진행합니다.</summary>
 public class WaveManager : BaseMono
 {
     [Header("웨이브 구성")]
@@ -11,6 +11,8 @@ public class WaveManager : BaseMono
     [SerializeField] private EnemySpawner enemySpawner;
     [SerializeField] private RoundEventManager roundEventManager;
     [SerializeField] private bool startGameOnStart = true;
+    [Tooltip("활성화하면 예정된 소환이 끝나고 필드 전체의 적이 없을 때 다음 라운드로 진행합니다.")]
+    [SerializeField] private bool autoAdvance;
     [Tooltip("맵 전체의 살아 있는 적 수가 이 값을 초과하면 패배합니다.")]
     [SerializeField, Min(1)] private int maxEnemyCount = 100;
 
@@ -26,6 +28,15 @@ public class WaveManager : BaseMono
     public EnemySpawner EnemySpawner => enemySpawner;
     public RoundEventManager RoundEventManager => roundEventManager;
     public WaveData LastCompletedWaveData { get; private set; }
+    public bool AutoAdvance => autoAdvance;
+    public event Action<bool> OnAutoAdvanceChanged;
+
+    public void SetAutoAdvance(bool value)
+    {
+        if (autoAdvance == value) return;
+        autoAdvance = value;
+        OnAutoAdvanceChanged?.Invoke(value);
+    }
 
     // 이벤트 인자는 목록 인덱스가 아닌 WaveData의 웨이브 번호입니다.
     public event Action<int> OnWaveStart;
@@ -92,9 +103,12 @@ public class WaveManager : BaseMono
             _gameManager.StartGame();
     }
 
-    private void Update()
+    private void Update() => Tick(Time.deltaTime);
+
+    private void Tick(float deltaTime)
     {
-        if (!IsRunning)
+        if (!IsRunning || deltaTime <= 0f ||
+            (_gameManager != null && _gameManager.IsCombatPaused))
             return;
 
         if (enemySpawner == null || !enemySpawner.isActiveAndEnabled)
@@ -105,8 +119,10 @@ public class WaveManager : BaseMono
             return;
         }
 
-        RemainingTime = Mathf.Max(0f, RemainingTime - Time.deltaTime);
-        if (RemainingTime > 0f)
+        RemainingTime = Mathf.Max(0f, RemainingTime - deltaTime);
+        // 첫 소환 전이나 소환 간격 중 잠깐 필드가 비어도 미생성 적을 건너뛰지 않습니다.
+        bool cleared = autoAdvance && !enemySpawner.IsSpawning && EnemyHealth.ActiveEnemyCount == 0;
+        if (RemainingTime > 0f && !cleared)
             return;
 
         LastCompletedWaveData = GetCurrentWaveData();
