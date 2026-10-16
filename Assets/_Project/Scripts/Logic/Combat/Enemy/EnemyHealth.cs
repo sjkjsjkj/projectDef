@@ -5,6 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 적의 체력과 사망을 관리하고, 사망 시 보상 목록을 자원 관리자에게 전달합니다.
 /// </summary>
+[RequireComponent(typeof(EnemyStatusController))]
 public class EnemyHealth : BaseMono, IDamageable
 {
     // 스포너 종류와 관계없이 활성 상태인 생존 적 전체를 집계합니다.
@@ -50,6 +51,7 @@ public class EnemyHealth : BaseMono, IDamageable
     private bool _initialized;
     private float _spawnMaxHealth;
     private ResourceManager _resources;
+    private EnemyStatusController _status;
     private List<Bounty> _bounties = new List<Bounty>();
     #endregion
 
@@ -57,6 +59,10 @@ public class EnemyHealth : BaseMono, IDamageable
     public float CurrentHealth => _currentHealth;
     public float MaxHealth => _initialized ? _spawnMaxHealth : maxHealth;
     public bool IsDead => _isDead;
+    public EnemyStatusController StatusEffects
+    {
+        get { EnsureStatusController(); return _status; }
+    }
 
     public event Action OnDead;
 
@@ -69,6 +75,8 @@ public class EnemyHealth : BaseMono, IDamageable
     {
         if (gameObject.activeInHierarchy)
             throw new InvalidOperationException("적의 능력치는 활성화 전에 설정해야 합니다.");
+        EnsureStatusController();
+        _status.ClearEffects();
         float value = hp ?? maxHealth;
         if (value <= 0f || float.IsNaN(value) || float.IsInfinity(value))
             throw new ArgumentOutOfRangeException(nameof(hp));
@@ -103,12 +111,26 @@ public class EnemyHealth : BaseMono, IDamageable
 
     public void TakeDamage(float damage)
     {
+        ApplyDamage(damage, true);
+    }
+
+    /// <summary>독/출혈 등 주기 피해는 화상의 피격 추가 피해를 발동하지 않습니다.</summary>
+    public void TakeStatusDamage(float damage)
+    {
+        ApplyDamage(damage, false);
+    }
+
+    private void ApplyDamage(float damage, bool directHit)
+    {
         if (_isDead || !gameObject.activeInHierarchy)
             return;
 
         if (damage <= 0 || float.IsNaN(damage) || float.IsInfinity(damage))
             return;
 
+        if (directHit && _status != null && _status.isActiveAndEnabled)
+            damage += _status.ExtraHitDamage;
+        if (float.IsInfinity(damage)) damage = float.MaxValue;
         _currentHealth -= damage;
         _currentHealth = Mathf.Max(_currentHealth, 0);
         OnDamageTaken?.Invoke(transform.position, damage);
@@ -129,6 +151,7 @@ public class EnemyHealth : BaseMono, IDamageable
             return;
 
         _isDead = true;
+        if (_status != null) _status.ClearEffects();
         try
         {
             // 제거/비활성화 경로에서는 지급하지 않습니다. 사망 이벤트 전에 보상을 확정합니다.
@@ -150,6 +173,7 @@ public class EnemyHealth : BaseMono, IDamageable
     protected override void Awake()
     {
         base.Awake();
+        EnsureStatusController();
         // 풀의 비활성 초기화에서 이미 주입한 CSV 능력치를 덮어쓰지 않습니다.
         if (!_initialized)
         {
@@ -157,6 +181,13 @@ public class EnemyHealth : BaseMono, IDamageable
             _currentHealth = _spawnMaxHealth;
             _initialized = true;
         }
+    }
+
+    private void EnsureStatusController()
+    {
+        if (_status != null) return;
+        // RequireComponent를 추가하기 전에 저장된 기존 프리팹도 최초 생성 시 한 번 보완합니다.
+        if (!TryGetComponent(out _status)) _status = gameObject.AddComponent<EnemyStatusController>();
     }
     #endregion
 
