@@ -11,12 +11,14 @@ public class EnemyHealth : BaseMono, IDamageable
     private static readonly HashSet<EnemyHealth> ActiveEnemies = new HashSet<EnemyHealth>();
     public static int ActiveEnemyCount => ActiveEnemies.Count;
     public static event Action<int> OnActiveEnemyCountChanged;
+    public static event Action<Vector3, float> OnDamageTaken;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetRegistry()
     {
         ActiveEnemies.Clear();
         OnActiveEnemyCountChanged = null;
+        OnDamageTaken = null;
     }
 
     private void OnEnable()
@@ -104,11 +106,12 @@ public class EnemyHealth : BaseMono, IDamageable
         if (_isDead || !gameObject.activeInHierarchy)
             return;
 
-        if (damage <= 0)
+        if (damage <= 0 || float.IsNaN(damage) || float.IsInfinity(damage))
             return;
 
         _currentHealth -= damage;
         _currentHealth = Mathf.Max(_currentHealth, 0);
+        OnDamageTaken?.Invoke(transform.position, damage);
 
         Debug.Log($"{name} 피격: {damage} / 남은 체력: {_currentHealth}");
 

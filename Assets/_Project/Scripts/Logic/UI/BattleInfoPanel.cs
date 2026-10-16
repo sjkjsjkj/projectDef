@@ -115,7 +115,7 @@ public class BattleInfoPanel : UI
 
     private void Update()
     {
-        if (!enableTabShortcut || Keyboard.current == null || !Keyboard.current.tabKey.wasPressedThisFrame)
+        if (SettingsPanel.IsOpen || !enableTabShortcut || Keyboard.current == null || !Keyboard.current.tabKey.wasPressedThisFrame)
             return;
 
         GameObject focused = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;

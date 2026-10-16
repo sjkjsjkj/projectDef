@@ -19,7 +19,6 @@ public class UI : BaseMono
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
     public void SetInfo(Vector2 size, Vector2 pos)
     {
-        SetResolution();
   
         _width = size.x;
         _height = size.y;
@@ -31,10 +30,6 @@ public class UI : BaseMono
     #endregion
 
     #region ─────────────────────────▶ 내부 메서드 ◀─────────────────────────
-    private void SetResolution()
-    {
-        Screen.SetResolution(1200, 800, FullScreenMode.Windowed);
-    }
     #endregion
 
     #region ─────────────────────────▶ 메시지 함수 ◀─────────────────────────

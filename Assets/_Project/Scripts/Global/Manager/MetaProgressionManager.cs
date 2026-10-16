@@ -77,6 +77,32 @@ public class MetaProgressionManager : GlobalSingleton<MetaProgressionManager>
         TrySettlePending();
     }
 
+    public bool TryResetSave(out string reason)
+    {
+        SceneFlowManager flow = SceneFlowManager.Ins;
+        reason = null;
+        if (flow == null || flow.CurrentScene != EScene.Main || flow.IsTransitioning)
+        { reason = "세이브 초기화는 메인 화면에서만 가능합니다."; return false; }
+        try
+        {
+            var store = new MetaProgressionSaveStore(Path.Combine(Application.persistentDataPath, "meta-progression.json"));
+            var data = new MetaProgression.SaveData();
+            var next = new MetaProgression(settings, data, store.Save);
+            store.Reset(JsonUtility.ToJson(data, true));
+            Progression = next;
+            Bonuses = MetaUpgradeBonuses.None;
+            _pendingRun = null;
+            _pendingWaves = 0;
+            _pendingVictory = false;
+            LastReward = LastCompletedWaves = 0;
+            LastError = LoadNotice = null;
+        }
+        catch (Exception exception)
+        { reason = LastError = exception.Message; return false; }
+        OnChanged?.Invoke();
+        return true;
+    }
+
     public bool TrySettlePending()
     {
         if (Progression == null) return false;

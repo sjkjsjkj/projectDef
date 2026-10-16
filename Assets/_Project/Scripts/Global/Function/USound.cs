@@ -9,6 +9,35 @@ public static class USound
     private static AudioSource _mainSource;
     private static AudioSource _bgmSource; // BGM을 재생할 파괴되지 않는 글로벌 오디오 오브젝트
     private static string _curBgmId; // 현재 재생중인 BGM ID
+    private static float _bgmGain = 1f;
+    private static readonly System.Collections.Generic.Dictionary<AudioSource, float> SfxSources = new();
+    private static readonly System.Collections.Generic.List<AudioSource> ExpiredSources = new();
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetSources()
+    {
+        _mainSource = _bgmSource = null;
+        _curBgmId = null;
+        _bgmGain = 1f;
+        SfxSources.Clear();
+        ExpiredSources.Clear();
+    }
+
+    public static void UpdateVolumes()
+    {
+        if (_bgmSource == null && SfxSources.Count == 0) return;
+        var volume = DataManager.Ins.Volume;
+        if (_bgmSource != null)
+            _bgmSource.volume = volume.IsBgmMute ? 0f : _bgmGain * volume.Master * volume.Bgm;
+        ExpiredSources.Clear();
+        foreach (var pair in SfxSources)
+        {
+            if (pair.Key == null || !pair.Key.isActiveAndEnabled || !pair.Key.isPlaying)
+            { ExpiredSources.Add(pair.Key); continue; }
+            pair.Key.volume = volume.IsSfxMute ? 0f : pair.Value * volume.Master * volume.Sfx;
+        }
+        foreach (var source in ExpiredSources) SfxSources.Remove(source);
+    }
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
     /// <summary>
@@ -117,22 +146,7 @@ public static class USound
     /// </summary>
     public static void UpdateBgmVolume()
     {
-        if (!TryGetBgmSource(out AudioSource source))
-        {
-            UDebug.Print($"BGM 오디오 소스가 존재하지 않습니다.", LogType.Assert);
-            return;
-        }
-        if (_curBgmId.IsEmpty())
-        {
-            return;
-        }
-        if (!TryGetSoundSO(_curBgmId, out SoundSO so))
-        {
-            UDebug.Print($"ID와 일치하는 SoundSO 데이터가 존재하지 않습니다.", LogType.Assert);
-            return;
-        }
-        var volume = DataManager.Ins.Volume;
-        _bgmSource.volume = so.Volume * volume.Master * volume.Bgm;
+        UpdateVolumes();
     }
     #endregion
 
@@ -190,15 +204,17 @@ public static class USound
     private static void PlayOneSfx(AudioSource source, SoundSO so)
     {
         var volume = DataManager.Ins.Volume;
-        source.volume = so.Volume * volume.Master * volume.Sfx;
-        source.PlayOneShot(so.Clip);
+        SfxSources[source] = 1f;
+        source.volume = volume.IsSfxMute ? 0f : volume.Master * volume.Sfx;
+        source.PlayOneShot(so.Clip, so.Volume);
     }
 
     // 효과음 재생
     private static void PlaySfx(AudioSource source, SoundSO so)
     {
         var volume = DataManager.Ins.Volume;
-        source.volume = so.Volume * volume.Master * volume.Sfx;
+        SfxSources[source] = so.Volume;
+        source.volume = volume.IsSfxMute ? 0f : so.Volume * volume.Master * volume.Sfx;
         source.clip = so.Clip;
         source.Play();
     }
@@ -244,7 +260,8 @@ public static class USound
         // BGM 재생하기
         var volume = DataManager.Ins.Volume;
         source.clip = so.Clip;
-        source.volume = so.Volume * volume.Bgm * volume.Master;
+        _bgmGain = so.Volume;
+        source.volume = volume.IsBgmMute ? 0f : so.Volume * volume.Bgm * volume.Master;
         source.Play();
         _curBgmId = id;
     }
