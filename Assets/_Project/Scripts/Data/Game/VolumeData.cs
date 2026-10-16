@@ -26,7 +26,7 @@ public class VolumeData
                 return;
             }
             _master = newVolume;
-            USound.UpdateBgmVolume();
+            USound.UpdateVolumes();
         }
     }
     public float Bgm
@@ -40,23 +40,31 @@ public class VolumeData
                 return;
             }
             _bgm = newVolume;
-            USound.UpdateBgmVolume();
+            USound.UpdateVolumes();
         }
     }
     public float Sfx
     {
         get => _sfx;
-        set => _sfx = Mathf.Clamp01(value);
+        set { _sfx = Mathf.Clamp01(value); USound.UpdateVolumes(); }
     }
     public bool IsBgmMute
     {
         get => _isBgmMute;
-        set => _isBgmMute = value;
+        set { _isBgmMute = value; USound.UpdateVolumes(); }
     }
     public bool IsSfxMute
     {
         get => _isSfxMute;
-        set => _isSfxMute = value;
+        set { _isSfxMute = value; USound.UpdateVolumes(); }
     }
+    public void Validate()
+    {
+        _master = ValidVolume(_master, .7f);
+        _bgm = ValidVolume(_bgm, .5f);
+        _sfx = ValidVolume(_sfx, .8f);
+    }
+    private static float ValidVolume(float value, float fallback) =>
+        float.IsNaN(value) || float.IsInfinity(value) ? fallback : Mathf.Clamp01(value);
     #endregion
 }

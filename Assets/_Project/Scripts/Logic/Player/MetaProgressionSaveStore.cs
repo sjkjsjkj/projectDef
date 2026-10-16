@@ -42,4 +42,20 @@ public sealed class MetaProgressionSaveStore
             File.Move(temp, Path);
         _recoveredBackup = false;
     }
+
+    /// <summary>이전 성장 데이터가 백업 복구로 되살아나지 않도록 백업도 초기화합니다.</summary>
+    public void Reset(string json)
+    {
+        MetaProgression.Parse(json);
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Path));
+        string backup = Path + ".bak";
+        string temp = Path + ".tmp";
+        File.WriteAllText(temp, json);
+        if (File.Exists(backup)) File.Replace(temp, backup, null);
+        else File.Move(temp, backup);
+        File.WriteAllText(temp, json);
+        if (File.Exists(Path)) File.Replace(temp, Path, null);
+        else File.Move(temp, Path);
+        _recoveredBackup = false;
+    }
 }

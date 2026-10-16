@@ -23,7 +23,7 @@ public class GameManager : GlobalSingleton<GameManager>
     public int CurrentEnemyCount => EnemyHealth.ActiveEnemyCount;
     public WaveManager WaveManager => _waveManager;
     public bool IsRoundEventActive => gameState == GameState.RoundEvent;
-    public bool IsCombatPaused => IsRoundEventActive || gameState == GameState.Victory || gameState == GameState.Defeat;
+    public bool IsCombatPaused => SettingsPanel.IsOpen || IsRoundEventActive || gameState == GameState.Victory || gameState == GameState.Defeat;
     public event Action<GameState> OnGameStateChanged;
 
     /// <summary>부팅 시 생성되는 GameManager에 씬의 WaveManager를 연결합니다.</summary>
