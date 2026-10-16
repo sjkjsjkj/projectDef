@@ -19,6 +19,8 @@ public class DragDropController : BaseMono
 
     [Header("드래그 N 드롭 영역")]
     [SerializeField] private Transform dragPlaneTransform;
+
+    [SerializeField, Min(1f)] private float dragThreshold = 8f;
     #endregion
 
     #region ─────────────────────────▶ 내부 변수 ◀─────────────────────────
@@ -27,6 +29,7 @@ public class DragDropController : BaseMono
     private IDropTarget _hoverTarget;
 
     private bool _isDragging;
+    private Vector2 _pressPosition;
     private readonly List<RaycastResult> _uiHits = new List<RaycastResult>();
     #endregion
 
@@ -89,18 +92,11 @@ public class DragDropController : BaseMono
         if (draggable == null)
             return;
 
-        if (!HasValidPlacement(draggable, draggable.CurrentTarget))
-        {
-            Debug.LogError("슬롯과 유닛의 배치 연결이 올바르지 않아 드래그를 시작할 수 없습니다.", hit);
-            return;
-        }
-
         _draggingObject = draggable;
         _sourceTarget = draggable.CurrentTarget;
-
-        _isDragging = true;
-
-        Debug.Log($"Drag Started: {_draggingObject.Origin.name}");
+        _pressPosition = mousePosition;
+        // 누르기만 했을 때는 위치와 배치를 바꾸지 않고 클릭 후보로 보관합니다.
+        _isDragging = false;
         #endregion
     }
 
@@ -328,31 +324,69 @@ public class DragDropController : BaseMono
         {
             Debug.LogError("드래그에 사용할 카메라가 없습니다.", this);
             enabled = false;
+            return;
         }
+
+        if (Application.isPlaying) UnitInfoUIFactory.Ensure(gameObject.scene);
     }
 
     private void OnDisable()
     {
-        if (!_isDragging)
-            return;
-
-        CancelDrag();
+        if (_isDragging) CancelDrag();
         ClearDragState();
+    }
+
+    private void OnApplicationFocus(bool focused)
+    {
+        if (!focused) OnDisable();
+    }
+
+    private void UpdatePointerGesture()
+    {
+        if (!IsAlive(_draggingObject) || !_draggingObject.Origin.gameObject.activeInHierarchy)
+        {
+            ClearDragState();
+            return;
+        }
+
+        Vector2 position = Mouse.current.position.ReadValue();
+        if (!_isDragging && (position - _pressPosition).sqrMagnitude >= dragThreshold * dragThreshold)
+        {
+            if (!ValidateSource()) return;
+            _isDragging = true;
+        }
+
+        if (_isDragging)
+        {
+            UpdateDrag();
+            if (_isDragging && Mouse.current.leftButton.wasReleasedThisFrame) EndDrag();
+        }
+        else if (Mouse.current.leftButton.wasReleasedThisFrame)
+        {
+            // 같은 유닛 위에서 놓은 클릭만 선택합니다. UI 위에서 놓으면 취소합니다.
+            Collider2D hit = Physics2D.OverlapPoint(targetCamera.ScreenToWorldPoint(position), draggableLayer);
+            if (!IsPointerOverUI() && hit != null &&
+                ReferenceEquals(hit.GetComponentInParent<IDraggable>(), _draggingObject) &&
+                _draggingObject is Unit unit && unit.isActiveAndEnabled && unit.Data != null)
+                EventBus<OnUnitSelected>.Publish(new OnUnitSelected(unit));
+            ClearDragState();
+        }
+        else if (!Mouse.current.leftButton.isPressed)
+        {
+            OnDisable();
+        }
     }
 
     private void Update()
     {
         if (Mouse.current == null || SettingsPanel.IsOpen || (GameManager.Ins != null && GameManager.Ins.IsRoundEventActive))
         {
-            if (_isDragging)
-            {
-                CancelDrag();
-                ClearDragState();
-            }
+            if (_isDragging) CancelDrag();
+            ClearDragState();
             return;
         }
 
-        if (!_isDragging)
+        if (_draggingObject == null)
         {
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
@@ -360,15 +394,7 @@ public class DragDropController : BaseMono
             }
         }
 
-        if (!_isDragging)
-            return;
-
-        UpdateDrag();
-
-        if (_isDragging && Mouse.current.leftButton.wasReleasedThisFrame)
-        {
-            EndDrag();
-        }
+        if (_draggingObject != null) UpdatePointerGesture();
     }
     #endregion
 
