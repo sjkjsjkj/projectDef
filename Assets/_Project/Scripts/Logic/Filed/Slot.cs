@@ -14,10 +14,12 @@ public class Slot : BaseMono , IDropTarget
     [Tooltip("Auto: WaitField 아래는 대기석, 나머지는 전투 슬롯입니다. 필요한 경우 직접 지정하세요.")]
     [SerializeField] private PlacementArea placementArea = PlacementArea.Auto;
 
-    [Header("Highlight")]
+    [Header("슬롯 이미지")]
     [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private Color normalColor = Color.white;
-    [SerializeField] private Color highlightColor = Color.yellow;
+    [Tooltip("일반 상태 이미지입니다. 비워 두면 SpriteRenderer의 기존 이미지를 사용합니다.")]
+    [SerializeField] private Sprite normalSprite;
+    [Tooltip("드래그 대상으로 선택되었을 때의 이미지입니다. 비워 두면 일반 이미지를 유지합니다.")]
+    [SerializeField] private Sprite highlightSprite;
     #endregion
 
     #region ─────────────────────────▶ 내부 변수 ◀─────────────────────────
@@ -91,8 +93,8 @@ public class Slot : BaseMono , IDropTarget
         if (spriteRenderer == null)
             return;
 
-        spriteRenderer.color =
-            active ? highlightColor : normalColor;
+        spriteRenderer.sprite =
+            active && highlightSprite != null ? highlightSprite : normalSprite;
     }
 
     private void SetUnit(Unit unit)
@@ -118,6 +120,9 @@ public class Slot : BaseMono , IDropTarget
 
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (normalSprite == null && spriteRenderer != null)
+            normalSprite = spriteRenderer.sprite;
 
         SetHighlight(false);
         if (initialUnit != null)
