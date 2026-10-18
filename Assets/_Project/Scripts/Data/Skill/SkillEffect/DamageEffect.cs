@@ -15,12 +15,12 @@ public class DamageEffect : SkillEffect
     public override void Apply(AbilityContext context)
     {
         var damage =
-            context.OwnerStats.AttackPower *
+            context.AttackPower *
             damageMultiplier;
 
         foreach (var target in context.Targets)
         {
-            if (target == null || !target.IsAlive)
+            if (target == null || (target is Object obj && obj == null) || !target.IsAlive)
                 continue;
 
             target.TakeDamage(damage);

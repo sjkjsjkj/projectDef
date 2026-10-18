@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   id: 070
   type: 2
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: a182d56264626d74ea433c28936b1460, type: 3}
   unitName: "\uC5EC\uD3EC"
   description: "\uC124\uBA85"
   grade: 5
-  prefab: {fileID: 0}
+  prefab: {fileID: 1282476156172300608, guid: f774272e087b3354f8b2846e46749e72, type: 3}
   region: "\uC5EC\uD3EC"
   region2: "\uC5EC\uD3EC\xB7\uC815\uC6D0\xB7\uB3D9\uD0C1\xB7\uC6D0\uC18C\xB7\uC7A5\uC591"
   weaponType: "\uADF9\uBCD1"

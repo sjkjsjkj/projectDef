@@ -34,6 +34,7 @@ public class UnitInfoTests
         IDropTarget slot = unit.CurrentTarget;
         MoveMouse(new Vector2(640, 360), true);
         Invoke(controller, "TryBeginDrag");
+        Assert.That(unit.IsBeingDragged, Is.False, "누르기만 한 상태에서는 공격 시간을 멈추지 않습니다.");
         MoveMouse(new Vector2(643, 360), true);
         Invoke(controller, "UpdatePointerGesture");
         Assert.That(unit.transform.position, Is.EqualTo(original));
@@ -56,12 +57,29 @@ public class UnitInfoTests
         MoveMouse(new Vector2(700, 360), true);
         Invoke(controller, "UpdatePointerGesture");
         Assert.That(unit.transform.position, Is.Not.EqualTo(original));
+        Assert.That(unit.IsBeingDragged, Is.True);
         MoveMouse(new Vector2(700, 360), false);
         Invoke(controller, "UpdatePointerGesture");
         Assert.That(_selected, Is.Null);
+        Assert.That(unit.IsBeingDragged, Is.False);
         Assert.That(unit.transform.position, Is.EqualTo(original));
         Assert.That(unit.CurrentTarget, Is.SameAs(slot));
         Assert.That(slot.Occupant, Is.SameAs(unit));
+    }
+
+    [Test]
+    public void DisablingDragControllerRestoresPositionAndUnfreezesUnit()
+    {
+        DragDropController controller = CreateInput(out Unit unit);
+        Vector3 original = unit.transform.position;
+        MoveMouse(new Vector2(640, 360), true);
+        Invoke(controller, "TryBeginDrag");
+        MoveMouse(new Vector2(700, 360), true);
+        Invoke(controller, "UpdatePointerGesture");
+        Assert.That(unit.IsBeingDragged, Is.True);
+        Invoke(controller, "OnDisable");
+        Assert.That(unit.IsBeingDragged, Is.False);
+        Assert.That(unit.transform.position, Is.EqualTo(original));
     }
 
     [Test]
@@ -166,6 +184,9 @@ public class UnitInfoTests
     {
         InputSystem.QueueStateEvent(_mouse, new MouseState { position = position }.WithButton(MouseButton.Left, pressed));
         InputSystem.Update();
+        // 에디터의 실제 마우스 이벤트가 current 장치를 바꿔도 가상 입력을 읽도록 합니다.
+        _mouse.MakeCurrent();
+        Assert.That(_mouse.leftButton.isPressed, Is.EqualTo(pressed));
     }
 
     private static string Text(UnitInfoPanel panel, string path) =>
