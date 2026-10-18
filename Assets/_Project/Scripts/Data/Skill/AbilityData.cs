@@ -22,6 +22,25 @@ public class AbilityData : BaseSO
 
     [SerializeField] private TargetSelector targetSelector;
 
+    [Header("공격 전달 방식")]
+    [SerializeField] private AttackDeliveryType deliveryType = AttackDeliveryType.Melee;
+    [Tooltip("근거리: 베기 등 공격 이미지. 원거리: 대상에게 날아가는 투사체 이미지. 오른쪽(+X)을 향한 이미지를 사용합니다.")]
+    [SerializeField] private Sprite attackEffect;
+    [SerializeField] private Sprite hitEffect;
+    [SerializeField, Min(0.01f)] private float attackEffectSize = 0.7f;
+    [SerializeField, Min(0.01f)] private float hitEffectSize = 0.35f;
+    [Tooltip("근거리 공격 이미지를 발사 위치에서 대상 방향으로 띄울 거리입니다.")]
+    [SerializeField, Min(0f)] private float meleeEffectOffset = 0.55f;
+    [Tooltip("근거리 공격 이펙트가 끝난 뒤 피격 이펙트를 시작합니다.")]
+    [SerializeField, Min(0f)] private float meleeAttackDuration = 0.08f;
+    [Tooltip("피격 이펙트를 표시한 뒤 효과(피해/상태이상)를 적용하기까지의 시간입니다.")]
+    [SerializeField, Min(0f)] private float hitEffectDuration = 0.06f;
+    [SerializeField, Min(0.01f)] private float projectileSpeed = 8f;
+    [SerializeField, Min(0.1f)] private float projectileLifetime = 5f;
+    [SerializeField, Min(0f)] private float projectileHitRadius = 0.05f;
+    [SerializeField] private Vector2 attackOriginOffset = new Vector2(0f, 0.45f);
+    [SerializeField] private float attackImageAngle;
+
     [Header("스킬 조건 및 효과")]
     [SerializeField] private List<SkillCondition> useConditions = new();
     [SerializeField] private List<SkillCondition> activationConditions = new();
@@ -35,6 +54,19 @@ public class AbilityData : BaseSO
     public float Range => range;
     public float Cooldown => cooldown;
     public LayerMask TargetLayer => targetLayer;
+    public AttackDeliveryType DeliveryType => deliveryType;
+    public Sprite AttackEffect => attackEffect;
+    public Sprite HitEffect => hitEffect;
+    public float AttackEffectSize => Mathf.Max(0.01f, attackEffectSize);
+    public float HitEffectSize => Mathf.Max(0.01f, hitEffectSize);
+    public float MeleeEffectOffset => Mathf.Max(0f, meleeEffectOffset);
+    public float MeleeAttackDuration => Mathf.Max(0f, meleeAttackDuration);
+    public float HitEffectDuration => Mathf.Max(0f, hitEffectDuration);
+    public float ProjectileSpeed => Mathf.Max(0.01f, projectileSpeed);
+    public float ProjectileLifetime => Mathf.Max(0.1f, projectileLifetime);
+    public float ProjectileHitRadius => Mathf.Max(0f, projectileHitRadius);
+    public Vector2 AttackOriginOffset => attackOriginOffset;
+    public float AttackImageAngle => attackImageAngle;
 
     public TargetSelector TargetSelector => targetSelector;
     public IReadOnlyList<SkillCondition> UseConditions => useConditions;
@@ -76,7 +108,7 @@ public class AbilityData : BaseSO
 
         context.TargetBuffer.Clear();
 
-        if (context.Owner == null || context.Origin == null || targetSelector == null)
+        if (context.Owner == null || context.Owner.IsBeingDragged || context.Origin == null || targetSelector == null)
             return false;
 
         // 불완전한 효과 설정으로 쿨다운만 소비하거나 일부 효과만 실행하지 않습니다.
@@ -97,12 +129,8 @@ public class AbilityData : BaseSO
         if (!AreConditionsSatisfied(activationConditions, context))
             return false;
 
-        foreach (var effect in effects)
-        {
-            effect.Apply(context);
-        }
-
-        return true;
+        // SO와 재사용 문맥에 실행 상태를 남기지 않고, 공격마다 독립된 대상을 보관합니다.
+        return AbilityExecutionRunner.ForScene(context.Owner.gameObject.scene).TryLaunch(this, context);
     }
 
     // 값 유효성 검사

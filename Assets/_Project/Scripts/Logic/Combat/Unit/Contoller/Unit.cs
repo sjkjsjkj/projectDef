@@ -26,6 +26,8 @@ public class Unit : CharacterBaseMono, IDraggable
     public event System.Action OnLevelChanged;
     public Transform Origin => transform;
     public IDropTarget CurrentTarget { get; set; }
+    public bool IsBeingDragged { get; private set; }
+    public void SetDragging(bool dragging) => IsBeingDragged = dragging;
 
     /// <summary>비활성 상태로 생성한 유닛에 Awake 이전에 테이블 데이터를 주입합니다.</summary>
     public void InitializeForSpawn(UnitData data)
@@ -126,6 +128,7 @@ public class Unit : CharacterBaseMono, IDraggable
 
     private void OnDisable()
     {
+        IsBeingDragged = false;
         if (CurrentTarget is Slot slot && slot != null) slot.NotifyBattleFormationChanged();
     }
 

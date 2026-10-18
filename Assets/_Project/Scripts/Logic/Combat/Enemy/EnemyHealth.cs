@@ -24,6 +24,7 @@ public class EnemyHealth : BaseMono, IDamageable
 
     private void OnEnable()
     {
+        SpawnVersion++;
         if (IsAlive && ActiveEnemies.Add(this))
             OnActiveEnemyCountChanged?.Invoke(ActiveEnemyCount);
     }
@@ -59,6 +60,8 @@ public class EnemyHealth : BaseMono, IDamageable
     public float CurrentHealth => _currentHealth;
     public float MaxHealth => _initialized ? _spawnMaxHealth : maxHealth;
     public bool IsDead => _isDead;
+    /// <summary>풀에서 같은 오브젝트가 다시 생성되면 이전 투사체의 대상을 무효화합니다.</summary>
+    public uint SpawnVersion { get; private set; }
     public EnemyStatusController StatusEffects
     {
         get { EnsureStatusController(); return _status; }
@@ -81,6 +84,7 @@ public class EnemyHealth : BaseMono, IDamageable
         if (value <= 0f || float.IsNaN(value) || float.IsInfinity(value))
             throw new ArgumentOutOfRangeException(nameof(hp));
         _spawnMaxHealth = value * MetaProgressionManager.CurrentBonuses.EnemyHealth;
+        SpawnVersion++;
         _currentHealth = _spawnMaxHealth;
         _isDead = false;
         _initialized = true;

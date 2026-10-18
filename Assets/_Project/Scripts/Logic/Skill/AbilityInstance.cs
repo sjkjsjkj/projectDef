@@ -16,6 +16,7 @@ public class AbilityInstance
 
     public float RemainingCooldown => _remainingCooldown;
     public bool IsReady => _remainingCooldown <= 0f;
+    public Vector3 AimPosition => _context.AimPosition;
     public float EffectiveCooldown => Mathf.Max(0f, _context.IsBasicAttack
         ? Data.GetCooldown(_context) / Mathf.Max(0.01f, _context.OwnerStats.AttackSpd)
         : Data.GetCooldown(_context) * _context.OwnerStats.SkillCooldownMultiplier);
@@ -33,6 +34,7 @@ public class AbilityInstance
 
     public void Tick(float deltaTime)
     {
+        if (_context.Owner == null || _context.Owner.IsBeingDragged) return;
         if (_remainingCooldown <= 0f)
             return;
 
@@ -49,7 +51,7 @@ public class AbilityInstance
 
     public bool TryActivate()
     {
-        if (!IsReady)
+        if (!IsReady || _context.Owner == null || _context.Owner.IsBeingDragged)
             return false;
 
         if (!Data.TryExecute(_context))

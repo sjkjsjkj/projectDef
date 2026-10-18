@@ -17,6 +17,9 @@ public class AbilityContext
     public Transform Origin { get; }
     public IReadOnlyList<IDamageable> Targets { get; }
     public bool IsBasicAttack { get; }
+    public Vector3 AimPosition { get; internal set; }
+    private readonly float? _attackPowerAtLaunch;
+    public float AttackPower => _attackPowerAtLaunch ?? OwnerStats.AttackPower;
 
     // 타깃 선택 결과는 문맥에 보관하며 공유 SO에는 저장하지 않습니다.
     internal List<IDamageable> TargetBuffer { get; } = new();
@@ -32,6 +35,20 @@ public class AbilityContext
         Origin = unit.Origin;
         Targets = TargetBuffer.AsReadOnly();
     }
+
+    private AbilityContext(AbilityContext source, IDamageable target)
+    {
+        Owner = source.Owner;
+        OwnerStats = source.OwnerStats;
+        Origin = source.Origin;
+        IsBasicAttack = source.IsBasicAttack;
+        AimPosition = source.AimPosition;
+        _attackPowerAtLaunch = source.AttackPower;
+        TargetBuffer.Add(target);
+        Targets = TargetBuffer.AsReadOnly();
+    }
+
+    internal AbilityContext ForTarget(IDamageable target) => new AbilityContext(this, target);
     #endregion
 
     #region ─────────────────────────▶ 내부 메서드 ◀─────────────────────────

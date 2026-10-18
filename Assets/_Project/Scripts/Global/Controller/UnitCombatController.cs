@@ -29,6 +29,11 @@ public class UnitCombatController : BaseMono
     #endregion
 
     #region ─────────────────────────▶ 공개 멤버 ◀─────────────────────────
+    /// <summary>기본 공격이 실제로 성공한 뒤, 이번 공격 간격을 전달합니다.</summary>
+    public event System.Action<float> BasicAttackPerformed;
+    /// <summary>공격 접수 시 목표 위치와 공격 간격을 전달합니다. 피해는 지연 실행됩니다.</summary>
+    public event System.Action<Vector3, float> AttackStarted;
+
     public void SetCombatEnabled(bool enabled)
     {
         combatEnabled = enabled;
@@ -36,13 +41,16 @@ public class UnitCombatController : BaseMono
 
     public bool TryUseSkill()
     {
-        if (!combatEnabled || (GameManager.Ins != null && GameManager.Ins.IsCombatPaused))
+        if (!combatEnabled || _unit == null || _unit.IsBeingDragged ||
+            (GameManager.Ins != null && GameManager.Ins.IsCombatPaused))
             return false;
 
         if (_skill == null)
             return false;
 
-        return _skill.TryActivate();
+        if (!_skill.TryActivate()) return false;
+        AttackStarted?.Invoke(_skill.AimPosition, _skill.EffectiveCooldown);
+        return true;
     }
     #endregion
 
@@ -75,7 +83,7 @@ public class UnitCombatController : BaseMono
 
     private bool TryActivateAutomatically(AbilityInstance ability, ref float nextRetryTime)
     {
-        if (ability == null || !ability.IsReady || Time.time < nextRetryTime)
+        if (ability == null || !ability.IsReady || nextRetryTime > 0f)
             return false;
 
         if (ability.TryActivate())
@@ -84,7 +92,7 @@ public class UnitCombatController : BaseMono
             return true;
         }
 
-        nextRetryTime = Time.time + Mathf.Max(0.02f, targetRetryInterval);
+        nextRetryTime = Mathf.Max(0.02f, targetRetryInterval);
         return false;
     }
 
@@ -122,19 +130,33 @@ public class UnitCombatController : BaseMono
     private void Update()
     {
         if (GameManager.Ins != null && GameManager.Ins.IsCombatPaused) return;
+        Tick(Time.deltaTime);
+    }
+
+    public void Tick(float deltaTime)
+    {
+        if (_unit == null || _unit.IsBeingDragged || !isActiveAndEnabled) return;
+        float dt = Mathf.Max(0f, deltaTime);
+        _nextBasicAttackRetryTime = Mathf.Max(0f, _nextBasicAttackRetryTime - dt);
+        _nextSkillRetryTime = Mathf.Max(0f, _nextSkillRetryTime - dt);
         // 전투가 비활성화되어도 이미 시작된 쿨다운은 경과합니다.
-        _basicAttack?.Tick(Time.deltaTime);
-        _skill?.Tick(Time.deltaTime);
+        _basicAttack?.Tick(dt);
+        _skill?.Tick(dt);
 
         if (!combatEnabled)
             return;
 
         if (autoUseSkill && TryActivateAutomatically(_skill, ref _nextSkillRetryTime))
         {
+            AttackStarted?.Invoke(_skill.AimPosition, _skill.EffectiveCooldown);
             return;
         }
 
-        TryActivateAutomatically(_basicAttack, ref _nextBasicAttackRetryTime);
+        if (TryActivateAutomatically(_basicAttack, ref _nextBasicAttackRetryTime))
+        {
+            AttackStarted?.Invoke(_basicAttack.AimPosition, _basicAttack.EffectiveCooldown);
+            BasicAttackPerformed?.Invoke(_basicAttack.EffectiveCooldown);
+        }
     }
     #endregion
 

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 /// 드래그 / 드랍을 관리하는 컨트롤러
 /// </summary>
 [System.Serializable]
+[DefaultExecutionOrder(-50)]
 public class DragDropController : BaseMono
 {
     #region ─────────────────────────▶ 인스펙터 ◀─────────────────────────
@@ -302,6 +303,7 @@ public class DragDropController : BaseMono
 
     private void ClearDragState()
     {
+        if (_draggingObject is Unit unit && unit != null) unit.SetDragging(false);
         if (IsAlive(_hoverTarget))
             _hoverTarget.SetHighlight(false);
 
@@ -354,14 +356,16 @@ public class DragDropController : BaseMono
         {
             if (!ValidateSource()) return;
             _isDragging = true;
+            if (_draggingObject is Unit unit) unit.SetDragging(true);
         }
 
         if (_isDragging)
         {
             UpdateDrag();
-            if (_isDragging && Mouse.current.leftButton.wasReleasedThisFrame) EndDrag();
+            // 해제 이벤트 프레임을 놓쳐도 드래그/전투 정지 상태가 남지 않도록 현재 상태로 종료합니다.
+            if (_isDragging && !Mouse.current.leftButton.isPressed) EndDrag();
         }
-        else if (Mouse.current.leftButton.wasReleasedThisFrame)
+        else if (!Mouse.current.leftButton.isPressed)
         {
             // 같은 유닛 위에서 놓은 클릭만 선택합니다. UI 위에서 놓으면 취소합니다.
             Collider2D hit = Physics2D.OverlapPoint(targetCamera.ScreenToWorldPoint(position), draggableLayer);
@@ -370,10 +374,6 @@ public class DragDropController : BaseMono
                 _draggingObject is Unit unit && unit.isActiveAndEnabled && unit.Data != null)
                 EventBus<OnUnitSelected>.Publish(new OnUnitSelected(unit));
             ClearDragState();
-        }
-        else if (!Mouse.current.leftButton.isPressed)
-        {
-            OnDisable();
         }
     }
 

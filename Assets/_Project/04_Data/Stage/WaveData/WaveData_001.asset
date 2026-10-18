@@ -15,11 +15,11 @@ MonoBehaviour:
   id: 001
   type: 4
   waveIndex: 1
-  duration: 7
+  duration: 30
   spawnInterval: 1
   enemySpawnDatas:
   - enemyPrefab: {fileID: 0}
-    count: 4
+    count: 10
     bounties:
     - rid: 5825585668941414472
   completionEvent: {fileID: 11400000, guid: 6d77261fc0431544ca209316226d897d, type: 2}
