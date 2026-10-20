@@ -10,38 +10,59 @@ public class BattleSynergyRowView : MonoBehaviour, IPointerEnterHandler, IPointe
     private TMP_Text _name;
     private TMP_Text _count;
     private TMP_Text _stages;
+    private TMP_Text _grade;
     private CanvasGroup _group;
     public BattleSynergyEntry Entry { get; private set; }
 
     public void Initialize(BattleSynergyListView owner, TMP_FontAsset font)
     {
         _owner = owner;
-        Image background = gameObject.AddComponent<Image>();
+        Image background = GetComponent<Image>();
+        if (background == null) background = gameObject.AddComponent<Image>();
         background.color = new Color32(42, 48, 60, 255);
-        _group = gameObject.AddComponent<CanvasGroup>();
-        LayoutElement layout = gameObject.AddComponent<LayoutElement>();
-        layout.minHeight = layout.preferredHeight = 60;
-        _name = BattleSynergyListView.Label("Name", transform, font, 16);
+        BattleInfoSkin skin = BattleInfoSkin.Load();
+        if (skin != null) BattleInfoSkin.SetImage(background, skin.synergyRow);
+        _group = GetComponent<CanvasGroup>();
+        if (_group == null) _group = gameObject.AddComponent<CanvasGroup>();
+        LayoutElement layout = GetComponent<LayoutElement>();
+        if (layout == null) layout = gameObject.AddComponent<LayoutElement>();
+        layout.minHeight = layout.preferredHeight = 48;
+        if (skin != null)
+        {
+            Image frame = BattleInfoSkin.ImageChild("IconFrame", transform, skin.emptyFrame);
+            BattleInfoSkin.Place(frame.rectTransform, 8, 6, 36, 36);
+        }
+        _name = BattleInfoSkin.TextChild("Name", transform, font, 14);
         _name.textWrappingMode = TextWrappingModes.NoWrap;
         _name.overflowMode = TextOverflowModes.Ellipsis;
-        SetBounds(_name.rectTransform, 8, 44, 5, 29);
-        _count = BattleSynergyListView.Label("Count", transform, font, 16);
-        SetBounds(_count.rectTransform, 0, 8, 5, 29);
-        _count.rectTransform.anchorMin = new Vector2(0.8f, 1);
-        _count.alignment = TextAlignmentOptions.TopRight;
-        _stages = BattleSynergyListView.Label("Stages", transform, font, 12);
-        SetBounds(_stages.rectTransform, 8, 8, 34, 54);
+        SetBounds(_name.rectTransform, 52, 73, 5, 25);
+        _count = BattleInfoSkin.TextChild("Count", transform, font, 13);
+        BattleInfoSkin.Stretch(_count.rectTransform, 0, 48, 5, 23);
+        _count.rectTransform.anchorMin = new Vector2(1, 0);
+        _count.rectTransform.offsetMin = new Vector2(-73, 23);
+        _count.alignment = TextAlignmentOptions.Midline;
+        _stages = BattleInfoSkin.TextChild("Stages", transform, font, 10);
+        SetBounds(_stages.rectTransform, 52, 9, 27, 43);
         _stages.richText = true;
+        RectTransform badge = BattleInfoSkin.Child("GradeBadge", transform);
+        if (skin != null) BattleInfoSkin.ImageChild("GradeBadge", transform, skin.gradeBadge);
+        BattleInfoSkin.Stretch(badge, 0, 8, 6, 22);
+        badge.anchorMin = new Vector2(1, 0);
+        badge.offsetMin = new Vector2(-48, 22);
+        _grade = BattleInfoSkin.TextChild("Grade", badge, font, 10);
+        BattleInfoSkin.Stretch(_grade.rectTransform, 3, 3, 1, 1);
+        _grade.alignment = TextAlignmentOptions.Midline;
     }
 
     public void Bind(BattleSynergyEntry entry)
     {
         Entry = entry;
-        _name.text = $"[{entry.Name}]";
-        _count.text = $"[{entry.Count}]";
+        _name.text = entry.Name;
+        _count.text = $"{entry.Count}";
+        _grade.text = entry.IsActive ? $"{entry.Stage}단계" : "대기";
         Color color = entry.IsActive ? new Color32(236, 231, 215, 255) : new Color32(166, 173, 184, 255);
-        _name.color = _count.color = _stages.color = color;
-        _group.alpha = entry.IsActive ? 1f : 0.45f;
+        _name.color = _count.color = _stages.color = _grade.color = color;
+        _group.alpha = entry.IsActive ? 1f : 0.6f;
         if (entry.Category == BattleSynergyCategory.Special)
         {
             _stages.text = "특수 관계";

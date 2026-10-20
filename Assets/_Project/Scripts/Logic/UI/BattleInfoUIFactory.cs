@@ -27,7 +27,7 @@ public static class BattleInfoUIFactory
             TextAlignmentOptions.MidlineRight);
         hint.color = new Color32(163, 173, 190, 255);
 
-        string[] names = { "Units", "Synergies", "DFS" };
+        string[] names = { "Units", "Synergies" };
         var tabs = new BattleInfoPanel.Tab[names.Length];
         RectTransform body = Rect("Body", panel, 12, 100, 356, 228);
         body.gameObject.AddComponent<Image>().color = new Color32(30, 35, 45, 255);
@@ -63,6 +63,12 @@ public static class BattleInfoUIFactory
     /// <summary>기존 본문과 탭 참조를 유지하며 폭과 테스트 아이콘을 갱신합니다.</summary>
     public static void ApplyCompactLayout(BattleInfoPanel view)
     {
+        BattleInfoSkin skin = BattleInfoSkin.Load();
+        if (skin != null)
+        {
+            skin.ApplyPanel(view);
+            return;
+        }
         RectTransform panel = view.transform.Find("BattleInfo") as RectTransform;
         if (panel == null) return;
         panel.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 260);
