@@ -24,7 +24,33 @@ public class BattleSynergyListView : BaseMono
         _specialSynergies = specialSynergies;
         uiFont = font;
         EnsureView();
+        ApplySkin();
         _dirty = true;
+    }
+
+    private void ApplySkin()
+    {
+        BattleInfoSkin skin = BattleInfoSkin.Load();
+        TMP_Text title = transform.Find("SynergyTitle")?.GetComponent<TMP_Text>();
+        if (skin != null)
+        {
+            Image strip = BattleInfoSkin.ImageChild("SynergyCountStrip", transform, skin.countStrip);
+            BattleInfoSkin.Stretch(strip.rectTransform, 0, 0, 0, 0);
+            strip.rectTransform.anchorMin = new Vector2(0, 1);
+            strip.rectTransform.offsetMin = new Vector2(0, -26);
+            strip.transform.SetAsFirstSibling();
+        }
+        if (title != null)
+        {
+            title.fontSize = 14;
+            title.alignment = TextAlignmentOptions.MidlineLeft;
+            title.rectTransform.offsetMin = new Vector2(10, -26);
+            title.rectTransform.offsetMax = new Vector2(-10, 0);
+        }
+        if (scroll != null) scroll.viewport.offsetMax = new Vector2(0, -32);
+        if (_rows.Count == 0 && rowsRoot != null)
+            _rows.AddRange(rowsRoot.GetComponentsInChildren<BattleSynergyRowView>(true));
+        foreach (BattleSynergyRowView row in _rows) row.Initialize(this, uiFont);
     }
 
     private void EnsureView()

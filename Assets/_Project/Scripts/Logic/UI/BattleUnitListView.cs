@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +9,10 @@ public class BattleUnitListView : BaseMono
 {
     [SerializeField] private TMP_Text countText;
     [SerializeField] private TMP_Text listText;
+    [SerializeField] private RectTransform rowsRoot;
+    [SerializeField] private TMP_Text emptyText;
+    [SerializeField] private TMP_FontAsset uiFont;
+    private readonly List<BattleUnitRowView> _rows = new List<BattleUnitRowView>();
     private readonly List<Unit> _units = new List<Unit>();
     private bool _dirty = true;
 
@@ -17,46 +20,62 @@ public class BattleUnitListView : BaseMono
 
     public void EnsureView(TMP_FontAsset font)
     {
-        if (countText != null && listText != null) return;
-
-        RectTransform root = Rect("DeployedUnits", transform);
+        uiFont = font;
+        // 이전 씬에 저장된 텍스트 목록을 숨기고 기존 루트/스크롤을 재사용합니다.
+        if (listText != null) listText.gameObject.SetActive(false);
+        RectTransform root = BattleInfoSkin.Child("DeployedUnits", transform);
         Stretch(root);
-        countText = Label("Count", root, font, 18);
-        RectTransform countRect = countText.rectTransform;
-        countRect.anchorMin = new Vector2(0, 1);
-        countRect.anchorMax = Vector2.one;
-        countRect.pivot = new Vector2(0, 1);
-        countRect.offsetMin = new Vector2(0, -28);
-        countRect.offsetMax = Vector2.zero;
-        countText.text = "출전 장수 · 0";
+        BattleInfoSkin skin = BattleInfoSkin.Load();
+        if (skin != null)
+        {
+            Image strip = BattleInfoSkin.ImageChild("CountStrip", root, skin.countStrip);
+            BattleInfoSkin.Stretch(strip.rectTransform, 0, 0, 0, 0);
+            strip.rectTransform.anchorMin = new Vector2(0, 1);
+            strip.rectTransform.offsetMin = new Vector2(0, -26);
+            strip.transform.SetAsFirstSibling();
+        }
+        countText = BattleInfoSkin.TextChild("Count", root, font, 14);
+        BattleInfoSkin.Stretch(countText.rectTransform, 10, 10, 0, 0);
+        countText.rectTransform.anchorMin = new Vector2(0, 1);
+        countText.rectTransform.offsetMin = new Vector2(10, -26);
+        if (string.IsNullOrEmpty(countText.text)) countText.text = "출전 장수 · 0";
 
-        RectTransform viewport = Rect("Viewport", root);
+        RectTransform viewport = BattleInfoSkin.Child("Viewport", root);
         Stretch(viewport);
-        viewport.offsetMax = new Vector2(0, -36);
-        Image hitArea = viewport.gameObject.AddComponent<Image>();
+        viewport.offsetMax = new Vector2(0, -32);
+        Image hitArea = viewport.GetComponent<Image>();
+        if (hitArea == null) hitArea = viewport.gameObject.AddComponent<Image>();
         hitArea.color = Color.clear;
-        viewport.gameObject.AddComponent<RectMask2D>();
-
-        listText = Label("List", viewport, font, 17);
-        RectTransform content = listText.rectTransform;
-        content.anchorMin = new Vector2(0, 1);
-        content.anchorMax = Vector2.one;
-        content.pivot = new Vector2(0, 1);
-        content.anchoredPosition = Vector2.zero;
-        content.sizeDelta = Vector2.zero;
-        listText.lineSpacing = 16;
-        listText.margin = new Vector4(0, 0, 6, 0);
-        listText.text = "출전 중인 장수가 없습니다.";
-        ContentSizeFitter fitter = content.gameObject.AddComponent<ContentSizeFitter>();
+        if (viewport.GetComponent<RectMask2D>() == null) viewport.gameObject.AddComponent<RectMask2D>();
+        rowsRoot = BattleInfoSkin.Child("Rows", viewport);
+        rowsRoot.anchorMin = new Vector2(0, 1);
+        rowsRoot.anchorMax = Vector2.one;
+        rowsRoot.pivot = new Vector2(0.5f, 1);
+        rowsRoot.anchoredPosition = rowsRoot.sizeDelta = Vector2.zero;
+        VerticalLayoutGroup layout = rowsRoot.GetComponent<VerticalLayoutGroup>();
+        if (layout == null) layout = rowsRoot.gameObject.AddComponent<VerticalLayoutGroup>();
+        layout.spacing = 6;
+        layout.childControlWidth = layout.childControlHeight = true;
+        layout.childForceExpandWidth = true;
+        layout.childForceExpandHeight = false;
+        ContentSizeFitter fitter = rowsRoot.GetComponent<ContentSizeFitter>();
+        if (fitter == null) fitter = rowsRoot.gameObject.AddComponent<ContentSizeFitter>();
         fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
-        ScrollRect scroll = viewport.gameObject.AddComponent<ScrollRect>();
+        ScrollRect scroll = viewport.GetComponent<ScrollRect>();
+        if (scroll == null) scroll = viewport.gameObject.AddComponent<ScrollRect>();
         scroll.viewport = viewport;
-        scroll.content = content;
+        scroll.content = rowsRoot;
         scroll.horizontal = false;
         scroll.vertical = true;
         scroll.movementType = ScrollRect.MovementType.Clamped;
         scroll.scrollSensitivity = 24;
+        emptyText = BattleInfoSkin.TextChild("EmptyUnits", viewport, font, 14);
+        Stretch(emptyText.rectTransform);
+        emptyText.alignment = TextAlignmentOptions.TopLeft;
+        emptyText.text = "출전 중인 장수가 없습니다.";
+        if (_rows.Count == 0)
+            _rows.AddRange(rowsRoot.GetComponentsInChildren<BattleUnitRowView>(true));
+        foreach (BattleUnitRowView row in _rows) row.Initialize(font);
     }
 
     private void OnEnable()
@@ -88,7 +107,7 @@ public class BattleUnitListView : BaseMono
 
     public void RefreshList()
     {
-        if (listText == null || countText == null)
+        if (rowsRoot == null || countText == null)
             EnsureView(InnUIFactory.ResolveFont(null));
         UnsubscribeUnits();
         BattleFormationUtility.CollectUnits(gameObject.scene, _units);
@@ -96,16 +115,19 @@ public class BattleUnitListView : BaseMono
             unit.OnLevelChanged += MarkDirty;
 
         countText.text = $"출전 장수 · {_units.Count}";
-        var text = new StringBuilder();
         for (int i = 0; i < _units.Count; i++)
         {
-            Unit unit = _units[i];
-            string unitName = unit.Data != null && !string.IsNullOrWhiteSpace(unit.Data.UnitName)
-                ? unit.Data.UnitName : unit.name;
-            if (i > 0) text.AppendLine();
-            text.Append(unitName).Append("  ·  Lv.").Append(unit.Level);
+            if (i == _rows.Count)
+            {
+                BattleUnitRowView row = Rect("UnitRow", rowsRoot).gameObject.AddComponent<BattleUnitRowView>();
+                row.Initialize(uiFont);
+                _rows.Add(row);
+            }
+            _rows[i].gameObject.SetActive(true);
+            _rows[i].Bind(_units[i]);
         }
-        listText.text = _units.Count == 0 ? "출전 중인 장수가 없습니다." : text.ToString();
+        for (int i = _units.Count; i < _rows.Count; i++) _rows[i].gameObject.SetActive(false);
+        emptyText.gameObject.SetActive(_units.Count == 0);
     }
 
     private void UnsubscribeUnits()
@@ -128,15 +150,4 @@ public class BattleUnitListView : BaseMono
         rect.offsetMin = rect.offsetMax = Vector2.zero;
     }
 
-    private static TMP_Text Label(string name, Transform parent, TMP_FontAsset font, int size)
-    {
-        TMP_Text label = Rect(name, parent).gameObject.AddComponent<TextMeshProUGUI>();
-        if (font != null) label.font = font;
-        label.fontSize = size;
-        label.alignment = TextAlignmentOptions.TopLeft;
-        label.color = new Color32(236, 231, 215, 255);
-        label.raycastTarget = false;
-        label.richText = false;
-        return label;
-    }
 }

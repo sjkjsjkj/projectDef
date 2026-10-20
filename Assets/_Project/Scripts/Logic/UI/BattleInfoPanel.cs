@@ -26,9 +26,12 @@ public class BattleInfoPanel : UI
     [SerializeField] private SpecialSynergyDefinition[] specialSynergies = SpecialSynergyDefinition.CreateDefaults();
 
     private UnityAction[] _clickHandlers;
+    private BattleInfoSkin _skin;
     public int CurrentTabIndex { get; private set; } = -1;
-    public int TabCount => tabs != null ? tabs.Length : 0;
+    // DFS는 이번 UI에서 제외합니다. 기존 씬의 세 번째 참조는 그대로 보존합니다.
+    public int TabCount => tabs != null ? Mathf.Min(tabs.Length, 2) : 0;
     public SpecialSynergyDefinition[] SpecialSynergies => specialSynergies;
+    public TMP_FontAsset UIFont => InnUIFactory.ResolveFont(uiFont);
 
     // 비활성 UI 루트에서 Awake 전에 호출합니다.
     public void Configure(Tab[] entries, TMP_FontAsset font = null)
@@ -40,6 +43,8 @@ public class BattleInfoPanel : UI
     protected override void Awake()
     {
         base.Awake();
+        _skin = BattleInfoSkin.Load();
+        if (_skin != null) _skin.ApplyPanel(this);
         _clickHandlers = new UnityAction[TabCount];
         for (int i = 0; i < TabCount; i++)
         {
@@ -94,7 +99,13 @@ public class BattleInfoPanel : UI
             bool selected = i == index;
             if (tab.content != null) tab.content.SetActive(selected);
             if (tab.button != null && tab.button.targetGraphic != null)
-                tab.button.targetGraphic.color = selected ? selectedColor : idleColor;
+            {
+                if (_skin == null) _skin = BattleInfoSkin.Load();
+                if (_skin != null && tab.button.targetGraphic is Image image)
+                    BattleInfoSkin.SetImage(image, selected ? _skin.tabSelected : _skin.tabNormal);
+                else
+                    tab.button.targetGraphic.color = selected ? selectedColor : idleColor;
+            }
         }
 
         // 클릭했던 이전 탭에 포커스가 남아 Submit으로 되돌아가는 것을 방지합니다.
